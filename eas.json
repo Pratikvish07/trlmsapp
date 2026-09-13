@@ -1,0 +1,57 @@
+{
+  "cli": {
+    "version": ">= 23.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_BASE_URL": "https://trlm.pickitover.com/api",
+        "EXPO_PUBLIC_CRP_SIGNUP_PATH": "/api/auth/crp/signup",
+        "EXPO_PUBLIC_LOGIN_PATH": "/api/auth/crp/login",
+        "EXPO_PUBLIC_ACTIVITY_PATH": "/api/activity",
+        "EXPO_PUBLIC_SUBCATEGORY_BY_ACTIVITY_PATH": "/api/subcategory/by-activity",
+        "EXPO_PUBLIC_ALL_CRPS_PATH": "/api/auth/crp/all",
+        "EXPO_PUBLIC_LIVELIHOOD_PATH": "/api/livelihood",
+        "EXPO_PUBLIC_SHG_TRACKING_PATH": "/api/livelihood"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_BASE_URL": "https://trlm.pickitover.com/api",
+        "EXPO_PUBLIC_CRP_SIGNUP_PATH": "/api/auth/crp/signup",
+        "EXPO_PUBLIC_LOGIN_PATH": "/api/auth/crp/login",
+        "EXPO_PUBLIC_ACTIVITY_PATH": "/api/activity",
+        "EXPO_PUBLIC_SUBCATEGORY_BY_ACTIVITY_PATH": "/api/subcategory/by-activity",
+        "EXPO_PUBLIC_ALL_CRPS_PATH": "/api/auth/crp/all",
+        "EXPO_PUBLIC_LIVELIHOOD_PATH": "/api/livelihood",
+        "EXPO_PUBLIC_SHG_TRACKING_PATH": "/api/livelihood"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_BASE_URL": "https://trlm.pickitover.com/api",
+        "EXPO_PUBLIC_CRP_SIGNUP_PATH": "/api/auth/crp/signup",
+        "EXPO_PUBLIC_LOGIN_PATH": "/api/auth/crp/login",
+        "EXPO_PUBLIC_ACTIVITY_PATH": "/api/activity",
+        "EXPO_PUBLIC_SUBCATEGORY_BY_ACTIVITY_PATH": "/api/subcategory/by-activity",
+        "EXPO_PUBLIC_ALL_CRPS_PATH": "/api/auth/crp/all",
+        "EXPO_PUBLIC_LIVELIHOOD_PATH": "/api/livelihood",
+        "EXPO_PUBLIC_SHG_TRACKING_PATH": "/api/livelihood"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

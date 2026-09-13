@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "Livelihood Tracker",
+    "slug": "trlm",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+
+    "icon": "./assets/branding/livelihood-tracker-icon-fixed.png",
+
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+
+    "ios": {
+      "supportsTablet": true,
+      "icon": "./assets/branding/livelihood-tracker-icon-fixed.png"
+    },
+
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/branding/livelihood-tracker-icon-fixed.png",
+        "backgroundColor": "#f5f0df"
+      },
+      "package": "com.pratikvish07.trlm"
+    },
+
+    "web": {
+      "favicon": "./assets/branding/livelihood-tracker-icon-fixed.png"
+    },
+
+    "plugins": [
+      "expo-asset"
+    ],
+
+    "extra": {
+      "eas": {
+        "projectId": "1abfb167-c846-4cff-a564-07170bbba5b3"
+      }
+    },
+
+    "owner": "pratikvish07"
+  }
+}
