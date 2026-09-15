@@ -49,6 +49,12 @@ const USER_STORAGE_KEY = "trlmUserProfile";
 const USER_DIRECTORY_KEY = "trlmUserProfilesByIdentity";
 const APP_NAV_STORAGE_KEY = "trlmAppNavState";
 const CHECKIN_STORAGE_KEY = "trlmCheckInState";
+// Must match DASHBOARD_SELECTION_STORAGE_KEY in DashboardHomeTab.js - kept
+// as a literal here rather than a shared import to avoid a cross-file
+// constant just for a storage key string. Cleared on logout below so a new
+// CRP logging in on the same device never inherits the previous CRP's
+// selected village/SHG/member.
+const DASHBOARD_SELECTION_STORAGE_KEY = "trlmDashboardSelectionState";
 const EMPTY_SESSION_INFO = {
   isActive: false,
   loginAt: "",
@@ -1279,7 +1285,11 @@ export default function AppRouter() {
     dispatch(logout());
     try {
       await persistUserProfile(finalUserProfile);
-      await AsyncStorage.multiRemove([USER_STORAGE_KEY, APP_NAV_STORAGE_KEY]);
+      await AsyncStorage.multiRemove([
+        USER_STORAGE_KEY,
+        APP_NAV_STORAGE_KEY,
+        DASHBOARD_SELECTION_STORAGE_KEY
+      ]);
     } catch (error) {
       console.error("Error clearing user profile:", error);
     }

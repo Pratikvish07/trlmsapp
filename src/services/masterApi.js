@@ -109,6 +109,11 @@ export const API_ENDPOINTS = {
       process.env.EXPO_PUBLIC_INCOME_PROFILE_SAVE_PATH ||
       "/api/income-profile/save"
   },
+  investmentProfile: {
+    insert:
+      process.env.EXPO_PUBLIC_INVESTMENT_PROFILE_INSERT_PATH ||
+      "/api/investment-profile/insert"
+  },
   technicalSupport: {
     save:
       process.env.EXPO_PUBLIC_TECHNICAL_SUPPORT_SAVE_PATH ||
@@ -256,6 +261,8 @@ async function parseApiResponse(response, entityName) {
       // legitimate non-JSON error pages.
     }
   }
+
+  console.log(`[API] ${entityName} -> ${response.status} ${response.url}`, bodyText);
 
   if (!response.ok) {
     if (response.status === 404) {
@@ -678,6 +685,21 @@ export async function submitShgTracking(payload) {
   return executeJsonRequest(API_ENDPOINTS.livelihood.shgTracking, "SHG tracking", payload);
 }
 
+// CONFIRMED via live Swagger on trlm.pickitover.com: /api/shg-tracking/save's
+// real request body is multipart/form-data with binary Image/Video file
+// fields (TrackingId, SHGMemberId, SHGName, CRPRegistrationId, Latitude,
+// Longitude, Image, Video, Remarks) - not the JSON imagePath/videoPath
+// string shape submitShgTracking() above sends. That JSON shape is why
+// saved records always came back with null image/video paths: the server
+// never actually accepts file data through it. Use this for any save that
+// includes an image or video.
+export async function submitShgTrackingMultipart(formData) {
+  return executeRequest(API_ENDPOINTS.livelihood.shgTracking, "SHG tracking", {
+    method: "POST",
+    body: formData
+  });
+}
+
 export async function submitShgTrackingUploadImage(payload) {
   return executeJsonRequest(
     API_ENDPOINTS.livelihood.shgTrackingUploadImage,
@@ -755,6 +777,10 @@ export async function submitFinancialSupport(payload, mode = "insert") {
 
 export async function submitIncomeProfile(payload) {
   return executeJsonRequest(API_ENDPOINTS.incomeProfile.save, "income profile", payload);
+}
+
+export async function submitInvestmentProfile(payload) {
+  return executeJsonRequest(API_ENDPOINTS.investmentProfile.insert, "investment profile", payload);
 }
 
 export async function submitTechnicalSupport(payload) {

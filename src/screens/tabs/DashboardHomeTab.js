@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import PostCheckoutModal from "./PostCheckoutModal";
 import { Image, Modal, Platform, Pressable, ScrollView, Text as RNText, TextInput as RNTextInput, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -20,13 +21,25 @@ import {
   submitActivityProfile,
   submitFinancialSupport,
   submitIncomeProfile,
+  submitInvestmentProfile,
   submitLivelihoodAssignment,
   submitProductionMaster,
-  submitShgTracking,
+  submitShgTrackingMultipart,
   submitTechnicalSupport,
   submitTrainingAgency
 } from "../../services/masterApi";
 import { pageStyles, wrStyles, neStyles, smStyles, flowStyles, apStyles, nfStyles, tsCardStyles, tsDetailStyles, fsStyles, pastStyles, txnStyles, lhcboStyles, lhGuideStyles, lhcboStatusStyles, lhStyles, chcEntStyles } from "../../styles/dashboardHomeStyles";
+
+// CRP ID / GP / Village / SHG / Member selection lived only in this
+// component's React state, with no persistence - a page reload (common on
+// Expo web) wiped it completely even though the app restores homeView and
+// login session from AsyncStorage. That silently reset selectedAssignedMember
+// to null after every reload, which is why screens guarded on it (Investment
+// Profile, SHG Tracking) kept blocking with "No SHG member selected" right
+// after a refresh, even when the user had already picked everything. This
+// key persists that selection the same way APP_NAV_STORAGE_KEY in
+// AppRouter.js already persists homeView/activeTab.
+const DASHBOARD_SELECTION_STORAGE_KEY = "trlmDashboardSelectionState";
 
 function Text({ children, ...props }) {
   const plainText = typeof children === "string" || typeof children === "number"
@@ -805,6 +818,90 @@ export default function DashboardHomeTab({
   const [crpOptions, setCrpOptions] = useState([]);
   const [selectedCrpRegistrationId, setSelectedCrpRegistrationId] = useState("");
   const [openCrpSelector, setOpenCrpSelector] = useState(false);
+
+  // Restores the CRP/GP/Village/SHG/Member selection after a page reload -
+  // see DASHBOARD_SELECTION_STORAGE_KEY comment above for why this exists.
+  // selectionHydrated gates the persist effect below so it never fires with
+  // blank initial state and overwrites a real saved selection before the
+  // restore read completes.
+  const [selectionHydrated, setSelectionHydrated] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    AsyncStorage.getItem(DASHBOARD_SELECTION_STORAGE_KEY)
+      .then((raw) => {
+        if (!active || !raw) {
+          return;
+        }
+        const saved = JSON.parse(raw);
+        if (saved.crpRegistrationId) {
+          setSelectedCrpRegistrationId(saved.crpRegistrationId);
+        }
+        if (saved.gpId) {
+          setSelectedGpId(saved.gpId);
+        }
+        if (saved.villageId) {
+          setSelectedVillageId(saved.villageId);
+        }
+        if (saved.shgName) {
+          setShgName(saved.shgName);
+        }
+        if (saved.memberName) {
+          setMemberName(saved.memberName);
+        }
+        // lastActivityProfileId (Income Profile's FK to Activity Profile)
+        // had the exact same reload-wipes-it bug as the member selection
+        // above - activityProfileIdByMember was only ever in React state,
+        // so a reload lost the link even though the Activity Profile
+        // record still existed server-side (confirmed live via
+        // GET /api/activity-profile/get/{id}). Restored the same way.
+        if (saved.activityProfileIdByMember && typeof saved.activityProfileIdByMember === "object") {
+          setActivityProfileIdByMember(saved.activityProfileIdByMember);
+        }
+      })
+      .catch((error) => {
+        console.warn("Unable to restore dashboard selection:", error);
+      })
+      .finally(() => {
+        if (active) {
+          setSelectionHydrated(true);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!selectionHydrated) {
+      return;
+    }
+
+    AsyncStorage.setItem(
+      DASHBOARD_SELECTION_STORAGE_KEY,
+      JSON.stringify({
+        crpRegistrationId: selectedCrpRegistrationId,
+        gpId: selectedGpId,
+        villageId: selectedVillageId,
+        shgName,
+        memberName,
+        activityProfileIdByMember
+      })
+    ).catch((error) => {
+      console.warn("Unable to save dashboard selection:", error);
+    });
+  }, [
+    selectionHydrated,
+    selectedCrpRegistrationId,
+    selectedGpId,
+    selectedVillageId,
+    shgName,
+    memberName,
+    activityProfileIdByMember
+  ]);
+
   const [showDashboardAlerts, setShowDashboardAlerts] = useState(false);
   const [hasAutoShownDashboardAlerts, setHasAutoShownDashboardAlerts] = useState(false);
   const dashboardNotificationItems = alerts.length
@@ -1098,7 +1195,12 @@ export default function DashboardHomeTab({
     // exactly why you got a confusing downstream FK error on productionId
     // instead of a clear message about production creation itself failing.
     // Now it throws, so the real reason surfaces in the Save alert.
-    const response = await submitProductionMaster({ name: trimmedName });
+    //
+    // CONFIRMED via live GET /api/production-master/get-all: the entity's
+    // real field is "ProductionName" (PascalCase), not "name" - sending
+    // "name" left ProductionName empty server-side and triggered "The name
+    // field is required" on save regardless of what was typed.
+    const response = await submitProductionMaster({ ProductionName: trimmedName });
     const savedRecord = Array.isArray(response) ? response[0] : response;
     const newId =
       savedRecord?.productionId ??
@@ -1287,6 +1389,53 @@ export default function DashboardHomeTab({
     }
   };
 
+  const handleSaveInvestmentProfile = async () => {
+    if (apiSavingKey) {
+      return;
+    }
+
+    if (!selectedAssignedMember) {
+      console.log("[Investment profile] blocked - diagnostic state:", {
+        selectedVillageId,
+        shgName,
+        memberName,
+        effectiveAssignedShgMembersCount: effectiveAssignedShgMembers.length,
+        effectiveAssignedShgMembers,
+        shgNames,
+        shgMembers
+      });
+      showAppAlert("Investment profile", "No SHG member selected for this investment profile.");
+      return;
+    }
+
+    const toNumber = (value) => Number(value) || 0;
+    const payload = {
+      investmentProfileId: 0,
+      shgMemberId: Number(selectedAssignedMember.id) || 0,
+      totalInvestment: toNumber(investmentProfile.totalInvestment),
+      loanFromSHG: toNumber(investmentProfile.loanFromShg),
+      loanFromBank: toNumber(investmentProfile.loanFromBank),
+      individualFinancing: toNumber(investmentProfile.individualFinancing),
+      ownContribution: toNumber(investmentProfile.ownContribution),
+      cef: toNumber(investmentProfile.csr),
+      governmentGrant: toNumber(investmentProfile.governmentGrant),
+      otherSource: toNumber(investmentProfile.otherSource)
+    };
+
+    try {
+      setApiSavingKey("investmentProfile");
+      await submitInvestmentProfile(payload);
+      showSavedDataPopup("Investment profile", investmentProfile);
+    } catch (error) {
+      showAppAlert(
+        "Investment profile",
+        error.message || "Unable to save investment profile right now."
+      );
+    } finally {
+      setApiSavingKey("");
+    }
+  };
+
   const handleSaveIncomeProfile = async () => {
     if (apiSavingKey) {
       return;
@@ -1308,10 +1457,13 @@ export default function DashboardHomeTab({
 
     const toNumber = (value) => Number(value) || 0;
     const payload = {
-      // Same pattern as activityProfileId on Activity Profile save: this
-      // is the record's own new PK, so it's omitted entirely on create
-      // rather than sent as 0 - confirmed by testing to be the actual fix
-      // there, applying the same lesson here preemptively.
+      // CONFIRMED via live Swagger test: sending incomeProfileId:0 with a
+      // reused activityProfileId got "Updated Successfully" against an
+      // unexpected existing row, while incomeProfileId:null with a fresh
+      // activityProfileId correctly inserted a new row with every field
+      // (including totalIncomeLastYear) persisted right. null is what
+      // signals "create new" to this endpoint - 0 does not.
+      incomeProfileId: null,
       activityProfileId: lastActivityProfileId,
       totalIncomeLastYear: toNumber(incomeProfile.totalIncomeLastYear),
       presentMonthIncome: toNumber(incomeProfile.presentMonthIncome),
@@ -1324,9 +1476,12 @@ export default function DashboardHomeTab({
       month6Income: toNumber(incomeProfile.month6)
     };
 
+    console.log("[Income Profile] submitting payload:", payload);
+
     try {
       setApiSavingKey("incomeProfile");
-      await submitIncomeProfile(payload);
+      const saveResponse = await submitIncomeProfile(payload);
+      console.log("[Income Profile] server response:", saveResponse);
       showSavedDataPopup("Income profile", incomeProfile);
     } catch (error) {
       showAppAlert(
@@ -2634,45 +2789,74 @@ export default function DashboardHomeTab({
     }
 
     const trackingDate = new Date().toISOString().slice(0, 10);
-    // CONFIRMED via your Swagger test: /api/shg-tracking/save is a plain
-    // JSON call (not multipart), matching the exact schema you gave at
-    // the very start of this conversation. The previous version of this
-    // function built a multipart FormData with entirely different field
-    // names (MemberId, ActivityId, IsLH_CBO, etc.) that don't appear in
-    // that schema at all - it looked like it was copy-pasted from the
-    // separate "SHG Member Details" assignment flow and never adapted.
-    const resolvedCrpRegistrationId =
-      selectedCrpRecord?.crpRegistrationId ||
-      selectedCrpRecord?.id ||
-      user.crpRegistrationId ||
-      0;
+    // CRPRegistrationId comes strictly from the logged-in CRP's own session
+    // (user.crpRegistrationId), not from selectedCrpRecord - that's a
+    // separately browsed/selected CRP record used elsewhere in this screen
+    // and isn't necessarily the CRP who is actually logged in and tracking.
+    const resolvedCrpRegistrationId = user.crpRegistrationId || 0;
 
-    // NOTE: imagePath/videoPath are meant to be strings - likely paths
-    // returned by uploading through /api/shg-tracking/upload-image and
-    // /upload-video first. Those two endpoints are already wired in
-    // masterApi.js but their request/response shape has never been
-    // confirmed against the live server, so this sends the local file
-    // name as a placeholder for now rather than guessing a third payload
-    // shape blind. This means the actual image/video files are NOT yet
-    // being uploaded to the server by this screen - only their names are
-    // recorded. Confirm the upload endpoints' schema (same way we did for
-    // this one) before relying on real file storage here.
-    const payload = {
-      trackingId: 0,
-      shgMemberId: Number(selectedAssignedMember.id) || 0,
-      shgName: String(selectedAssignedMember.shgName || ""),
-      crpRegistrationId: Number(resolvedCrpRegistrationId) || 0,
-      latitude: Number(coordinates.latitude) || 0,
-      longitude: Number(coordinates.longitude) || 0,
-      imagePath: uploadedImageName || "",
-      videoPath: uploadedVideoName || "",
-      remarks: trackingRemarks.trim()
-    };
+    // /api/shg-tracking/save's real request body is multipart/form-data
+    // with binary Image/Video fields (confirmed live in Swagger) - not
+    // JSON imagePath/videoPath strings. Field names here match that
+    // Swagger form exactly: TrackingId, SHGMemberId, SHGName,
+    // CRPRegistrationId, Latitude, Longitude, Image, Video, Remarks.
+    //
+    // TrackingId is sent empty (multipart/form-data has no literal null -
+    // this is the equivalent of the incomeProfileId:null fix confirmed on
+    // income-profile/save: an explicit 0 risked being read as "this is an
+    // existing record" instead of "create new".
+    // SHGMemberId/SHGName come from selectedAssignedMember, itself sourced
+    // from the SHG Livelihood member API (fetchShgMembersByVillage) - not
+    // typed or picked from anywhere else.
+    const formData = new FormData();
+    formData.append("TrackingId", "");
+    formData.append("SHGMemberId", String(Number(selectedAssignedMember.id) || 0));
+    formData.append("SHGName", String(selectedAssignedMember.shgName || ""));
+    formData.append("CRPRegistrationId", String(Number(resolvedCrpRegistrationId) || 0));
+    formData.append("Latitude", String(Number(coordinates.latitude) || 0));
+    formData.append("Longitude", String(Number(coordinates.longitude) || 0));
+    formData.append("Remarks", trackingRemarks.trim());
+
+    console.log("[SHG Tracking] submitting with fields:", {
+      TrackingId: "",
+      SHGMemberId: Number(selectedAssignedMember.id) || 0,
+      SHGName: selectedAssignedMember.shgName || "",
+      CRPRegistrationId: Number(resolvedCrpRegistrationId) || 0,
+      Latitude: Number(coordinates.latitude) || 0,
+      Longitude: Number(coordinates.longitude) || 0,
+      Remarks: trackingRemarks.trim(),
+      uploadedImageUri,
+      uploadedVideoUri
+    });
 
     try {
       setTrackingSubmitting(true);
 
-      await submitShgTracking(payload);
+      if (Platform.OS === "web") {
+        const imageResponse = await fetch(uploadedImageUri);
+        const imageBlob = await imageResponse.blob();
+        console.log("[SHG Tracking] image blob:", imageBlob.size, "bytes,", imageBlob.type);
+        formData.append("Image", imageBlob, uploadedImageName || "tracking-image.jpg");
+
+        const videoResponse = await fetch(uploadedVideoUri);
+        const videoBlob = await videoResponse.blob();
+        console.log("[SHG Tracking] video blob:", videoBlob.size, "bytes,", videoBlob.type);
+        formData.append("Video", videoBlob, uploadedVideoName || "tracking-video.mp4");
+      } else {
+        formData.append("Image", {
+          uri: uploadedImageUri,
+          name: uploadedImageName || "tracking-image.jpg",
+          type: getMimeTypeFromUri(uploadedImageUri)
+        });
+        formData.append("Video", {
+          uri: uploadedVideoUri,
+          name: uploadedVideoName || "tracking-video.mp4",
+          type: getVideoMimeTypeFromUri(uploadedVideoUri)
+        });
+      }
+
+      const saveResponse = await submitShgTrackingMultipart(formData);
+      console.log("[SHG Tracking] server response:", saveResponse);
 
       onSubmitWorkingReport({
         assignmentId: selectedAssignedMember.id,
@@ -2700,10 +2884,81 @@ export default function DashboardHomeTab({
         nextView
       );
     } catch (error) {
+      console.log("[SHG Tracking] save failed:", error);
       showAppAlert("Tracking", error.message || "Unable to submit SHG tracking right now.");
     } finally {
       setTrackingSubmitting(false);
     }
+  };
+
+  // /api/shg-tracking/geo, /upload-image and /upload-video were confirmed
+  // (via live GET on trlm.pickitover.com) to accept a call and return a
+  // success message without actually persisting latitude/longitude/
+  // imagePath/videoPath against the tracking record - a server-side no-op.
+  // Calling them from the app would show field users a false "success"
+  // toast for data that never gets saved, so these three buttons stay
+  // local-only (capture + preview) and the real submission happens once,
+  // for real, through /api/shg-tracking/save in handleSaveTrackedStatus.
+  const handleShgTrackingGeoCheck = async () => {
+    const meters = await checkRadiusDistance(false);
+    if (meters === null) {
+      return;
+    }
+
+    showResponsePopup("Location Captured", `Location matched: ${meters}m from assigned SHG.`);
+  };
+
+  const handleShgTrackingImageUpload = (source = "library") => {
+    const picker =
+      source === "camera"
+        ? ImagePicker.launchCameraAsync
+        : ImagePicker.launchImageLibraryAsync;
+
+    picker({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      quality: 0.8
+    })
+      .then((result) => {
+        if (result.canceled || !result.assets?.length) {
+          return;
+        }
+
+        const asset = result.assets[0];
+        const imageName = asset.fileName || "selected-image";
+
+        setUploadedImageName(imageName);
+        setUploadedImageDate(new Date().toISOString().slice(0, 10));
+        setUploadedImageUri(asset.uri || "");
+        showResponsePopup("Image Selected", `Selected: ${imageName}`);
+      })
+      .catch((error) => {
+        showResponsePopup("Upload Failed", error.message || "Unable to select image.");
+      });
+  };
+
+  const handleShgTrackingVideoUpload = () => {
+    ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+      allowsEditing: false,
+      quality: 0.8
+    })
+      .then((result) => {
+        if (result.canceled || !result.assets?.length) {
+          return;
+        }
+
+        const asset = result.assets[0];
+        const videoName = asset.fileName || "selected-video";
+
+        setUploadedVideoName(videoName);
+        setUploadedVideoDate(new Date().toISOString().slice(0, 10));
+        setUploadedVideoUri(asset.uri || "");
+        showResponsePopup("Video Selected", `Selected: ${videoName}`);
+      })
+      .catch((error) => {
+        showResponsePopup("Upload Failed", error.message || "Unable to select video.");
+      });
   };
 
   const handleUploadLhCboImage = () => {
@@ -3447,15 +3702,15 @@ export default function DashboardHomeTab({
                 Attendance counts only when assigned SHG geolocation matches.
               </Text>
               <View style={flowStyles.trackingActionRow}>
-                <Pressable style={flowStyles.secondaryTrackBtn} onPress={() => checkRadiusDistance(false)}>
+                <Pressable style={flowStyles.secondaryTrackBtn} onPress={handleShgTrackingGeoCheck}>
                   <Text style={flowStyles.secondaryTrackBtnText}>
                     {isDistanceLoading ? "Checking..." : "Enable / Match Geo"}
                   </Text>
                 </Pressable>
-                <Pressable style={flowStyles.secondaryTrackBtn} onPress={() => handleUploadImage("library")}>
+                <Pressable style={flowStyles.secondaryTrackBtn} onPress={() => handleShgTrackingImageUpload("library")}>
                   <Text style={flowStyles.secondaryTrackBtnText}>Click / Upload Image</Text>
                 </Pressable>
-                <Pressable style={flowStyles.secondaryTrackBtn} onPress={handleUploadVideo}>
+                <Pressable style={flowStyles.secondaryTrackBtn} onPress={handleShgTrackingVideoUpload}>
                   <Text style={flowStyles.secondaryTrackBtnText}>Upload Video</Text>
                 </Pressable>
               </View>
@@ -4248,9 +4503,12 @@ export default function DashboardHomeTab({
             <View style={flowStyles.investmentActionRow}>
               <Pressable
                 style={flowStyles.investmentSaveBtn}
-                onPress={() => showSavedDataPopup("Investment profile", investmentProfile)}
+                onPress={handleSaveInvestmentProfile}
+                disabled={apiSavingKey === "investmentProfile"}
               >
-                <Text style={flowStyles.investmentSaveBtnText}>Save</Text>
+                <Text style={flowStyles.investmentSaveBtnText}>
+                  {apiSavingKey === "investmentProfile" ? "Saving..." : "Save"}
+                </Text>
               </Pressable>
               <Pressable
                 style={flowStyles.investmentBackBtn}
