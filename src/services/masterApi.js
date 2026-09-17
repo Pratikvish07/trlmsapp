@@ -122,10 +122,14 @@ export const API_ENDPOINTS = {
   trainingAgency: {
     save:
       process.env.EXPO_PUBLIC_TRAINING_AGENCY_SAVE_PATH ||
-      "/api/training-agency/save"
+      "/api/training-agency/save",
+    getAll:
+      process.env.EXPO_PUBLIC_TRAINING_AGENCY_GET_ALL_PATH ||
+      "/api/training-agency/get-all"
   },
   trade: {
-    save: process.env.EXPO_PUBLIC_TRADE_SAVE_PATH || "/api/trade/save"
+    save: process.env.EXPO_PUBLIC_TRADE_SAVE_PATH || "/api/trade/save",
+    getAll: process.env.EXPO_PUBLIC_TRADE_GET_ALL_PATH || "/api/trade/get-all"
   },
   productionMaster: {
     getAll:
@@ -726,6 +730,28 @@ export async function submitShgTrackingUploadVideo(payload) {
 
 export async function submitTradeSave(payload) {
   return executeJsonRequest(API_ENDPOINTS.trade.save, "trade", payload);
+}
+
+export async function fetchTradeOptions() {
+  const payload = await executeRequest(API_ENDPOINTS.trade.getAll, "trade options");
+  return mapCollection(payload, ["tradeId", "TradeId", "id", "value"], [
+    "tradeName",
+    "TradeName",
+    "name",
+    "label"
+  ]);
+}
+
+export async function fetchTrainingAgencyOptions() {
+  const payload = await executeRequest(API_ENDPOINTS.trainingAgency.getAll, "training agency options");
+  return mapCollection(payload, ["trainingAgencyId", "TrainingAgencyId", "agencyId", "AgencyId", "id", "value"], [
+    "trainingAgencyName",
+    "TrainingAgencyName",
+    "agencyName",
+    "AgencyName",
+    "name",
+    "label"
+  ]);
 }
 
 export async function fetchProductionMaster() {

@@ -16,6 +16,8 @@ import {
   fetchSeasons,
   fetchShgMembersByVillage,
   fetchSubCategoriesByActivity,
+  fetchTradeOptions,
+  fetchTrainingAgencyOptions,
   fetchUnitsOfArea,
   fetchVillagesByGp,
   submitActivityProfile,
@@ -380,23 +382,6 @@ const FARM_TYPE_OPTIONS = ["Seasonal", "Perennial"];
 const FARM_SEASON_OPTIONS = ["Rabi", "Kharif", "Summer", "Winter", "Rainy"];
 const FARM_LAND_OPTIONS = ["Tilla", "Low", "Plain"];
 const FARM_PRODUCTION_UNIT_OPTIONS = ["KG", "Quintal"];
-const TRAINING_TRADE_OPTIONS = [
-  "Tailoring",
-  "Piggery",
-  "Poultry",
-  "Fishery",
-  "Goat Rearing",
-  "Mushroom Cultivation",
-  "Handicraft"
-];
-const TRAINING_THROUGH_OPTIONS = [
-  "TRLM",
-  "RSETI",
-  "KVK",
-  "NGO",
-  "Block Office",
-  "Self Sponsored"
-];
 const SUPPORT_ACTIVITY_OPTIONS = [
   "Paddy Cultivation",
   "Vegetable Farming",
@@ -519,6 +504,8 @@ export default function DashboardHomeTab({
   const [unitOfAreaRecords, setUnitOfAreaRecords] = useState([]);
   const [seasonRecords, setSeasonRecords] = useState([]);
   const [landTypeRecords, setLandTypeRecords] = useState([]);
+  const [tradeRecords, setTradeRecords] = useState([]);
+  const [trainingAgencyRecords, setTrainingAgencyRecords] = useState([]);
   // Confirmed live via /api/activity-type/get-all: [{ActivityTypeId:1,
   // ActivityTypeName:"Seasonal"},{ActivityTypeId:2,ActivityTypeName:"Perennial"}].
   // Kept as a fallback matching the confirmed values in case this hasn't
@@ -1531,19 +1518,21 @@ export default function DashboardHomeTab({
     ].join("\n");
   };
 
-  // NOTE ON TRADE IDs: the schema for /api/technical-support/save wants
-  // skillTradeId / edpTradeId / requiredTradeId as integers, but this form
-  // only ever captures the trade as a free-typed name (EditableSelect has
-  // no trade-master lookup wired to it - none of the endpoints you shared
-  // return trade records with ids). Until there's a trades master list to
-  // resolve a name -> id, these are sent as 0 and the typed name is kept
-  // in the on-screen summary only. Flagging this rather than inventing IDs
-  // that would silently write wrong data.
+  // technicalSupportForm.skillDate/edpDate are stored in DD-MM-YYYY display
+  // format (see formatIsoDateToDisplay, used when the date picker confirms
+  // a selection) - not ISO. new Date("16-09-2026") is not a format the JS
+  // Date parser understands, so it silently produced Invalid Date here and
+  // this always returned null regardless of what date was actually picked.
+  // Confirmed live: the request payload showed skillTrainingDate/
+  // edpTrainingDate as null even after selecting a real date, and the
+  // saved record came back with both dates null. Converting back to ISO
+  // via formatDisplayDateToIso first fixes it.
   const toIsoDateOrNull = (value) => {
-    if (!value) {
+    const isoValue = formatDisplayDateToIso(value);
+    if (!isoValue) {
       return null;
     }
-    const parsed = new Date(value);
+    const parsed = new Date(isoValue);
     return Number.isNaN(parsed.getTime()) ? null : parsed.toISOString();
   };
 
@@ -1552,19 +1541,33 @@ export default function DashboardHomeTab({
       return;
     }
 
+    // Trade/agency ids resolved from /api/trade/get-all and
+    // /api/training-agency/get-all instead of hardcoded 0 - previously
+    // whatever the user picked in these dropdowns was silently discarded
+    // and the server always got 0 regardless of the selection.
+    const resolveTradeId = (name) =>
+      tradeRecords.find((item) => item.name === name)?.id || 0;
+    const resolveAgencyId = (name) =>
+      trainingAgencyRecords.find((item) => item.name === name)?.id || 0;
+
     const payload = {
-      technicalSupportId: 0,
+      // null (not 0) signals "create new" - confirmed on income-profile/save
+      // that an explicit 0 can be misread as an existing record's id.
+      technicalSupportId: null,
+      // shgMemberId comes from selectedAssignedMember, sourced from the SHG
+      // Livelihood member API (fetchShgMembersByVillage) - same as SHG
+      // Tracking and Income/Investment Profile.
       shgMemberId: selectedAssignedMember?.id || 0,
       hasSkillTraining: technicalSupportForm.havingSkillTraining === "Yes",
-      skillTradeId: 0,
+      skillTradeId: resolveTradeId(technicalSupportForm.skillTrade),
       skillTrainingDate: toIsoDateOrNull(technicalSupportForm.skillDate),
-      skillAgencyId: 0,
+      skillAgencyId: resolveAgencyId(technicalSupportForm.skillThrough),
       hasEDPTraining: technicalSupportForm.havingEdpTraining === "Yes",
-      edpTradeId: 0,
+      edpTradeId: resolveTradeId(technicalSupportForm.edpTrade),
       edpTrainingDate: toIsoDateOrNull(technicalSupportForm.edpDate),
-      edpAagencyId: 0,
+      edpAagencyId: resolveAgencyId(technicalSupportForm.edpThrough),
       trainingRequired: technicalSupportForm.trainingRequirement === "Yes",
-      requiredTradeId: 0
+      requiredTradeId: resolveTradeId(technicalSupportForm.trainingRequiredTrade)
     };
 
     try {
@@ -2357,7 +2360,9 @@ export default function DashboardHomeTab({
         fetchSubCategoriesByActivity(2), // Fishery Based
         fetchActivities(),
         fetchProductionMaster(),
-        fetchActivityTypes()
+        fetchActivityTypes(),
+        fetchTradeOptions(),
+        fetchTrainingAgencyOptions()
       ]);
 
       if (!active) {
@@ -2373,7 +2378,9 @@ export default function DashboardHomeTab({
         fisheryRes,
         activitiesRes,
         productionRes,
-        activityTypesRes
+        activityTypesRes,
+        tradeRes,
+        trainingAgencyRes
       ] = results;
 
       if (crpTypesRes.status === "fulfilled" && crpTypesRes.value.length) {
@@ -2402,6 +2409,12 @@ export default function DashboardHomeTab({
       }
       if (activityTypesRes.status === "fulfilled" && activityTypesRes.value.length) {
         setActivityTypeRecords(activityTypesRes.value);
+      }
+      if (tradeRes.status === "fulfilled" && tradeRes.value.length) {
+        setTradeRecords(tradeRes.value);
+      }
+      if (trainingAgencyRes.status === "fulfilled" && trainingAgencyRes.value.length) {
+        setTrainingAgencyRecords(trainingAgencyRes.value);
       }
       if (activitiesRes.status === "fulfilled" && activitiesRes.value.length) {
         // "Non-Farm" category (CategoryId 2) activity names are exactly
@@ -5638,8 +5651,8 @@ export default function DashboardHomeTab({
 
   if (homeView === "technicalSupportTech") {
     const yesNoOptions = ["Yes", "No"];
-    const tradeOptions = TRAINING_TRADE_OPTIONS;
-    const throughOptions = TRAINING_THROUGH_OPTIONS;
+    const tradeOptions = tradeRecords.map((item) => item.name);
+    const throughOptions = trainingAgencyRecords.map((item) => item.name);
 
     return (
       <View style={pageStyles.screen}>
