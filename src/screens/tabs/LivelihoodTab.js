@@ -3,11 +3,14 @@ import { Pressable, Text, View } from "react-native";
 import LabelInput from "../../components/LabelInput";
 import Pill from "../../components/Pill";
 import PrimaryButton from "../../components/PrimaryButton";
+import { useI18n } from "../../i18n/I18nProvider";
 import styles from "../../styles/appStyles";
 
 const TYPES = ["Farm", "Livestock", "Fishery", "Non-Farm"];
 
 export default function LivelihoodTab({ livelihood, setLivelihood, onSave }) {
+  const { t } = useI18n();
+
   return (
     <View style={styles.tabContent}>
       <View style={styles.rowWrap}>
@@ -23,7 +26,7 @@ export default function LivelihoodTab({ livelihood, setLivelihood, onSave }) {
 
       {livelihood.type === "Farm" ? (
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Farm Activity Screen</Text>
+          <Text style={styles.cardTitle}>{t("Farm Activity Screen")}</Text>
           <LabelInput
             label="Crop Type Dropdown"
             value={livelihood.fields.cropType}
@@ -72,7 +75,7 @@ export default function LivelihoodTab({ livelihood, setLivelihood, onSave }) {
             keyboardType="numeric"
           />
           <Pressable style={styles.outlineButton}>
-            <Text style={styles.outlineText}>Upload Image</Text>
+            <Text style={styles.outlineText}>{t("Upload Image")}</Text>
           </Pressable>
           <PrimaryButton label="Save" onPress={onSave} />
         </View>
@@ -80,7 +83,7 @@ export default function LivelihoodTab({ livelihood, setLivelihood, onSave }) {
 
       {livelihood.type === "Livestock" ? (
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Livestock Activity Screen</Text>
+          <Text style={styles.cardTitle}>{t("Livestock Activity Screen")}</Text>
           <LabelInput
             label="Animal Type"
             value={livelihood.fields.animalType}
@@ -145,7 +148,7 @@ export default function LivelihoodTab({ livelihood, setLivelihood, onSave }) {
 
       {livelihood.type === "Fishery" ? (
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Fishery Activity Screen</Text>
+          <Text style={styles.cardTitle}>{t("Fishery Activity Screen")}</Text>
           <LabelInput
             label="Pond Size"
             value={livelihood.fields.pondSize}
@@ -199,7 +202,7 @@ export default function LivelihoodTab({ livelihood, setLivelihood, onSave }) {
 
       {livelihood.type === "Non-Farm" ? (
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Non-Farm Enterprise Screen</Text>
+          <Text style={styles.cardTitle}>{t("Non-Farm Enterprise Screen")}</Text>
           <LabelInput
             label="Enterprise Type"
             value={livelihood.fields.enterpriseType}

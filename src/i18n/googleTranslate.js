@@ -5,7 +5,7 @@ const translationListeners = new Set();
 
 function getLanguageCode(language) {
   const normalized = String(language || "en").toLowerCase();
-  const supported = new Set(["en", "hi", "ta", "te", "bn", "mr", "gu", "kn", "ml", "pa"]);
+  const supported = new Set(["en", "hi", "ta", "te", "bn", "mr", "gu", "kn", "ml", "pa", "as"]);
 
   if (supported.has(normalized)) {
     return normalized;

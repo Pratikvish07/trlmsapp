@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
+import as from "./locales/as.json";
 import bn from "./locales/bn.json";
 import en from "./locales/en.json";
 import gu from "./locales/gu.json";
@@ -12,7 +13,7 @@ import ta from "./locales/ta.json";
 import te from "./locales/te.json";
 
 export const LANGUAGE_STORAGE_KEY = "selectedLanguage";
-export const SUPPORTED_LANGUAGE_CODES = ["en", "hi", "ta", "te", "bn", "mr", "gu", "kn", "ml", "pa"];
+export const SUPPORTED_LANGUAGE_CODES = ["en", "hi", "ta", "te", "bn", "mr", "gu", "kn", "ml", "pa", "as"];
 
 const resources = {
   en,
@@ -24,7 +25,8 @@ const resources = {
   gu,
   kn,
   ml,
-  pa
+  pa,
+  as
 };
 
 const languageListeners = new Set();

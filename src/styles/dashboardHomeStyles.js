@@ -1,11 +1,12 @@
 import { StyleSheet } from "react-native";
+import { colors, typography, radii, spacing, sizes } from "./theme";
 
 export const pageStyles = StyleSheet.create({
   screen: {
     paddingVertical: 10,
-    paddingHorizontal: 6,
+    paddingHorizontal: spacing.screenPad,
     position: "relative",
-    backgroundColor: "#eef4ff"
+    backgroundColor: colors.appBg
   },
   bgGlowTop: {
     position: "absolute",
@@ -28,11 +29,11 @@ export const pageStyles = StyleSheet.create({
   frame: {
     borderRadius: 26,
     borderWidth: 1,
-    borderColor: "#d8e3f4",
+    borderColor: colors.border,
     backgroundColor: "rgba(255,255,255,0.94)",
     padding: 14,
     gap: 14,
-    shadowColor: "#1e293b",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.1,
     shadowRadius: 18,
@@ -43,63 +44,69 @@ export const pageStyles = StyleSheet.create({
     width: 74,
     height: 74,
     borderRadius: 22,
-    backgroundColor: "#fff7df",
+    backgroundColor: colors.warningLight,
     borderWidth: 1,
-    borderColor: "#f7d88b",
+    borderColor: colors.warningLight,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.12,
     shadowRadius: 8,
     elevation: 3
   },
-  imageAvatarText: { color: "#8a5a00", fontSize: 20, fontWeight: "900", textAlign: "center" },
-  imageText: { color: "#334155", fontSize: 10, fontWeight: "800", textAlign: "center" },
+  imageAvatarText: { color: colors.warning, fontSize: 20, fontWeight: "900",
+ fontFamily: typography.bold, textAlign: "center" },
+  imageText: { color: colors.textSecondary, fontSize: 10, fontWeight: "800",
+ fontFamily: typography.bold, textAlign: "center" },
   infoCard: {
     flex: 1,
-    backgroundColor: "#16304d",
-    borderRadius: 18,
+    backgroundColor: colors.primaryDark,
+    borderRadius: radii.card,
     paddingVertical: 12,
     paddingHorizontal: 14,
     justifyContent: "center",
     gap: 5
   },
-  infoLine: { color: "#f8fafc", fontSize: 12, fontWeight: "800" },
+  infoLine: { color: colors.textOnPrimary, fontSize: 12, fontWeight: "800",
+ fontFamily: typography.bold, },
   dropdownWrap: { position: "relative", zIndex: 10 },
   dropdownTrigger: {
     borderRadius: 14,
-    backgroundColor: "#4067c2",
+    backgroundColor: colors.primary,
     borderWidth: 1,
-    borderColor: "#2f56a2",
+    borderColor: colors.primary,
     paddingHorizontal: 14,
     paddingVertical: 12,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between"
   },
-  dropdownText: { color: "#ffffff", fontSize: 12, fontWeight: "800", letterSpacing: 0.2 },
-  dropdownArrow: { color: "#fbbf24", fontWeight: "900" },
+  dropdownText: { color: colors.textOnPrimary, fontSize: 12, fontWeight: "800",
+ fontFamily: typography.bold, letterSpacing: 0.2 },
+  dropdownArrow: { color: colors.warning, fontWeight: "900",
+ fontFamily: typography.bold, },
   dropdownMenu: {
     marginTop: 4,
     borderWidth: 1,
-    borderColor: "#3259a3",
+    borderColor: colors.primary,
     borderRadius: 6,
     overflow: "hidden"
   },
-  dropdownItem: { paddingVertical: 9, paddingHorizontal: 10, backgroundColor: "#e6eefc" },
-  dropdownItemActive: { backgroundColor: "#bfd2f7" },
-  dropdownItemText: { color: "#1f2937", fontSize: 12, fontWeight: "700" },
-  dropdownItemTextActive: { color: "#1e3a8a" },
+  dropdownItem: { paddingVertical: 9, paddingHorizontal: 10, backgroundColor: colors.surface },
+  dropdownItemActive: { backgroundColor: colors.surface },
+  dropdownItemText: { color: colors.textPrimary, fontSize: 12, fontWeight: "700",
+ fontFamily: typography.bold, },
+  dropdownItemTextActive: { color: colors.primary },
   dashboardCard: {
-    backgroundColor: "#fffaf0",
+    backgroundColor: colors.warningLight,
     borderWidth: 1,
-    borderColor: "#f2cb73",
+    borderColor: colors.warningLight,
     borderRadius: 24,
     paddingVertical: 16,
     paddingHorizontal: 14,
     gap: 14,
-    shadowColor: "#a16207",
+    shadowColor: colors.warning,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.15,
     shadowRadius: 12,
@@ -112,29 +119,32 @@ export const pageStyles = StyleSheet.create({
     gap: 12
   },
   dashboardEyebrow: {
-    color: "#b45309",
+    color: colors.warning,
     fontSize: 11,
     fontWeight: "900",
+    fontFamily: typography.bold,
     letterSpacing: 1.1,
     textTransform: "uppercase"
   },
   dashboardTitle: {
     fontSize: 32,
-    color: "#102a43",
-    fontWeight: "900"
+    color: colors.textPrimary,
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   dashboardDateBadge: {
     borderRadius: 999,
-    backgroundColor: "#fff1c2",
+    backgroundColor: colors.warningLight,
     borderWidth: 1,
-    borderColor: "#f5cf72",
+    borderColor: colors.warningLight,
     paddingHorizontal: 12,
     paddingVertical: 8
   },
   dashboardDateLabel: {
-    color: "#7c4a03",
+    color: colors.warning,
     fontSize: 11,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   metricGrid: {
     flexDirection: "row",
@@ -144,12 +154,12 @@ export const pageStyles = StyleSheet.create({
   metricStatCard: {
     width: "48%",
     minHeight: 116,
-    borderRadius: 18,
-    backgroundColor: "#ffffff",
+    borderRadius: radii.card,
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: "#e4ebf5",
-    padding: 12,
-    shadowColor: "#1e293b",
+    borderColor: colors.border,
+    padding: spacing.cardPad,
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.06,
     shadowRadius: 10,
@@ -162,21 +172,24 @@ export const pageStyles = StyleSheet.create({
     marginBottom: 10
   },
   metricStatLabel: {
-    color: "#475569",
+    color: colors.textSecondary,
     fontSize: 11,
     fontWeight: "700",
+    fontFamily: typography.bold,
     minHeight: 30
   },
   metricStatValue: {
-    color: "#0f172a",
+    color: colors.textPrimary,
     fontSize: 24,
     fontWeight: "900",
+    fontFamily: typography.bold,
     marginTop: 4
   },
   metricStatHint: {
-    color: "#64748b",
+    color: colors.textSecondary,
     fontSize: 11,
     fontWeight: "600",
+    fontFamily: typography.semiBold,
     marginTop: 6
   },
   metricCompactCard: {
@@ -191,34 +204,37 @@ export const pageStyles = StyleSheet.create({
     gap: 4
   },
   metricCompactLabel: {
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 11,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   metricCompactValue: {
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 14,
     fontWeight: "900",
+    fontFamily: typography.bold,
     textAlign: "right",
     minWidth: 88
   },
   graphPill: {
     alignSelf: "flex-start",
-    backgroundColor: "#2d59cf",
+    backgroundColor: colors.primary,
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 6
   },
-  graphText: { color: "#dbeafe", fontSize: 11, fontWeight: "700" },
+  graphText: { color: "#dbeafe", fontSize: 11, fontWeight: "700",
+ fontFamily: typography.bold, },
   graphPillTeal: {
-    backgroundColor: "#0f766e"
+    backgroundColor: colors.primary
   },
   graphPillOrange: {
-    backgroundColor: "#ea580c"
+    backgroundColor: colors.accent
   },
   dashboardGraphStrip: {
     borderRadius: 18,
-    backgroundColor: "#18375d",
+    backgroundColor: colors.primaryDark,
     padding: 14,
     gap: 12
   },
@@ -226,9 +242,10 @@ export const pageStyles = StyleSheet.create({
     gap: 4
   },
   dashboardGraphStripTitle: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 17,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   dashboardGraphStripHint: {
     color: "#cbd5e1",
@@ -242,8 +259,8 @@ export const pageStyles = StyleSheet.create({
   },
   graphPageCard: {
     borderWidth: 1,
-    borderColor: "#cfe0f5",
-    backgroundColor: "#f8fbff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: 22,
     paddingVertical: 14,
     paddingHorizontal: 12,
@@ -256,21 +273,23 @@ export const pageStyles = StyleSheet.create({
     gap: 12
   },
   graphPageEyebrow: {
-    color: "#295fd6",
+    color: colors.primary,
     fontSize: 11,
     fontWeight: "900",
+    fontFamily: typography.bold,
     textTransform: "uppercase",
     letterSpacing: 1
   },
   graphPageTitle: {
-    color: "#102a43",
+    color: colors.textPrimary,
     fontSize: 20,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   graphTotalBadge: {
     minWidth: 88,
     borderRadius: 18,
-    backgroundColor: "#16304d",
+    backgroundColor: colors.primaryDark,
     paddingHorizontal: 12,
     paddingVertical: 10,
     alignItems: "center"
@@ -278,25 +297,28 @@ export const pageStyles = StyleSheet.create({
   graphTotalBadgeLabel: {
     color: "#cbd5e1",
     fontSize: 10,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   graphTotalBadgeValue: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 20,
     fontWeight: "900",
+    fontFamily: typography.bold,
     marginTop: 2
   },
   graphSpotlightCard: {
     borderRadius: 20,
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: "#dde7f5",
-    padding: 14
+    borderColor: colors.border,
+    padding: spacing.cardPad
   },
   graphSpotlightTitle: {
-    color: "#102a43",
+    color: colors.textPrimary,
     fontSize: 15,
     fontWeight: "800",
+    fontFamily: typography.bold,
     marginBottom: 10
   },
   graphSpotlightBars: {
@@ -312,15 +334,16 @@ export const pageStyles = StyleSheet.create({
     gap: 8
   },
   graphSpotlightValue: {
-    color: "#102a43",
+    color: colors.textPrimary,
     fontSize: 11,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   graphSpotlightTrack: {
     width: "100%",
     height: 140,
     borderRadius: 18,
-    backgroundColor: "#edf3fb",
+    backgroundColor: colors.surface,
     justifyContent: "flex-end",
     overflow: "hidden"
   },
@@ -330,19 +353,20 @@ export const pageStyles = StyleSheet.create({
     minHeight: 12
   },
   graphSpotlightLabel: {
-    color: "#475569",
+    color: colors.textSecondary,
     fontSize: 10,
     fontWeight: "700",
+    fontFamily: typography.bold,
     textAlign: "center"
   },
   legendWrap: {
     gap: 10
   },
   legendCard: {
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
-    borderRadius: 16,
+    borderColor: colors.border,
+    borderRadius: radii.card,
     paddingVertical: 10,
     paddingHorizontal: 12,
     gap: 8
@@ -359,19 +383,21 @@ export const pageStyles = StyleSheet.create({
   },
   legendLabel: {
     flex: 1,
-    color: "#1f2937",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   legendValue: {
-    color: "#0f172a",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   legendProgressTrack: {
     height: 8,
     borderRadius: 999,
-    backgroundColor: "#e7eef8",
+    backgroundColor: colors.surface,
     overflow: "hidden"
   },
   legendProgressFill: {
@@ -382,34 +408,36 @@ export const pageStyles = StyleSheet.create({
   backToDashboardBtn: {
     alignSelf: "center",
     minWidth: 180,
-    backgroundColor: "#1e3a8a",
+    backgroundColor: colors.primary,
     borderWidth: 1,
-    borderColor: "#1e40af",
-    borderRadius: 14,
+    borderColor: colors.primary,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 16
   },
   backToDashboardText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   quickActionsCard: {
     borderWidth: 1,
-    borderColor: "#dbe5ef",
-    backgroundColor: "#ffffff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: 22,
     paddingHorizontal: 14,
     paddingVertical: 14,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.06,
     shadowRadius: 10,
     elevation: 1
   },
-  quickActionsTitle: { color: "#111827", fontSize: 18, fontWeight: "800" },
+  quickActionsTitle: { color: colors.textPrimary, fontSize: 18, fontWeight: "800",
+ fontFamily: typography.bold, },
   actionsRow: { flexDirection: "row", gap: 8, marginTop: 8 },
   submitActionRow: {
     flexDirection: "row",
@@ -418,40 +446,42 @@ export const pageStyles = StyleSheet.create({
   },
   graphActionBtn: {
     flex: 1,
-    backgroundColor: "#2f4cb5",
-    borderRadius: 12,
+    backgroundColor: colors.primary,
+    borderRadius: radii.button,
     minHeight: 46,
     alignItems: "center",
     justifyContent: "center"
   },
   graphActionBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 15,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   submitActionBtn: {
     minWidth: 104,
-    backgroundColor: "#f59e0b",
-    borderRadius: 12,
+    backgroundColor: colors.warning,
+    borderRadius: radii.button,
     paddingHorizontal: 16,
     minHeight: 46,
     alignItems: "center",
     justifyContent: "center"
   },
   submitActionBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 15,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   dashboardInlineAlert: {
     marginTop: 12,
     gap: 12,
     borderWidth: 1,
-    borderColor: "#fed7aa",
+    borderColor: colors.accentLight,
     borderRadius: 18,
-    backgroundColor: "#fff7ed",
+    backgroundColor: colors.accentLight,
     padding: 14,
-    shadowColor: "#c2410c",
+    shadowColor: colors.accent,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
     shadowRadius: 8,
@@ -466,28 +496,31 @@ export const pageStyles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: "#f97316",
+    backgroundColor: colors.accent,
     alignItems: "center",
     justifyContent: "center"
   },
   dashboardInlineAlertBadgeText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 18,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   dashboardInlineAlertCopy: {
     flex: 1,
     gap: 2
   },
   dashboardInlineAlertTitle: {
-    color: "#9a3412",
+    color: colors.accent,
     fontSize: 14,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   dashboardInlineAlertSubtitle: {
-    color: "#c2410c",
+    color: colors.accent,
     fontSize: 11,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   dashboardInlineAlertList: {
     gap: 8
@@ -497,9 +530,9 @@ export const pageStyles = StyleSheet.create({
     alignItems: "flex-start",
     gap: 8,
     borderRadius: 12,
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: "#ffedd5",
+    borderColor: colors.accentLight,
     paddingHorizontal: 10,
     paddingVertical: 10
   },
@@ -507,27 +540,29 @@ export const pageStyles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: "#fb923c",
+    backgroundColor: colors.accent,
     marginTop: 4
   },
   dashboardInlineAlertText: {
     flex: 1,
-    color: "#7c2d12",
+    color: colors.accent,
     fontSize: 12,
     fontWeight: "700",
+    fontFamily: typography.bold,
     lineHeight: 18
   },
   dashboardActivityPanel: {
     marginTop: 12,
-    borderRadius: 16,
-    backgroundColor: "#18375d",
+    borderRadius: radii.card,
+    backgroundColor: colors.primaryDark,
     minHeight: 124,
-    padding: 14
+    padding: spacing.cardPad
   },
   dashboardActivityTitle: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 16,
     fontWeight: "800",
+    fontFamily: typography.bold,
     textDecorationLine: "underline"
   },
   dashboardActivityLine: {
@@ -553,9 +588,9 @@ export const pageStyles = StyleSheet.create({
   },
   alertPopupCard: {
     borderWidth: 1,
-    borderColor: "#111827",
-    backgroundColor: "#f8edd7",
-    borderRadius: 18,
+    borderColor: colors.textPrimary,
+    backgroundColor: colors.warningLight,
+    borderRadius: radii.card,
     paddingHorizontal: 12,
     paddingVertical: 10,
     shadowColor: "#000000",
@@ -573,44 +608,48 @@ export const pageStyles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: "#f59e0b",
+    backgroundColor: colors.warning,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: "#d97706"
+    borderColor: colors.warning
   },
   dashboardAlertIcon: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 18,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   dashboardAlertCopy: {
     flex: 1,
     gap: 1
   },
   dashboardAlertTitle: {
-    color: "#9a3412",
+    color: colors.accent,
     fontSize: 18,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   dashboardAlertHint: {
-    color: "#7c2d12",
+    color: colors.accent,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   dashboardAlertBadge: {
     minWidth: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: "#dc2626",
+    backgroundColor: colors.error,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 6
   },
   dashboardAlertBadgeText: {
-      color: "#ffffff",
+      color: colors.textOnPrimary,
       fontSize: 12,
-      fontWeight: "900"
+      fontWeight: "900",
+      fontFamily: typography.bold,
     },
     dashboardAlertList: {
       marginTop: 10,
@@ -625,58 +664,61 @@ export const pageStyles = StyleSheet.create({
       width: 8,
       height: 8,
       borderRadius: 4,
-      backgroundColor: "#f59e0b",
+      backgroundColor: colors.warning,
       marginTop: 5
     },
     dashboardAlertListText: {
       flex: 1,
-      color: "#7c2d12",
+      color: colors.accent,
       fontSize: 12,
       fontWeight: "700",
+      fontFamily: typography.bold,
       lineHeight: 18
     },
     actionBtnMuted: {
       flex: 1,
-      backgroundColor: "#e5e7eb",
+      backgroundColor: colors.border,
       borderWidth: 1,
-      borderColor: "#cbd5e1",
+      borderColor: colors.inputBorder,
       borderRadius: 18,
       minHeight: 76,
       alignItems: "center",
       justifyContent: "center",
       paddingHorizontal: 6,
-      shadowColor: "#334155",
+      shadowColor: colors.textSecondary,
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.08,
       shadowRadius: 3,
       elevation: 1
     },
     actionBtnAmber: {
-      backgroundColor: "#fff4d6",
-      borderColor: "#f5cf72"
+      backgroundColor: colors.warningLight,
+      borderColor: colors.warningLight
     },
     actionBtnSlate: {
-      backgroundColor: "#eef4ff",
-      borderColor: "#bfd2f7"
+      backgroundColor: colors.surface,
+      borderColor: colors.border
     },
     actionBtnPrimary: {
       flex: 1,
-      backgroundColor: "#0f766e",
+      backgroundColor: colors.primary,
       borderWidth: 1,
-      borderColor: "#0f766e",
+      borderColor: colors.primary,
       borderRadius: 18,
       minHeight: 76,
       alignItems: "center",
       justifyContent: "center",
       paddingHorizontal: 6,
-      shadowColor: "#0f766e",
+      shadowColor: colors.primary,
       shadowOffset: { width: 0, height: 3 },
       shadowOpacity: 0.24,
       shadowRadius: 5,
       elevation: 2
     },
-  actionTextMuted: { color: "#1f2937", fontSize: 12, fontWeight: "700", textAlign: "center" },
-  actionTextPrimary: { color: "#ffffff", fontSize: 12, fontWeight: "800", textAlign: "center" }
+  actionTextMuted: { color: colors.textPrimary, fontSize: 12, fontWeight: "700",
+ fontFamily: typography.bold, textAlign: "center" },
+  actionTextPrimary: { color: colors.textOnPrimary, fontSize: 12, fontWeight: "800",
+ fontFamily: typography.bold, textAlign: "center" }
 });
 
 export const wrStyles = StyleSheet.create({
@@ -684,8 +726,8 @@ export const wrStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#d6e0eb",
-    backgroundColor: "#f8fbff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: 14,
     overflow: "hidden"
   },
@@ -693,42 +735,46 @@ export const wrStyles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 8,
     paddingVertical: 8,
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 13,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   metricValueBox: {
     width: 62,
-    backgroundColor: "#1e3a8a",
+    backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 10
   },
-  metricValueText: { color: "#ffffff", fontWeight: "800", fontSize: 13 },
+  metricValueText: { color: colors.textOnPrimary, fontWeight: "800",
+ fontFamily: typography.bold, fontSize: 13 },
   metricInput: {
     width: 86,
-    backgroundColor: "#1e3a8a",
-    color: "#ffffff",
+    backgroundColor: colors.primary,
+    color: colors.textOnPrimary,
     fontWeight: "700",
+    fontFamily: typography.bold,
     paddingHorizontal: 8,
     paddingVertical: 10
   },
   submitRow: { flexDirection: "row", gap: 8 },
   reportWorkflowCard: {
     borderWidth: 1,
-    borderColor: "#d6e0eb",
-    backgroundColor: "#f8fbff",
-    borderRadius: 16,
-    padding: 12,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.cardPad,
     gap: 8
   },
   workflowTitle: {
-    color: "#102a43",
+    color: colors.textPrimary,
     fontSize: 15,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   workflowHint: {
-    color: "#475569",
+    color: colors.textSecondary,
     fontSize: 12,
     lineHeight: 18
   },
@@ -739,15 +785,17 @@ export const wrStyles = StyleSheet.create({
   },
   workflowLabel: {
     width: 118,
-    color: "#1f2937",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   workflowValue: {
     flex: 1,
-    color: "#0f172a",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   workflowMediaRow: {
     flexDirection: "row",
@@ -756,21 +804,22 @@ export const wrStyles = StyleSheet.create({
   },
   mediaBtn: {
     flex: 1,
-    backgroundColor: "#dbeafe",
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: "#93c5fd",
-    borderRadius: 10,
+    borderColor: colors.border,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 10
   },
   mediaBtnText: {
-    color: "#1d4ed8",
+    color: colors.primary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   mediaStatusText: {
-    color: "#334155",
+    color: colors.textSecondary,
     fontSize: 12
   },
   workflowActions: {
@@ -780,59 +829,64 @@ export const wrStyles = StyleSheet.create({
   },
   locationBtn: {
     flex: 1,
-    backgroundColor: "#1e40af",
+    backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12,
-    borderRadius: 12
+    borderRadius: radii.button
   },
   locationBtnText: {
     color: "#dbeafe",
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   graphBtn: {
     flex: 1,
-    backgroundColor: "#1e40af",
+    backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12,
-    borderRadius: 12
+    borderRadius: radii.button
   },
-  graphBtnText: { color: "#dbeafe", fontWeight: "700" },
+  graphBtnText: { color: "#dbeafe", fontWeight: "700",
+ fontFamily: typography.bold, },
   submitBtn: {
     width: 84,
-    backgroundColor: "#d97706",
+    backgroundColor: colors.warning,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 12
+    borderRadius: radii.button
   },
-  submitBtnText: { color: "#ffffff", fontWeight: "800" },
+  submitBtnText: { color: colors.textOnPrimary, fontWeight: "800",
+ fontFamily: typography.bold, },
   distanceText: {
-    color: "#0f172a",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   alertRow: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#d6e0eb",
-    backgroundColor: "#fffdf8",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: 14
   },
-  alertDot: { width: 12, height: 12, borderRadius: 6, marginHorizontal: 8, backgroundColor: "#f97316" },
-  alertText: { flex: 1, fontSize: 12, color: "#1f2937", paddingVertical: 8, paddingRight: 8 },
+  alertDot: { width: 12, height: 12, borderRadius: 6, marginHorizontal: 8, backgroundColor: colors.accent },
+  alertText: { flex: 1, fontSize: 12, color: colors.textPrimary, paddingVertical: 8, paddingRight: 8 },
   activityCard: {
     borderWidth: 1,
-    borderColor: "#cfe0ff",
-    backgroundColor: "#143d73",
-    padding: 14,
+    borderColor: colors.border,
+    backgroundColor: colors.primaryDark,
+    padding: spacing.cardPad,
     minHeight: 128,
-    borderRadius: 16
+    borderRadius: radii.card
   },
   activityTitle: {
     color: "#eff6ff",
     fontWeight: "800",
+    fontFamily: typography.bold,
     textDecorationLine: "underline",
     textAlign: "center",
     marginBottom: 8
@@ -840,12 +894,13 @@ export const wrStyles = StyleSheet.create({
   activityLine: { color: "#e2e8f0", fontSize: 12, marginTop: 2 },
   backBtn: {
     alignSelf: "flex-end",
-    backgroundColor: "#102a43",
+    backgroundColor: colors.primaryDark,
     paddingHorizontal: 14,
     paddingVertical: 9,
-    borderRadius: 12
+    borderRadius: radii.button
   },
-  backBtnText: { color: "#ffffff", fontSize: 11, fontWeight: "700" }
+  backBtnText: { color: colors.textOnPrimary, fontSize: 11, fontWeight: "700",
+ fontFamily: typography.bold, }
 });
 
 export const neStyles = StyleSheet.create({
@@ -853,8 +908,8 @@ export const neStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#d6e0eb",
-    backgroundColor: "#f8fbff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 14,
@@ -862,20 +917,22 @@ export const neStyles = StyleSheet.create({
   },
   fieldLabel: {
     width: 88,
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   fieldValue: {
     flex: 1,
-    color: "#1f2937",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   selectStrip: {
-    backgroundColor: "#143d73",
+    backgroundColor: colors.primaryDark,
     borderWidth: 1,
-    borderColor: "#1d4f91",
+    borderColor: colors.primary,
     alignItems: "center",
     paddingVertical: 10,
     borderRadius: 14
@@ -883,6 +940,7 @@ export const neStyles = StyleSheet.create({
   selectText: {
     color: "#dbeafe",
     fontWeight: "700",
+    fontFamily: typography.bold,
     fontSize: 12
   },
   portionRow: {
@@ -891,27 +949,28 @@ export const neStyles = StyleSheet.create({
   },
   portionBtn: {
     flex: 1,
-    backgroundColor: "#1e40af",
+    backgroundColor: colors.primary,
     borderWidth: 1,
-    borderColor: "#1d4ed8",
-    borderRadius: 14,
+    borderColor: colors.primary,
+    borderRadius: radii.button,
     minHeight: 60,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 10
   },
   portionBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 12,
     fontWeight: "800",
+    fontFamily: typography.bold,
     textAlign: "center"
   },
   alertRow: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#d6e0eb",
-    backgroundColor: "#fffdf8",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: 14
   },
   alertDot: {
@@ -919,26 +978,27 @@ export const neStyles = StyleSheet.create({
     height: 14,
     borderRadius: 7,
     marginHorizontal: 8,
-    backgroundColor: "#facc15"
+    backgroundColor: colors.warning
   },
   alertText: {
     flex: 1,
     fontSize: 12,
-    color: "#1f2937",
+    color: colors.textPrimary,
     paddingVertical: 8,
     paddingRight: 8
   },
   activityCard: {
     borderWidth: 1,
-    borderColor: "#f3c78a",
-    backgroundColor: "#b45309",
-    padding: 14,
+    borderColor: colors.warningLight,
+    backgroundColor: colors.warning,
+    padding: spacing.cardPad,
     minHeight: 152,
-    borderRadius: 16
+    borderRadius: radii.card
   },
   activityTitle: {
     color: "#fff7ed",
     fontWeight: "800",
+    fontFamily: typography.bold,
     textDecorationLine: "underline",
     textAlign: "center",
     marginBottom: 8
@@ -953,23 +1013,24 @@ export const neStyles = StyleSheet.create({
 export const smStyles = StyleSheet.create({
   fieldRow: {
     borderWidth: 1,
-    borderColor: "#d6e0eb",
-    backgroundColor: "#f8fbff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 14,
     gap: 6
   },
   fieldLabel: {
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   dropdownTrigger: {
     borderWidth: 1,
-    borderColor: "#c8d5e6",
+    borderColor: colors.border,
     borderRadius: 12,
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.surface,
     paddingHorizontal: 12,
     paddingVertical: 10,
     flexDirection: "row",
@@ -977,41 +1038,45 @@ export const smStyles = StyleSheet.create({
     alignItems: "center"
   },
   dropdownTriggerText: {
-    color: "#1e293b",
+    color: colors.textPrimary,
     fontSize: 12,
     fontWeight: "700",
+    fontFamily: typography.bold,
     flex: 1,
     marginRight: 6
   },
   dropdownArrow: {
-    color: "#334155",
+    color: colors.textSecondary,
     fontSize: 12,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   dropdownMenu: {
     marginTop: 6,
     borderWidth: 1,
-    borderColor: "#c8d5e6",
+    borderColor: colors.border,
     borderRadius: 12,
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.surface,
     overflow: "hidden"
   },
   dropdownItem: {
     paddingHorizontal: 10,
     paddingVertical: 8,
-    backgroundColor: "#ffffff"
+    backgroundColor: colors.surface
   },
   dropdownItemActive: {
-    backgroundColor: "#dbeafe"
+    backgroundColor: colors.surface
   },
   dropdownItemText: {
-    color: "#1e293b",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "600"
+    fontWeight: "600",
+    fontFamily: typography.semiBold,
   },
   dropdownItemTextActive: {
-    color: "#1e3a8a",
-    fontWeight: "800"
+    color: colors.primary,
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   optionRow: {
     flexDirection: "row",
@@ -1020,30 +1085,31 @@ export const smStyles = StyleSheet.create({
   },
   optionPill: {
     borderWidth: 1,
-    borderColor: "#93a3c9",
-    backgroundColor: "#eaf0ff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: 6,
     paddingHorizontal: 8,
     paddingVertical: 4
   },
   optionPillActive: {
-    backgroundColor: "#3b67b8",
-    borderColor: "#3159a5"
+    backgroundColor: colors.primary,
+    borderColor: colors.primary
   },
   optionPillText: {
-    color: "#1e293b",
+    color: colors.textPrimary,
     fontSize: 11,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   optionPillTextActive: {
-    color: "#ffffff"
+    color: colors.textOnPrimary
   },
   readonlyRow: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#d6e0eb",
-    backgroundColor: "#f8fbff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 14,
@@ -1051,46 +1117,50 @@ export const smStyles = StyleSheet.create({
   },
   readonlyLabel: {
     flex: 1,
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   readonlyValue: {
-    color: "#1e3a8a",
+    color: colors.primary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   uploadBtn: {
-    backgroundColor: "#e2e8f0",
+    backgroundColor: colors.border,
     borderWidth: 1,
-    borderColor: "#94a3b8",
-    borderRadius: 4,
+    borderColor: colors.textPlaceholder,
+    borderRadius: radii.button,
     paddingHorizontal: 8,
     paddingVertical: 6
   },
   uploadBtnText: {
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 10,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   previewCard: {
     borderWidth: 1,
-    borderColor: "#d6e0eb",
-    backgroundColor: "#f8fbff",
-    padding: 10,
-    borderRadius: 14,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    padding: spacing.cardPad,
+    borderRadius: radii.card,
     gap: 6
   },
   previewTitle: {
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   previewBox: {
     minHeight: 84,
     borderWidth: 1,
-    borderColor: "#3159a5",
-    backgroundColor: "#3b67b8",
+    borderColor: colors.primary,
+    backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
     padding: 8
@@ -1105,6 +1175,7 @@ export const smStyles = StyleSheet.create({
     color: "#dbeafe",
     fontSize: 14,
     fontWeight: "700",
+    fontFamily: typography.bold,
     textAlign: "center"
   },
   dotToggle: {
@@ -1123,52 +1194,53 @@ export const smStyles = StyleSheet.create({
     paddingVertical: 5
   },
   lhIndicatorBtnOn: {
-    backgroundColor: "#dcfce7",
-    borderColor: "#15803d"
+    backgroundColor: colors.successLight,
+    borderColor: colors.success
   },
   lhIndicatorBtnOff: {
-    backgroundColor: "#e2e8f0",
-    borderColor: "#64748b"
+    backgroundColor: colors.border,
+    borderColor: colors.textSecondary
   },
   lhIndicatorText: {
     fontSize: 11,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   lhIndicatorTextOn: {
-    color: "#166534"
+    color: colors.success
   },
   lhIndicatorTextOff: {
-    color: "#334155"
+    color: colors.textSecondary
   },
   dotToggleOn: {
-    backgroundColor: "#22c55e",
-    borderColor: "#15803d"
+    backgroundColor: colors.success,
+    borderColor: colors.success
   },
   dotToggleOff: {
-    backgroundColor: "#cbd5e1",
-    borderColor: "#94a3b8"
+    backgroundColor: colors.inputBorder,
+    borderColor: colors.textPlaceholder
   },
   cboInput: {
     width: 142,
     borderWidth: 1,
-    borderColor: "#9ca3af",
-    borderRadius: 4,
-    backgroundColor: "#ffffff",
+    borderColor: colors.border,
+    borderRadius: radii.input,
+    backgroundColor: colors.surface,
     paddingHorizontal: 8,
     paddingVertical: 6,
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 12
   },
   cboInputDisabled: {
-    backgroundColor: "#e5e7eb",
-    color: "#64748b"
+    backgroundColor: colors.border,
+    color: colors.textSecondary
   },
   radiusRow: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#d6e0eb",
-    backgroundColor: "#f8fbff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 14,
@@ -1181,22 +1253,23 @@ export const smStyles = StyleSheet.create({
     borderWidth: 1
   },
   radiusStatusIdle: {
-    backgroundColor: "#94a3b8",
-    borderColor: "#64748b"
+    backgroundColor: colors.textPlaceholder,
+    borderColor: colors.textSecondary
   },
   radiusStatusGreen: {
-    backgroundColor: "#22c55e",
-    borderColor: "#15803d"
+    backgroundColor: colors.success,
+    borderColor: colors.success
   },
   radiusStatusRed: {
-    backgroundColor: "#ef4444",
-    borderColor: "#b91c1c"
+    backgroundColor: colors.error,
+    borderColor: colors.error
   },
   radiusText: {
     flex: 1,
     fontSize: 12,
-    color: "#111827",
-    fontWeight: "700"
+    color: colors.textPrimary,
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   bottomRow: {
     flexDirection: "row",
@@ -1204,29 +1277,31 @@ export const smStyles = StyleSheet.create({
   },
   checkBtn: {
     flex: 1,
-    backgroundColor: "#1e40af",
-    borderRadius: 12,
+    backgroundColor: colors.primary,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 11
   },
   checkBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   saveBtn: {
     flex: 1,
-    backgroundColor: "#d97706",
-    borderRadius: 12,
+    backgroundColor: colors.warning,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 11
   },
   saveBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   }
 });
 
@@ -1236,12 +1311,12 @@ export const flowStyles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#0f2f50",
-    borderRadius: 18,
+    borderColor: colors.border,
+    backgroundColor: colors.primaryDark,
+    borderRadius: radii.card,
     paddingHorizontal: 14,
     paddingVertical: 14,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.12,
     shadowRadius: 12,
@@ -1251,9 +1326,9 @@ export const flowStyles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 21,
-    backgroundColor: "#f59e0b",
+    backgroundColor: colors.warning,
     borderWidth: 3,
-    borderColor: "#fde68a"
+    borderColor: colors.warningLight
   },
   statusHeroCopy: {
     flex: 1,
@@ -1263,18 +1338,21 @@ export const flowStyles = StyleSheet.create({
     color: "#bfdbfe",
     fontSize: 10,
     fontWeight: "800",
+    fontFamily: typography.bold,
     letterSpacing: 0.8,
     textTransform: "uppercase"
   },
   statusHeroTitle: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 16,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   statusHeroSubtitle: {
     color: "#dbeafe",
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   statusTitleWrap: {
     marginTop: 14,
@@ -1282,12 +1360,13 @@ export const flowStyles = StyleSheet.create({
     gap: 4
   },
   statusTitle: {
-    color: "#0f172a",
+    color: colors.textPrimary,
     fontSize: 15,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   statusHint: {
-    color: "#64748b",
+    color: colors.textSecondary,
     fontSize: 12,
     lineHeight: 18
   },
@@ -1295,52 +1374,54 @@ export const flowStyles = StyleSheet.create({
     gap: 10
   },
   profileButton: {
-    backgroundColor: "#3157b7",
+    backgroundColor: colors.primary,
     borderWidth: 1,
-    borderColor: "#27479b",
-    borderRadius: 14,
+    borderColor: colors.primary,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 14,
     paddingHorizontal: 12,
-    shadowColor: "#1d4ed8",
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.14,
     shadowRadius: 8,
     elevation: 2
   },
   profileButtonText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 16,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   trackingEntryBtn: {
-    backgroundColor: "#0f766e",
+    backgroundColor: colors.primary,
     borderWidth: 1,
-    borderColor: "#115e59",
-    borderRadius: 14,
+    borderColor: colors.primaryDark,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 14,
     paddingHorizontal: 12,
-    shadowColor: "#0f766e",
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.14,
     shadowRadius: 8,
     elevation: 2
   },
   trackingEntryBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 16,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   statusFooterCard: {
     marginTop: 14,
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#f8fbff",
-    borderRadius: 18,
-    padding: 12,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.cardPad,
     gap: 10
   },
   footerRow: {
@@ -1350,9 +1431,10 @@ export const flowStyles = StyleSheet.create({
     },
   footerStatusText: {
     flex: 1,
-    color: "#334155",
+    color: colors.textSecondary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   geoDot: {
       width: 18,
@@ -1361,68 +1443,71 @@ export const flowStyles = StyleSheet.create({
       borderWidth: 1
   },
   geoDotGreen: {
-    backgroundColor: "#22c55e",
-    borderColor: "#15803d"
+    backgroundColor: colors.success,
+    borderColor: colors.success
   },
   geoDotIdle: {
-    backgroundColor: "#94a3b8",
-    borderColor: "#64748b"
+    backgroundColor: colors.textPlaceholder,
+    borderColor: colors.textSecondary
   },
   geoDotRed: {
-    backgroundColor: "#ef4444",
-    borderColor: "#b91c1c"
+    backgroundColor: colors.error,
+    borderColor: colors.error
   },
   primarySaveBtn: {
       width: "100%",
-      backgroundColor: "#f97316",
+      backgroundColor: colors.accent,
       borderWidth: 1,
-      borderColor: "#c2410c",
-      borderRadius: 14,
+      borderColor: colors.accent,
+      borderRadius: radii.button,
       alignItems: "center",
       justifyContent: "center",
       paddingVertical: 12,
-      shadowColor: "#ea580c",
+      shadowColor: colors.accent,
       shadowOffset: { width: 0, height: 3 },
       shadowOpacity: 0.16,
       shadowRadius: 8,
       elevation: 2
     },
   primarySaveText: {
-      color: "#ffffff",
+      color: colors.textOnPrimary,
       fontSize: 14,
-      fontWeight: "800"
+      fontWeight: "800",
+      fontFamily: typography.bold,
     },
   statusBackBtn: {
       marginTop: 12,
-      backgroundColor: "#1e3a8a",
+      backgroundColor: colors.primary,
       borderWidth: 1,
-      borderColor: "#172554",
-      borderRadius: 14,
+      borderColor: colors.primaryDark,
+      borderRadius: radii.button,
       alignItems: "center",
       justifyContent: "center",
       paddingVertical: 12
     },
   statusBackBtnText: {
-        color: "#ffffff",
+        color: colors.textOnPrimary,
         fontSize: 13,
-        fontWeight: "800"
+        fontWeight: "800",
+        fontFamily: typography.bold,
       },
     trackingCard: {
       marginTop: 10,
       borderWidth: 1,
-      borderColor: "#cbd5e1",
-      backgroundColor: "#f8fafc",
+      borderColor: colors.inputBorder,
+      backgroundColor: colors.surface,
       borderRadius: 10,
       padding: 10,
       gap: 8
     },
     trackingTitle: {
-      color: "#111827",
+      color: colors.textPrimary,
       fontSize: 13,
-      fontWeight: "900"
+      fontWeight: "900",
+      fontFamily: typography.bold,
     },
     trackingHint: {
-      color: "#475569",
+      color: colors.textSecondary,
       fontSize: 11,
       lineHeight: 16
     },
@@ -1432,9 +1517,9 @@ export const flowStyles = StyleSheet.create({
     },
     secondaryTrackBtn: {
       flex: 1,
-      backgroundColor: "#dbeafe",
+      backgroundColor: colors.surface,
       borderWidth: 1,
-      borderColor: "#93c5fd",
+      borderColor: colors.border,
       borderRadius: 8,
       alignItems: "center",
       justifyContent: "center",
@@ -1442,25 +1527,27 @@ export const flowStyles = StyleSheet.create({
       paddingHorizontal: 8
     },
     secondaryTrackBtnText: {
-      color: "#1d4ed8",
+      color: colors.primary,
       fontSize: 11,
       fontWeight: "800",
+      fontFamily: typography.bold,
       textAlign: "center"
     },
     mediaMetaText: {
-      color: "#334155",
+      color: colors.textSecondary,
       fontSize: 11,
-      fontWeight: "700"
+      fontWeight: "700",
+      fontFamily: typography.bold,
     },
   remarksInput: {
       minHeight: 70,
       borderWidth: 1,
-      borderColor: "#cbd5e1",
+      borderColor: colors.inputBorder,
       borderRadius: 8,
-      backgroundColor: "#ffffff",
+      backgroundColor: colors.surface,
       paddingHorizontal: 10,
       paddingVertical: 8,
-      color: "#111827",
+      color: colors.textPrimary,
       textAlignVertical: "top"
     },
     trackingShell: {
@@ -1469,11 +1556,11 @@ export const flowStyles = StyleSheet.create({
       alignSelf: "center",
       borderRadius: 22,
       borderWidth: 1,
-      borderColor: "#dbe7f3",
-      backgroundColor: "#f7fbff",
+      borderColor: colors.border,
+      backgroundColor: colors.surface,
       padding: 16,
       gap: 14,
-      shadowColor: "#0f172a",
+      shadowColor: colors.textPrimary,
       shadowOffset: { width: 0, height: 6 },
       shadowOpacity: 0.08,
       shadowRadius: 14,
@@ -1483,46 +1570,48 @@ export const flowStyles = StyleSheet.create({
       gap: 8,
       padding: 16,
       borderWidth: 1,
-      borderColor: "#e2ebf5",
+      borderColor: colors.border,
       borderRadius: 18,
       backgroundColor: "rgba(255,255,255,0.92)"
     },
     trackingTitleWrap: {
       alignSelf: "flex-start",
       borderWidth: 1,
-      borderColor: "#d7e2ee",
-      backgroundColor: "#ffffff",
+      borderColor: colors.border,
+      backgroundColor: colors.surface,
       borderRadius: 14,
       paddingHorizontal: 14,
       paddingVertical: 9,
-      shadowColor: "#0f172a",
+      shadowColor: colors.textPrimary,
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.05,
       shadowRadius: 6,
       elevation: 1
     },
     trackingHeroTitle: {
-      color: "#0f172a",
+      color: colors.textPrimary,
       fontSize: 21,
-      fontWeight: "900"
+      fontWeight: "900",
+      fontFamily: typography.bold,
     },
     trackingEyebrow: {
       alignSelf: "flex-start",
-      color: "#1d4ed8",
+      color: colors.primary,
       fontSize: 12,
       fontWeight: "900",
+      fontFamily: typography.bold,
       textTransform: "uppercase",
       letterSpacing: 0.6
     },
     trackingHeroHint: {
-      color: "#64748b",
+      color: colors.textSecondary,
       fontSize: 12,
       lineHeight: 18
     },
     trackingMemberCard: {
       borderWidth: 1,
-      borderColor: "#dbe7f3",
-      backgroundColor: "#ffffff",
+      borderColor: colors.border,
+      backgroundColor: colors.surface,
       borderRadius: 18,
       padding: 14,
       gap: 10
@@ -1534,27 +1623,29 @@ export const flowStyles = StyleSheet.create({
       gap: 12
     },
     trackingMemberLabel: {
-      color: "#64748b",
+      color: colors.textSecondary,
       fontSize: 11,
       fontWeight: "800",
+      fontFamily: typography.bold,
       textTransform: "uppercase",
       letterSpacing: 0.4
     },
     trackingMemberValue: {
       flex: 1,
-      color: "#102a43",
+      color: colors.textPrimary,
       fontSize: 14,
       fontWeight: "800",
+      fontFamily: typography.bold,
       textAlign: "right"
     },
     trackingStatusCard: {
       borderWidth: 1,
-      borderColor: "#dbe7f3",
-      backgroundColor: "#ffffff",
+      borderColor: colors.border,
+      backgroundColor: colors.surface,
       borderRadius: 18,
       padding: 14,
       gap: 12,
-      shadowColor: "#0f172a",
+      shadowColor: colors.textPrimary,
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.04,
       shadowRadius: 10,
@@ -1565,29 +1656,31 @@ export const flowStyles = StyleSheet.create({
     },
     trackingStatusPill: {
       borderWidth: 1,
-      borderColor: "#dbe7f3",
-      backgroundColor: "#f8fbff",
+      borderColor: colors.border,
+      backgroundColor: colors.surface,
       borderRadius: 12,
       paddingHorizontal: 12,
       paddingVertical: 10
     },
     trackingStatusLabel: {
-      color: "#64748b",
+      color: colors.textSecondary,
       fontSize: 10,
       fontWeight: "800",
+      fontFamily: typography.bold,
       textTransform: "uppercase",
       letterSpacing: 0.5
     },
     trackingStatusValue: {
-      color: "#102a43",
+      color: colors.textPrimary,
       fontSize: 12,
       fontWeight: "800",
+      fontFamily: typography.bold,
       marginTop: 3
     },
     trackingFooterCard: {
       borderWidth: 1,
-      borderColor: "#dbe7f3",
-      backgroundColor: "#ffffff",
+      borderColor: colors.border,
+      backgroundColor: colors.surface,
       borderRadius: 18,
       padding: 12,
       gap: 12
@@ -1598,9 +1691,10 @@ export const flowStyles = StyleSheet.create({
       gap: 10
     },
     formTitle: {
-      color: "#111827",
+      color: colors.textPrimary,
       fontSize: 15,
-      fontWeight: "800"
+      fontWeight: "800",
+      fontFamily: typography.bold,
   },
   investmentShell: {
     width: "100%",
@@ -1608,11 +1702,11 @@ export const flowStyles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 22,
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#f7fbff",
-    padding: 16,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    padding: spacing.cardPad,
     gap: 14,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.08,
     shadowRadius: 14,
@@ -1622,51 +1716,53 @@ export const flowStyles = StyleSheet.create({
     gap: 8,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#e2ebf5",
-    borderRadius: 18,
+    borderColor: colors.border,
+    borderRadius: radii.card,
     backgroundColor: "rgba(255,255,255,0.92)"
   },
   investmentTitleWrap: {
     alignSelf: "flex-start",
     borderWidth: 1,
-    borderColor: "#d7e2ee",
-    backgroundColor: "#ffffff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 9,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 6,
     elevation: 1
   },
   investmentTitle: {
-    color: "#0f172a",
+    color: colors.textPrimary,
     fontSize: 21,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   investmentEyebrow: {
     alignSelf: "flex-start",
-    color: "#1d4ed8",
+    color: colors.primary,
     fontSize: 12,
     fontWeight: "900",
+    fontFamily: typography.bold,
     textTransform: "uppercase",
     letterSpacing: 0.6
   },
   investmentHint: {
-    color: "#64748b",
+    color: colors.textSecondary,
     fontSize: 12,
     lineHeight: 18
   },
   investmentCard: {
     width: "100%",
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#ffffff",
-    borderRadius: 18,
-    padding: 14,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.cardPad,
     gap: 12,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.04,
     shadowRadius: 10,
@@ -1679,20 +1775,22 @@ export const flowStyles = StyleSheet.create({
   },
   investmentFieldLabel: {
     flex: 1,
-    color: "#334155",
+    color: colors.textSecondary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   investmentInput: {
     width: 116,
     minHeight: 40,
     borderWidth: 1,
-    borderColor: "#cbd5e1",
-    borderRadius: 10,
-    backgroundColor: "#ffffff",
-    color: "#111827",
+    borderColor: colors.inputBorder,
+    borderRadius: radii.input,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
     fontSize: 13,
     fontWeight: "700",
+    fontFamily: typography.bold,
     paddingHorizontal: 10,
     paddingVertical: 8
   },
@@ -1706,40 +1804,42 @@ export const flowStyles = StyleSheet.create({
   investmentSaveBtn: {
     flex: 1,
     minHeight: 48,
-    backgroundColor: "#f97316",
+    backgroundColor: colors.accent,
     borderWidth: 1,
-    borderColor: "#c2410c",
-    borderRadius: 14,
+    borderColor: colors.accent,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 16,
-    shadowColor: "#ea580c",
+    shadowColor: colors.accent,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.16,
     shadowRadius: 8,
     elevation: 2
   },
   investmentSaveBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 14,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   investmentBackBtn: {
     minWidth: 116,
     maxWidth: 140,
     minHeight: 40,
-    backgroundColor: "#16385f",
+    backgroundColor: colors.primaryDark,
     borderWidth: 1,
-    borderColor: "#102a43",
-    borderRadius: 14,
+    borderColor: colors.primaryDark,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 14
   },
   investmentBackBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 11,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   formRow: {
     flexDirection: "row",
@@ -1749,21 +1849,23 @@ export const flowStyles = StyleSheet.create({
   },
   formLabel: {
     flex: 1,
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   input: {
     width: 128,
     borderWidth: 1,
-    borderColor: "#9ca3af",
-    borderRadius: 4,
-    backgroundColor: "#ffffff",
-    color: "#111827",
+    borderColor: colors.border,
+    borderRadius: radii.input,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
     paddingHorizontal: 8,
     paddingVertical: 6,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   ddWrap: {
     width: "100%",
@@ -1774,9 +1876,9 @@ export const flowStyles = StyleSheet.create({
     width: "100%",
     minHeight: 42,
     borderWidth: 1,
-    borderColor: "#d8e3f2",
+    borderColor: colors.border,
     borderRadius: 12,
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.surface,
     paddingHorizontal: 12,
     paddingVertical: 10,
     flexDirection: "row",
@@ -1784,23 +1886,25 @@ export const flowStyles = StyleSheet.create({
     justifyContent: "space-between"
   },
   ddText: {
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 12,
     fontWeight: "700",
+    fontFamily: typography.bold,
     flex: 1,
     marginRight: 10
   },
   ddArrow: {
-    color: "#f97316",
+    color: colors.accent,
     fontSize: 12,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   ddMenu: {
     marginTop: 6,
     borderWidth: 1,
-    borderColor: "#d8e3f2",
+    borderColor: colors.border,
     borderRadius: 12,
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.surface,
     overflow: "hidden",
     maxHeight: 190,
     boxShadow: "0px 10px 24px rgba(15, 23, 42, 0.12)",
@@ -1814,19 +1918,20 @@ export const flowStyles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 11,
     borderBottomWidth: 1,
-    borderBottomColor: "#eef3fb",
-    backgroundColor: "#ffffff"
+    borderBottomColor: colors.border,
+    backgroundColor: colors.surface
   },
   ddOptionActive: {
-    backgroundColor: "#edf4ff"
+    backgroundColor: colors.surface
   },
   ddOptionText: {
-    color: "#1f2937",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "600"
+    fontWeight: "600",
+    fontFamily: typography.semiBold,
   },
   ddOptionTextActive: {
-    color: "#1d4ed8"
+    color: colors.primary
   }
 });
 
@@ -1837,11 +1942,11 @@ export const apStyles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 22,
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#f7fbff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     padding: 16,
     gap: 14,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.08,
     shadowRadius: 14,
@@ -1851,39 +1956,41 @@ export const apStyles = StyleSheet.create({
     gap: 8,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#e2ebf5",
-    borderRadius: 18,
+    borderColor: colors.border,
+    borderRadius: radii.card,
     backgroundColor: "rgba(255,255,255,0.92)"
   },
   titleWrap: {
     alignSelf: "flex-start",
     borderWidth: 1,
-    borderColor: "#d7e2ee",
-    backgroundColor: "#ffffff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 9,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 6,
     elevation: 1
   },
   title: {
-    color: "#0f172a",
+    color: colors.textPrimary,
     fontSize: 21,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   sectionType: {
     alignSelf: "flex-start",
-    color: "#1d4ed8",
+    color: colors.primary,
     fontSize: 12,
     fontWeight: "900",
+    fontFamily: typography.bold,
     textTransform: "uppercase",
     letterSpacing: 0.6
   },
   sectionHint: {
-    color: "#64748b",
+    color: colors.textSecondary,
     fontSize: 12,
     lineHeight: 18
   },
@@ -1891,12 +1998,12 @@ export const apStyles = StyleSheet.create({
     width: "100%",
     alignSelf: "center",
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#ffffff",
-    borderRadius: 18,
-    padding: 14,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.cardPad,
     gap: 14,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.04,
     shadowRadius: 10,
@@ -1907,18 +2014,19 @@ export const apStyles = StyleSheet.create({
     gap: 7
   },
   label: {
-    color: "#334155",
+    color: colors.textSecondary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   input: {
     width: "100%",
     minHeight: 48,
     borderWidth: 1,
-    borderColor: "#cbd5e1",
-    borderRadius: 12,
-    backgroundColor: "#ffffff",
-    color: "#111827",
+    borderColor: colors.inputBorder,
+    borderRadius: radii.input,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
     fontSize: 13,
     paddingHorizontal: 12,
     paddingVertical: 12
@@ -1927,8 +2035,8 @@ export const apStyles = StyleSheet.create({
     width: "100%",
     minHeight: 48,
     borderRadius: 12,
-    borderColor: "#cbd5e1",
-    backgroundColor: "#ffffff",
+    borderColor: colors.inputBorder,
+    backgroundColor: colors.surface,
     paddingHorizontal: 12,
     paddingVertical: 12
   },
@@ -1942,21 +2050,22 @@ export const apStyles = StyleSheet.create({
     minHeight: 48,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#4d7dc9",
+    backgroundColor: colors.primary,
     borderWidth: 1,
-    borderColor: "#3159a5",
-    borderRadius: 14,
+    borderColor: colors.primary,
+    borderRadius: radii.button,
     paddingVertical: 12,
-    shadowColor: "#1e3a8a",
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 2
   },
   actionBtnText: {
-    color: "#f8fafc",
+    color: colors.textOnPrimary,
     fontSize: 15,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   }
 });
 
@@ -1964,23 +2073,24 @@ export const nfStyles = StyleSheet.create({
   frame: {
     borderRadius: 2,
     borderWidth: 1,
-    borderColor: "#7f7f7f",
-    backgroundColor: "#d8d8d8",
+    borderColor: colors.border,
+    backgroundColor: colors.border,
     padding: 8
   },
   titleWrap: {
     alignSelf: "center",
     borderWidth: 1,
-    borderColor: "#666666",
-    backgroundColor: "#ececec",
+    borderColor: colors.border,
+    backgroundColor: colors.border,
     paddingHorizontal: 12,
     paddingVertical: 4,
     marginBottom: 6
   },
   title: {
-    color: "#1f1f1f",
+    color: colors.textPrimary,
     fontSize: 24,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   row: {
     flexDirection: "row",
@@ -1989,16 +2099,17 @@ export const nfStyles = StyleSheet.create({
   },
   label: {
     width: 84,
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 10,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   input: {
     width: 132,
     borderWidth: 1,
-    borderColor: "#535353",
-    backgroundColor: "#ffffff",
-    color: "#111827",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
     fontSize: 10,
     paddingHorizontal: 6,
     paddingVertical: 3
@@ -2006,8 +2117,8 @@ export const nfStyles = StyleSheet.create({
   dateTrigger: {
     width: 132,
     borderWidth: 1,
-    borderColor: "#535353",
-    backgroundColor: "#ffffff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     minHeight: 28,
     paddingHorizontal: 6,
     paddingVertical: 3,
@@ -2017,22 +2128,24 @@ export const nfStyles = StyleSheet.create({
   },
   dateTriggerText: {
     flex: 1,
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 10,
-    fontWeight: "600"
+    fontWeight: "600",
+    fontFamily: typography.semiBold,
   },
   datePlaceholderText: {
-    color: "#64748b"
+    color: colors.textSecondary
   },
   dateTriggerIcon: {
-    color: "#f97316",
+    color: colors.accent,
     fontSize: 10,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   dropdown: {
     width: 132,
     borderRadius: 0,
-    borderColor: "#535353",
+    borderColor: colors.border,
     paddingVertical: 3
   },
   toggleWrap: {
@@ -2043,48 +2156,51 @@ export const nfStyles = StyleSheet.create({
   toggleBtn: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#818181",
+    borderColor: colors.border,
     borderRadius: 999,
-    backgroundColor: "#efefef",
+    backgroundColor: colors.border,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 3
   },
   toggleBtnActive: {
-    backgroundColor: "#dbeafe",
-    borderColor: "#1d4ed8"
+    backgroundColor: colors.surface,
+    borderColor: colors.primary
   },
   toggleText: {
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 10,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   complianceHeader: {
     alignItems: "center",
     marginTop: 4
   },
   complianceTitle: {
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 16,
     fontWeight: "800",
+    fontFamily: typography.bold,
     textDecorationLine: "underline"
   },
   saveBtn: {
     alignSelf: "flex-start",
     marginTop: 6,
     minWidth: 120,
-    backgroundColor: "#f97316",
+    backgroundColor: colors.accent,
     borderWidth: 1,
-    borderColor: "#c2410c",
-    borderRadius: 6,
+    borderColor: colors.accent,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 8
   },
   saveBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   }
 });
 
@@ -2095,11 +2211,11 @@ export const tsCardStyles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 22,
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#f7fbff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     padding: 16,
     gap: 14,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.08,
     shadowRadius: 14,
@@ -2109,48 +2225,50 @@ export const tsCardStyles = StyleSheet.create({
     gap: 8,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#e2ebf5",
-    borderRadius: 18,
+    borderColor: colors.border,
+    borderRadius: radii.card,
     backgroundColor: "rgba(255,255,255,0.92)"
   },
   titleWrap: {
     alignSelf: "flex-start",
     borderWidth: 1,
-    borderColor: "#d7e2ee",
-    backgroundColor: "#ffffff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 9,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 6,
     elevation: 1
   },
   title: {
-    color: "#0f172a",
+    color: colors.textPrimary,
     fontSize: 21,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   sectionType: {
     alignSelf: "flex-start",
-    color: "#1d4ed8",
+    color: colors.primary,
     fontSize: 12,
     fontWeight: "900",
+    fontFamily: typography.bold,
     textTransform: "uppercase",
     letterSpacing: 0.6
   },
   sectionHint: {
-    color: "#64748b",
+    color: colors.textSecondary,
     fontSize: 12,
     lineHeight: 18
   },
   memberCard: {
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#ffffff",
-    borderRadius: 18,
-    padding: 14,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.cardPad,
     gap: 10
   },
   memberRow: {
@@ -2160,24 +2278,26 @@ export const tsCardStyles = StyleSheet.create({
     gap: 12
   },
   memberLabel: {
-    color: "#64748b",
+    color: colors.textSecondary,
     fontSize: 11,
     fontWeight: "800",
+    fontFamily: typography.bold,
     textTransform: "uppercase",
     letterSpacing: 0.4
   },
   memberValue: {
     flex: 1,
-    color: "#102a43",
+    color: colors.textPrimary,
     fontSize: 14,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   geoCard: {
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#ffffff",
-    borderRadius: 18,
-    padding: 14,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.cardPad,
     gap: 12
   },
   geoHeaderRow: {
@@ -2190,20 +2310,21 @@ export const tsCardStyles = StyleSheet.create({
     gap: 3
   },
   geoTitle: {
-    color: "#102a43",
+    color: colors.textPrimary,
     fontSize: 15,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   geoHint: {
-    color: "#64748b",
+    color: colors.textSecondary,
     fontSize: 12,
     lineHeight: 18
   },
   geoActionBtn: {
-    backgroundColor: "#1e40af",
+    backgroundColor: colors.primary,
     borderWidth: 1,
-    borderColor: "#1d4ed8",
-    borderRadius: 14,
+    borderColor: colors.primary,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12
@@ -2211,40 +2332,42 @@ export const tsCardStyles = StyleSheet.create({
   geoActionBtnText: {
     color: "#dbeafe",
     fontSize: 13,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   moduleCard: {
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#ffffff",
-    borderRadius: 18,
-    padding: 14,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.cardPad,
     gap: 12,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.04,
     shadowRadius: 10,
     elevation: 1
   },
   mainButton: {
-    backgroundColor: "#3f6bbe",
+    backgroundColor: colors.primary,
     borderWidth: 1,
-    borderColor: "#3159a5",
-    borderRadius: 14,
+    borderColor: colors.primary,
+    borderRadius: radii.button,
     minHeight: 62,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#334155",
+    shadowColor: colors.textSecondary,
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.25,
     shadowRadius: 8,
     elevation: 4
   },
   mainButtonText: {
-    color: "#f8fafc",
+    color: colors.textOnPrimary,
     textAlign: "center",
     fontSize: 17,
     fontWeight: "800",
+    fontFamily: typography.bold,
     lineHeight: 24
   },
   segmentRow: {
@@ -2255,38 +2378,39 @@ export const tsCardStyles = StyleSheet.create({
   segmentBtn: {
     flex: 1,
     minHeight: 54,
-    borderRadius: 10,
-    backgroundColor: "#4b6ca9",
+    borderRadius: radii.button,
+    backgroundColor: colors.primary,
     borderWidth: 1,
-    borderColor: "#2f4f86",
+    borderColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#334155",
+    shadowColor: colors.textSecondary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 2
   },
   segmentBtnActive: {
-    backgroundColor: "#3f6bbe",
-    borderColor: "#274c94"
+    backgroundColor: colors.primary,
+    borderColor: colors.primary
   },
   lockedButton: {
     opacity: 0.6
   },
   segmentBtnText: {
-    color: "#f8fafc",
+    color: colors.textOnPrimary,
     textAlign: "center",
     fontSize: 14,
     fontWeight: "800",
+    fontFamily: typography.bold,
     lineHeight: 18
   },
   footerCard: {
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#ffffff",
-    borderRadius: 18,
-    padding: 12,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.cardPad,
     gap: 12
   },
   geoDot: {
@@ -2296,36 +2420,37 @@ export const tsCardStyles = StyleSheet.create({
     borderWidth: 1
   },
   geoDotGreen: {
-    backgroundColor: "#22c55e",
-    borderColor: "#15803d"
+    backgroundColor: colors.success,
+    borderColor: colors.success
   },
   geoDotIdle: {
-    backgroundColor: "#94a3b8",
-    borderColor: "#64748b"
+    backgroundColor: colors.textPlaceholder,
+    borderColor: colors.textSecondary
   },
   geoDotRed: {
-    backgroundColor: "#ef4444",
-    borderColor: "#b91c1c"
+    backgroundColor: colors.error,
+    borderColor: colors.error
   },
   saveBtn: {
     width: "100%",
-    backgroundColor: "#f97316",
+    backgroundColor: colors.accent,
     borderWidth: 1,
-    borderColor: "#c2410c",
-    borderRadius: 14,
+    borderColor: colors.accent,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12,
-    shadowColor: "#ea580c",
+    shadowColor: colors.accent,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.16,
     shadowRadius: 8,
     elevation: 2
   },
   saveBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 14,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   }
 });
 
@@ -2336,11 +2461,11 @@ export const tsDetailStyles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 22,
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#f7fbff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     padding: 16,
     gap: 14,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.08,
     shadowRadius: 14,
@@ -2350,78 +2475,82 @@ export const tsDetailStyles = StyleSheet.create({
     gap: 8,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#e2ebf5",
-    borderRadius: 18,
+    borderColor: colors.border,
+    borderRadius: radii.card,
     backgroundColor: "rgba(255,255,255,0.92)"
   },
   titleWrap: {
     alignSelf: "flex-start",
     borderWidth: 1,
-    borderColor: "#d7e2ee",
-    backgroundColor: "#ffffff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 9,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 6,
     elevation: 1
   },
   title: {
-    color: "#0f172a",
+    color: colors.textPrimary,
     fontSize: 21,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   sectionType: {
     alignSelf: "flex-start",
-    color: "#1d4ed8",
+    color: colors.primary,
     fontSize: 12,
     fontWeight: "900",
+    fontFamily: typography.bold,
     textTransform: "uppercase",
     letterSpacing: 0.6
   },
   sectionHint: {
-    color: "#64748b",
+    color: colors.textSecondary,
     fontSize: 12,
     lineHeight: 18
   },
   sectionCard: {
     width: "100%",
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#ffffff",
-    borderRadius: 18,
-    padding: 14,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.cardPad,
     gap: 14,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.04,
     shadowRadius: 10,
     elevation: 1
   },
   sectionTitle: {
-    color: "#0f172a",
+    color: colors.textPrimary,
     fontSize: 16,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   fieldBlock: {
     width: "100%",
     gap: 7
   },
   label: {
-    color: "#334155",
+    color: colors.textSecondary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   input: {
     width: "100%",
     minHeight: 48,
     borderWidth: 1,
-    borderColor: "#cbd5e1",
-    borderRadius: 12,
-    backgroundColor: "#ffffff",
-    color: "#111827",
+    borderColor: colors.inputBorder,
+    borderRadius: radii.input,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
     fontSize: 13,
     paddingHorizontal: 12,
     paddingVertical: 12
@@ -2430,8 +2559,8 @@ export const tsDetailStyles = StyleSheet.create({
     width: "100%",
     minHeight: 48,
     borderRadius: 12,
-    borderColor: "#cbd5e1",
-    backgroundColor: "#ffffff",
+    borderColor: colors.inputBorder,
+    backgroundColor: colors.surface,
     paddingHorizontal: 12,
     paddingVertical: 12
   },
@@ -2444,10 +2573,10 @@ export const tsDetailStyles = StyleSheet.create({
     width: "100%",
     minHeight: 48,
     borderWidth: 1,
-    borderColor: "#cbd5e1",
-    borderRadius: 12,
-    backgroundColor: "#ffffff",
-    color: "#111827",
+    borderColor: colors.inputBorder,
+    borderRadius: radii.input,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
     fontSize: 13,
     paddingLeft: 12,
     paddingRight: 38,
@@ -2463,19 +2592,20 @@ export const tsDetailStyles = StyleSheet.create({
     justifyContent: "center"
   },
   selectChevron: {
-    color: "#f97316",
+    color: colors.accent,
     fontSize: 12,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   selectMenu: {
     marginTop: 6,
     borderWidth: 1,
-    borderColor: "#d8e3f2",
+    borderColor: colors.border,
     borderRadius: 12,
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.surface,
     overflow: "hidden",
     maxHeight: 190,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.1,
     shadowRadius: 14,
@@ -2488,21 +2618,29 @@ export const tsDetailStyles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 11,
     borderBottomWidth: 1,
-    borderBottomColor: "#eef3fb",
-    backgroundColor: "#ffffff"
+    borderBottomColor: colors.border,
+    backgroundColor: colors.surface
   },
   selectOptionText: {
-    color: "#1f2937",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "600"
+    fontWeight: "600",
+    fontFamily: typography.semiBold,
+  },
+  selectEmptyText: {
+    color: colors.textSecondary,
+    fontSize: 12,
+    fontStyle: "italic",
+    paddingHorizontal: 12,
+    paddingVertical: 11
   },
   dateTrigger: {
     width: "100%",
     minHeight: 48,
     borderWidth: 1,
-    borderColor: "#cbd5e1",
+    borderColor: colors.inputBorder,
     borderRadius: 12,
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.surface,
     paddingHorizontal: 12,
     paddingVertical: 12,
     flexDirection: "row",
@@ -2511,46 +2649,50 @@ export const tsDetailStyles = StyleSheet.create({
   },
   dateTriggerText: {
     flex: 1,
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 13,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   datePlaceholderText: {
-    color: "#64748b",
-    fontWeight: "600"
+    color: colors.textSecondary,
+    fontWeight: "600",
+    fontFamily: typography.semiBold,
   },
   dateTriggerIcon: {
-    color: "#f97316",
+    color: colors.accent,
     fontSize: 12,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   divider: {
     height: 1,
-    backgroundColor: "#8b8b8b",
+    backgroundColor: colors.border,
     marginVertical: 4
   },
   saveBtn: {
     alignSelf: "center",
     minWidth: 180,
-    backgroundColor: "#f97316",
+    backgroundColor: colors.accent,
     borderWidth: 1,
-    borderColor: "#c2410c",
-    borderRadius: 14,
+    borderColor: colors.accent,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 24,
     marginTop: 2,
-    shadowColor: "#ea580c",
+    shadowColor: colors.accent,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.16,
     shadowRadius: 8,
     elevation: 2
   },
   saveBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 14,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   modalOverlay: {
     flex: 1,
@@ -2562,13 +2704,13 @@ export const tsDetailStyles = StyleSheet.create({
   modalCard: {
     width: "100%",
     maxWidth: 380,
-    backgroundColor: "#fbfdff",
+    backgroundColor: colors.surface,
     borderRadius: 28,
-    padding: 20,
+    padding: spacing.cardPad,
     gap: 16,
     borderWidth: 1,
-    borderColor: "#dbe4ef",
-    shadowColor: "#0f172a",
+    borderColor: colors.border,
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.18,
     shadowRadius: 22,
@@ -2576,17 +2718,18 @@ export const tsDetailStyles = StyleSheet.create({
   },
   modalBadge: {
     alignSelf: "center",
-    backgroundColor: "#e8f7ef",
+    backgroundColor: colors.successLight,
     borderWidth: 1,
-    borderColor: "#b7e4c7",
+    borderColor: colors.successLight,
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 6
   },
   modalBadgeText: {
-    color: "#15803d",
+    color: colors.success,
     fontSize: 11,
     fontWeight: "900",
+    fontFamily: typography.bold,
     letterSpacing: 0.6,
     textTransform: "uppercase"
   },
@@ -2599,40 +2742,41 @@ export const tsDetailStyles = StyleSheet.create({
     justifyContent: "center"
   },
   modalIconCircleSaved: {
-    backgroundColor: "#ecfdf5",
+    backgroundColor: colors.successLight,
     borderWidth: 1,
-    borderColor: "#a7f3d0"
+    borderColor: colors.successLight
   },
   modalIconCircleAlert: {
-    backgroundColor: "#fef2f2",
+    backgroundColor: colors.errorLight,
     borderWidth: 1,
-    borderColor: "#fecaca"
+    borderColor: colors.errorLight
   },
   modalIconText: {
     fontSize: 26,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   modalIconTextSaved: {
-    color: "#0f766e"
+    color: colors.primary
   },
   modalIconTextAlert: {
-    color: "#dc2626"
+    color: colors.error
   },
   modalBadgeSaved: {
-    backgroundColor: "#ecfdf5",
-    borderColor: "#99e6c4"
+    backgroundColor: colors.successLight,
+    borderColor: colors.successLight
   },
   modalBadgeAlert: {
-    backgroundColor: "#fef2f2",
-    borderColor: "#fbc7c7"
+    backgroundColor: colors.errorLight,
+    borderColor: colors.errorLight
   },
   modalBadgeTextSaved: {
-    color: "#0f766e",
+    color: colors.primary,
     textTransform: "none",
     letterSpacing: 0.2
   },
   modalBadgeTextAlert: {
-    color: "#b91c1c",
+    color: colors.error,
     textTransform: "none",
     letterSpacing: 0.2
   },
@@ -2643,38 +2787,41 @@ export const tsDetailStyles = StyleSheet.create({
     gap: 12,
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#eef2f7"
+    borderBottomColor: colors.border
   },
   modalFieldRowLast: {
     borderBottomWidth: 0
   },
   modalFieldLabel: {
-    color: "#64748b",
+    color: colors.textSecondary,
     fontSize: 12,
     fontWeight: "700",
+    fontFamily: typography.bold,
     flexShrink: 0,
     maxWidth: "45%"
   },
   modalFieldValue: {
-    color: "#0f172a",
+    color: colors.textPrimary,
     fontSize: 13,
     fontWeight: "800",
+    fontFamily: typography.bold,
     textAlign: "right",
     flexShrink: 1
   },
   modalTitle: {
-    color: "#102a43",
+    color: colors.textPrimary,
     fontSize: 20,
     fontWeight: "900",
+    fontFamily: typography.bold,
     textAlign: "center"
   },
   modalContentCard: {
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#ffffff",
-    borderRadius: 18,
-    padding: 14,
-    shadowColor: "#0f172a",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.cardPad,
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.04,
     shadowRadius: 10,
@@ -2685,13 +2832,14 @@ export const tsDetailStyles = StyleSheet.create({
     height: 180,
     borderRadius: 14,
     marginBottom: 12,
-    backgroundColor: "#e2e8f0"
+    backgroundColor: colors.border
   },
   modalMessage: {
-    color: "#334155",
+    color: colors.textSecondary,
     fontSize: 13,
     lineHeight: 22,
     fontWeight: "700",
+    fontFamily: typography.bold,
     textAlign: "left"
   },
   modalScroll: {
@@ -2701,10 +2849,10 @@ export const tsDetailStyles = StyleSheet.create({
     width: "100%",
     minHeight: 48,
     borderWidth: 1,
-    borderColor: "#cbd5e1",
-    borderRadius: 12,
-    backgroundColor: "#ffffff",
-    color: "#111827",
+    borderColor: colors.inputBorder,
+    borderRadius: radii.input,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
     fontSize: 14,
     paddingHorizontal: 12,
     paddingVertical: 12
@@ -2717,24 +2865,25 @@ export const tsDetailStyles = StyleSheet.create({
     flex: 1,
     minHeight: 46,
     borderWidth: 1,
-    borderColor: "#cbd5e1",
-    borderRadius: 12,
-    backgroundColor: "#f8fafc",
+    borderColor: colors.inputBorder,
+    borderRadius: radii.button,
+    backgroundColor: colors.surface,
     alignItems: "center",
     justifyContent: "center"
   },
   modalSecondaryBtnText: {
-    color: "#334155",
+    color: colors.textSecondary,
     fontSize: 13,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   modalPrimaryBtn: {
     flex: 1,
     minHeight: 46,
     borderWidth: 1,
-    borderColor: "#1d4ed8",
-    borderRadius: 12,
-    backgroundColor: "#2563eb",
+    borderColor: colors.primary,
+    borderRadius: radii.button,
+    backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center"
   },
@@ -2742,21 +2891,22 @@ export const tsDetailStyles = StyleSheet.create({
     width: "100%",
     minHeight: 50,
     borderWidth: 1,
-    borderColor: "#1d4ed8",
-    borderRadius: 16,
-    backgroundColor: "#2563eb",
+    borderColor: colors.primary,
+    borderRadius: radii.button,
+    backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#2563eb",
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.18,
     shadowRadius: 10,
     elevation: 3
   },
   modalPrimaryBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 14,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   }
 });
 
@@ -2764,19 +2914,19 @@ export const fsStyles = StyleSheet.create({
   frame: {
     borderRadius: 2,
     borderWidth: 1,
-    borderColor: "#8b8b8b",
-    backgroundColor: "#d8d8d8",
+    borderColor: colors.border,
+    backgroundColor: colors.border,
     padding: 10
   },
   card: {
     width: "100%",
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#ffffff",
-    borderRadius: 18,
-    padding: 14,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.cardPad,
     gap: 14,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.04,
     shadowRadius: 10,
@@ -2787,18 +2937,19 @@ export const fsStyles = StyleSheet.create({
     gap: 7
   },
   fieldLabel: {
-    color: "#334155",
+    color: colors.textSecondary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   cardInput: {
     width: "100%",
     minHeight: 48,
     borderWidth: 1,
-    borderColor: "#cbd5e1",
-    borderRadius: 12,
-    backgroundColor: "#ffffff",
-    color: "#111827",
+    borderColor: colors.inputBorder,
+    borderRadius: radii.input,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
     fontSize: 13,
     paddingLeft: 12,
     paddingRight: 38,
@@ -2812,23 +2963,24 @@ export const fsStyles = StyleSheet.create({
     flex: 1,
     minHeight: 46,
     borderWidth: 1,
-    borderColor: "#cbd5e1",
+    borderColor: colors.inputBorder,
     borderRadius: 12,
-    backgroundColor: "#f8fafc",
+    backgroundColor: colors.surface,
     alignItems: "center",
     justifyContent: "center"
   },
   togglePillActive: {
-    backgroundColor: "#1e3a8a",
-    borderColor: "#172554"
+    backgroundColor: colors.primary,
+    borderColor: colors.primaryDark
   },
   togglePillText: {
-    color: "#334155",
+    color: colors.textSecondary,
     fontSize: 13,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   togglePillTextActive: {
-    color: "#ffffff"
+    color: colors.textOnPrimary
   },
   actionRow: {
     flexDirection: "row",
@@ -2838,10 +2990,10 @@ export const fsStyles = StyleSheet.create({
   popupActionBtn: {
     flex: 1,
     minHeight: 48,
-    backgroundColor: "#06b6d4",
+    backgroundColor: colors.primary,
     borderWidth: 1,
-    borderColor: "#0e7490",
-    borderRadius: 14,
+    borderColor: colors.primary,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 14
@@ -2850,26 +3002,28 @@ export const fsStyles = StyleSheet.create({
     opacity: 0.5
   },
   popupActionBtnText: {
-    color: "#083344",
+    color: colors.textPrimary,
     fontSize: 13,
     fontWeight: "900",
+    fontFamily: typography.bold,
     textAlign: "center"
   },
   saveActionBtn: {
     flex: 1,
     minHeight: 48,
-    backgroundColor: "#22c55e",
+    backgroundColor: colors.success,
     borderWidth: 1,
-    borderColor: "#15803d",
-    borderRadius: 14,
+    borderColor: colors.success,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 14
   },
   saveActionBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 14,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   row: {
     flexDirection: "row",
@@ -2878,24 +3032,25 @@ export const fsStyles = StyleSheet.create({
   },
   label: {
     width: 142,
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   dropdown: {
     flex: 1,
     borderRadius: 0,
-    borderColor: "#666666",
+    borderColor: colors.border,
     paddingVertical: 5
   },
   selectInput: {
     flex: 1,
     minHeight: 40,
     borderWidth: 1,
-    borderColor: "#666666",
-    borderRadius: 0,
-    backgroundColor: "#ffffff",
-    color: "#111827",
+    borderColor: colors.border,
+    borderRadius: radii.input,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
     fontSize: 11,
     paddingLeft: 8,
     paddingRight: 28,
@@ -2913,17 +3068,18 @@ export const fsStyles = StyleSheet.create({
     borderWidth: 1
   },
   toggleDotOn: {
-    backgroundColor: "#16a34a",
-    borderColor: "#166534"
+    backgroundColor: colors.success,
+    borderColor: colors.success
   },
   toggleDotOff: {
-    backgroundColor: "#cbd5e1",
-    borderColor: "#64748b"
+    backgroundColor: colors.inputBorder,
+    borderColor: colors.textSecondary
   },
   toggleText: {
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   bottomRow: {
     marginTop: 8,
@@ -2934,34 +3090,36 @@ export const fsStyles = StyleSheet.create({
   popupBtn: {
     width: 74,
     minHeight: 64,
-    backgroundColor: "#06b6d4",
+    backgroundColor: colors.primary,
     borderWidth: 1,
-    borderColor: "#0e7490",
+    borderColor: colors.primary,
     alignItems: "center",
     justifyContent: "center"
   },
   popupBtnText: {
-    color: "#0f172a",
+    color: colors.textPrimary,
     fontSize: 11,
     fontWeight: "800",
+    fontFamily: typography.bold,
     textAlign: "center",
     textDecorationLine: "underline"
   },
   saveBtn: {
     minWidth: 96,
-    backgroundColor: "#22c55e",
+    backgroundColor: colors.success,
     borderWidth: 1,
-    borderColor: "#15803d",
-    borderRadius: 7,
+    borderColor: colors.success,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 10,
     paddingHorizontal: 18
   },
   saveBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 13,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   }
 });
 
@@ -2969,46 +3127,48 @@ export const pastStyles = StyleSheet.create({
   frame: {
     borderRadius: 2,
     borderWidth: 1,
-    borderColor: "#8b8b8b",
-    backgroundColor: "#d8d8d8",
+    borderColor: colors.border,
+    backgroundColor: colors.border,
     padding: 8
   },
   sectionCard: {
     width: "100%",
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#ffffff",
-    borderRadius: 18,
-    padding: 14,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.cardPad,
     gap: 14,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.04,
     shadowRadius: 10,
     elevation: 1
   },
   sectionTitle: {
-    color: "#0f172a",
+    color: colors.textPrimary,
     fontSize: 16,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   fieldBlock: {
     width: "100%",
     gap: 7
   },
   fieldLabel: {
-    color: "#334155",
+    color: colors.textSecondary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   cardInput: {
     width: "100%",
     minHeight: 48,
     borderWidth: 1,
-    borderColor: "#cbd5e1",
-    borderRadius: 12,
-    backgroundColor: "#ffffff",
-    color: "#111827",
+    borderColor: colors.inputBorder,
+    borderRadius: radii.input,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
     fontSize: 13,
     paddingLeft: 12,
     paddingRight: 38,
@@ -3018,12 +3178,13 @@ export const pastStyles = StyleSheet.create({
     width: "100%",
     minHeight: 48,
     borderWidth: 1,
-    borderColor: "#cbd5e1",
-    borderRadius: 12,
-    backgroundColor: "#eff6ff",
-    color: "#111827",
+    borderColor: colors.inputBorder,
+    borderRadius: radii.input,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
     fontSize: 13,
     fontWeight: "700",
+    fontFamily: typography.bold,
     paddingHorizontal: 12,
     paddingVertical: 12
   },
@@ -3034,8 +3195,8 @@ export const pastStyles = StyleSheet.create({
   },
   section: {
     borderWidth: 1,
-    borderColor: "#8b8b8b",
-    backgroundColor: "#eeeeee",
+    borderColor: colors.border,
+    backgroundColor: colors.border,
     padding: 8,
     gap: 4
   },
@@ -3046,16 +3207,17 @@ export const pastStyles = StyleSheet.create({
   },
   label: {
     width: 144,
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 11,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#666666",
-    backgroundColor: "#ffffff",
-    color: "#111827",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
     fontSize: 11,
     paddingHorizontal: 8,
     paddingVertical: 5
@@ -3063,9 +3225,9 @@ export const pastStyles = StyleSheet.create({
   inputReadOnly: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#666666",
-    backgroundColor: "#e2e8f0",
-    color: "#111827",
+    borderColor: colors.border,
+    backgroundColor: colors.border,
+    color: colors.textPrimary,
     fontSize: 11,
     paddingHorizontal: 8,
     paddingVertical: 5
@@ -3073,17 +3235,17 @@ export const pastStyles = StyleSheet.create({
   dropdown: {
     flex: 1,
     borderRadius: 0,
-    borderColor: "#666666",
+    borderColor: colors.border,
     paddingVertical: 5
   },
   selectInput: {
     flex: 1,
     minHeight: 30,
     borderWidth: 1,
-    borderColor: "#666666",
-    borderRadius: 0,
-    backgroundColor: "#ffffff",
-    color: "#111827",
+    borderColor: colors.border,
+    borderRadius: radii.input,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
     fontSize: 11,
     paddingLeft: 8,
     paddingRight: 28,
@@ -3092,35 +3254,37 @@ export const pastStyles = StyleSheet.create({
   saveBtn: {
     flex: 1,
     minHeight: 48,
-    backgroundColor: "#22c55e",
+    backgroundColor: colors.success,
     borderWidth: 1,
-    borderColor: "#15803d",
-    borderRadius: 14,
+    borderColor: colors.success,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 14
   },
   saveBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 14,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   linkBtn: {
     flex: 1,
     minHeight: 48,
     borderWidth: 1,
-    borderColor: "#93c5fd",
-    backgroundColor: "#dbeafe",
-    borderRadius: 14,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 14
   },
   linkBtnText: {
-    color: "#1e3a8a",
+    color: colors.primary,
     fontSize: 13,
     fontWeight: "800",
+    fontFamily: typography.bold,
     textAlign: "center"
   }
 });
@@ -3129,46 +3293,48 @@ export const txnStyles = StyleSheet.create({
   frame: {
     borderRadius: 2,
     borderWidth: 1,
-    borderColor: "#8b8b8b",
-    backgroundColor: "#d8d8d8",
+    borderColor: colors.border,
+    backgroundColor: colors.border,
     padding: 8
   },
   sectionCard: {
     width: "100%",
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#ffffff",
-    borderRadius: 18,
-    padding: 14,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.cardPad,
     gap: 14,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.04,
     shadowRadius: 10,
     elevation: 1
   },
   sectionTitle: {
-    color: "#0f172a",
+    color: colors.textPrimary,
     fontSize: 16,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   fieldBlock: {
     width: "100%",
     gap: 7
   },
   fieldLabel: {
-    color: "#334155",
+    color: colors.textSecondary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   cardInput: {
     width: "100%",
     minHeight: 48,
     borderWidth: 1,
-    borderColor: "#cbd5e1",
-    borderRadius: 12,
-    backgroundColor: "#ffffff",
-    color: "#111827",
+    borderColor: colors.inputBorder,
+    borderRadius: radii.input,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
     fontSize: 13,
     paddingLeft: 12,
     paddingRight: 38,
@@ -3179,38 +3345,41 @@ export const txnStyles = StyleSheet.create({
   },
   uploadBtn: {
     minHeight: 48,
-    backgroundColor: "#dbeafe",
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: "#93c5fd",
-    borderRadius: 14,
+    borderColor: colors.border,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 14
   },
   uploadBtnText: {
-    color: "#1e3a8a",
+    color: colors.primary,
     fontSize: 13,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   uploadMetaCard: {
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#f8fbff",
-    borderRadius: 14,
-    padding: 12,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.cardPad,
     gap: 4
   },
   uploadMetaLabel: {
-    color: "#1d4ed8",
+    color: colors.primary,
     fontSize: 11,
     fontWeight: "900",
+    fontFamily: typography.bold,
     textTransform: "uppercase",
     letterSpacing: 0.5
   },
   uploadMetaValue: {
-    color: "#334155",
+    color: colors.textSecondary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   metricsGrid: {
     flexDirection: "row",
@@ -3219,9 +3388,9 @@ export const txnStyles = StyleSheet.create({
   metricCard: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#f8fbff",
-    borderRadius: 14,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
     paddingVertical: 12,
     paddingHorizontal: 10,
     alignItems: "center",
@@ -3229,24 +3398,26 @@ export const txnStyles = StyleSheet.create({
     gap: 4
   },
   metricLabel: {
-    color: "#64748b",
+    color: colors.textSecondary,
     fontSize: 10,
     fontWeight: "800",
+    fontFamily: typography.bold,
     textTransform: "uppercase",
     textAlign: "center"
   },
   metricValue: {
-    color: "#102a43",
+    color: colors.textPrimary,
     fontSize: 15,
     fontWeight: "900",
+    fontFamily: typography.bold,
     textAlign: "center"
   },
   summaryCard: {
     borderWidth: 1,
-    borderColor: "#dbe7f3",
-    backgroundColor: "#f8fbff",
-    borderRadius: 16,
-    padding: 12,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.cardPad,
     gap: 10
   },
   summaryRow: {
@@ -3256,18 +3427,20 @@ export const txnStyles = StyleSheet.create({
     gap: 12,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: "#eef3fb"
+    borderBottomColor: colors.border
   },
   summaryLabel: {
     flex: 1,
-    color: "#64748b",
+    color: colors.textSecondary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   summaryValue: {
-    color: "#102a43",
+    color: colors.textPrimary,
     fontSize: 12,
     fontWeight: "800",
+    fontFamily: typography.bold,
     textAlign: "right"
   },
   actionRow: {
@@ -3277,34 +3450,36 @@ export const txnStyles = StyleSheet.create({
   saveBtn: {
     flex: 1,
     minHeight: 48,
-    backgroundColor: "#2563eb",
+    backgroundColor: colors.primary,
     borderWidth: 1,
-    borderColor: "#1d4ed8",
-    borderRadius: 14,
+    borderColor: colors.primary,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 14
   },
   saveBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 14,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   backBtn: {
     flex: 1,
     minHeight: 48,
-    backgroundColor: "#16385f",
+    backgroundColor: colors.primaryDark,
     borderWidth: 1,
-    borderColor: "#102a43",
-    borderRadius: 14,
+    borderColor: colors.primaryDark,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 14
   },
   backBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 14,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   row: {
     flexDirection: "row",
@@ -3313,16 +3488,17 @@ export const txnStyles = StyleSheet.create({
   },
   label: {
     width: 188,
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 11,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#666666",
-    backgroundColor: "#ffffff",
-    color: "#111827",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
     fontSize: 11,
     paddingHorizontal: 8,
     paddingVertical: 5
@@ -3330,9 +3506,9 @@ export const txnStyles = StyleSheet.create({
   inputReadOnly: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#666666",
-    backgroundColor: "#e2e8f0",
-    color: "#111827",
+    borderColor: colors.border,
+    backgroundColor: colors.border,
+    color: colors.textPrimary,
     fontSize: 11,
     paddingHorizontal: 8,
     paddingVertical: 5
@@ -3340,25 +3516,26 @@ export const txnStyles = StyleSheet.create({
   dropdown: {
     flex: 1,
     borderRadius: 0,
-    borderColor: "#666666",
+    borderColor: colors.border,
     paddingVertical: 5
   },
   tableTitle: {
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 12,
     fontWeight: "800",
+    fontFamily: typography.bold,
     marginTop: 6
   },
   table: {
     borderWidth: 1,
-    borderColor: "#555555",
-    backgroundColor: "#f3f4f6"
+    borderColor: colors.border,
+    backgroundColor: colors.surface
   },
   tableHead: {
     flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: "#555555",
-    backgroundColor: "#e5e7eb"
+    borderBottomColor: colors.border,
+    backgroundColor: colors.border
   },
   tableRow: {
     flexDirection: "row"
@@ -3366,36 +3543,38 @@ export const txnStyles = StyleSheet.create({
   thMonth: {
     width: 58,
     borderRightWidth: 1,
-    borderRightColor: "#555555",
+    borderRightColor: colors.border,
     padding: 4,
     fontSize: 10,
     fontWeight: "800",
-    color: "#111827"
+    fontFamily: typography.bold,
+    color: colors.textPrimary
   },
   th: {
     flex: 1,
     borderRightWidth: 1,
-    borderRightColor: "#555555",
+    borderRightColor: colors.border,
     padding: 4,
     fontSize: 10,
     fontWeight: "800",
-    color: "#111827"
+    fontFamily: typography.bold,
+    color: colors.textPrimary
   },
   tdMonth: {
     width: 58,
     borderRightWidth: 1,
-    borderRightColor: "#555555",
+    borderRightColor: colors.border,
     padding: 4,
     fontSize: 10,
-    color: "#111827"
+    color: colors.textPrimary
   },
   td: {
     flex: 1,
     borderRightWidth: 1,
-    borderRightColor: "#555555",
+    borderRightColor: colors.border,
     padding: 4,
     fontSize: 10,
-    color: "#111827"
+    color: colors.textPrimary
   },
   legacyButtonRow: {
     flexDirection: "row",
@@ -3404,33 +3583,35 @@ export const txnStyles = StyleSheet.create({
   },
   legacyActionBtn: {
     minWidth: 86,
-    backgroundColor: "#3b67b8",
+    backgroundColor: colors.primary,
     borderWidth: 1,
-    borderColor: "#3159a5",
-    borderRadius: 6,
+    borderColor: colors.primary,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 8
   },
   legacyActionBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   legacyBackBtn: {
     minWidth: 70,
-    backgroundColor: "#1f2937",
+    backgroundColor: colors.textPrimary,
     borderWidth: 1,
-    borderColor: "#111827",
-    borderRadius: 6,
+    borderColor: colors.textPrimary,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 8
   },
   legacyBackBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   }
 });
 
@@ -3438,19 +3619,19 @@ export const lhcboStyles = StyleSheet.create({
   frame: {
     borderRadius: 22,
     borderWidth: 1,
-    borderColor: "#c9d8eb",
-    backgroundColor: "#eef4ff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     padding: 12,
     gap: 12
   },
   formCard: {
     borderWidth: 1,
-    borderColor: "#d7e3f3",
-    backgroundColor: "#f8fbff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: 22,
-    padding: 14,
+    padding: spacing.cardPad,
     gap: 12,
-    shadowColor: "#0f172a",
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.06,
     shadowRadius: 12,
@@ -3458,26 +3639,28 @@ export const lhcboStyles = StyleSheet.create({
   },
   formHeader: {
     borderWidth: 1,
-    borderColor: "#dce7f7",
-    backgroundColor: "#ffffff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: 18,
     padding: 14,
     gap: 4
   },
   formEyebrow: {
-    color: "#b45309",
+    color: colors.warning,
     fontSize: 11,
     fontWeight: "900",
+    fontFamily: typography.bold,
     textTransform: "uppercase",
     letterSpacing: 0.7
   },
   formTitle: {
-    color: "#102a43",
+    color: colors.textPrimary,
     fontSize: 20,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   formHint: {
-    color: "#64748b",
+    color: colors.textSecondary,
     fontSize: 12,
     lineHeight: 18
   },
@@ -3486,37 +3669,39 @@ export const lhcboStyles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
     borderWidth: 1,
-    borderColor: "#dde7f5",
-    backgroundColor: "#ffffff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: 16,
     paddingHorizontal: 12,
     paddingVertical: 12
   },
   label: {
     width: 120,
-    color: "#0f172a",
+    color: colors.textPrimary,
     fontSize: 11,
     fontWeight: "800",
+    fontFamily: typography.bold,
     lineHeight: 16
   },
   dropdown: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#c4d3e8",
+    borderColor: colors.border,
     borderRadius: 12,
-    backgroundColor: "#f8fbff",
+    backgroundColor: colors.surface,
     paddingHorizontal: 12,
     paddingVertical: 10
   },
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#c4d3e8",
-    borderRadius: 12,
-    backgroundColor: "#f8fbff",
-    color: "#1f2937",
+    borderColor: colors.border,
+    borderRadius: radii.input,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
     fontSize: 12,
     fontWeight: "700",
+    fontFamily: typography.bold,
     paddingHorizontal: 12,
     paddingVertical: 10
   },
@@ -3526,7 +3711,7 @@ export const lhcboStyles = StyleSheet.create({
   },
   metaChip: {
     flex: 1,
-    backgroundColor: "#17365d",
+    backgroundColor: colors.primaryDark,
     borderRadius: 16,
     paddingHorizontal: 12,
     paddingVertical: 12,
@@ -3536,42 +3721,47 @@ export const lhcboStyles = StyleSheet.create({
     color: "#cbd5e1",
     fontSize: 10,
     fontWeight: "800",
+    fontFamily: typography.bold,
     textTransform: "uppercase"
   },
   metaChipValue: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 13,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   uploadBtn: {
     minWidth: 132,
-    backgroundColor: "#dbeafe",
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: "#3b82f6",
-    borderRadius: 12,
+    borderColor: colors.primary,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 10,
     paddingHorizontal: 14
   },
   uploadBtnText: {
-    color: "#1e3a8a",
+    color: colors.primary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   helpText: {
-    color: "#2563eb",
+    color: colors.primary,
     fontSize: 12,
     lineHeight: 16
   },
   autoText: {
-    color: "#dc2626",
-    fontWeight: "800"
+    color: colors.error,
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   previewHeading: {
-    color: "#102a43",
+    color: colors.textPrimary,
     fontSize: 13,
     fontWeight: "900",
+    fontFamily: typography.bold,
     marginTop: 2
   },
   previewRow: {
@@ -3584,21 +3774,22 @@ export const lhcboStyles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: "#3b82f6",
+    backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center"
   },
   navBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 12,
-    fontWeight: "900"
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   previewBox: {
     flex: 1,
     minHeight: 140,
     borderWidth: 1,
-    borderColor: "#8ea9d1",
-    backgroundColor: "#eef4ff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
@@ -3609,7 +3800,7 @@ export const lhcboStyles = StyleSheet.create({
     height: 140
   },
   previewText: {
-    color: "#17365d",
+    color: colors.textPrimary,
     textAlign: "center",
     fontSize: 14,
     lineHeight: 20
@@ -3627,26 +3818,27 @@ export const lhcboStyles = StyleSheet.create({
     borderWidth: 1
   },
   geoDotIdle: {
-    backgroundColor: "#94a3b8",
-    borderColor: "#64748b"
+    backgroundColor: colors.textPlaceholder,
+    borderColor: colors.textSecondary
   },
   geoDotGreen: {
-    backgroundColor: "#22c55e",
-    borderColor: "#15803d"
+    backgroundColor: colors.success,
+    borderColor: colors.success
   },
   geoDotIdle: {
-    backgroundColor: "#94a3b8",
-    borderColor: "#64748b"
+    backgroundColor: colors.textPlaceholder,
+    borderColor: colors.textSecondary
   },
   geoDotRed: {
-    backgroundColor: "#ef4444",
-    borderColor: "#b91c1c"
+    backgroundColor: colors.error,
+    borderColor: colors.error
   },
   radiusText: {
     flex: 1,
-    color: "#1e40af",
+    color: colors.primary,
     fontSize: 11,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   actionRow: {
     flexDirection: "row",
@@ -3655,42 +3847,44 @@ export const lhcboStyles = StyleSheet.create({
   },
   checkBtn: {
     flex: 1,
-    backgroundColor: "#1d4ed8",
-    borderRadius: 12,
+    backgroundColor: colors.primary,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12
   },
   checkBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   saveBtn: {
     flex: 1,
-    backgroundColor: "#f97316",
-    borderRadius: 12,
+    backgroundColor: colors.accent,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12
   },
   saveBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   }
 });
 
 export const chcEntStyles = StyleSheet.create({
   enterpriseBanner: {
-    backgroundColor: "#fef3c7",
+    backgroundColor: colors.warningLight,
     borderWidth: 2,
-    borderColor: "#f59e0b",
+    borderColor: colors.warning,
     borderRadius: 16,
     padding: 16,
     marginVertical: 12,
     alignItems: "center",
-    shadowColor: "#d97706",
+    shadowColor: colors.warning,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 12,
@@ -3699,38 +3893,42 @@ export const chcEntStyles = StyleSheet.create({
   bannerIcon: {
     fontSize: 24,
     fontWeight: "900",
-    color: "#b45309",
+    fontFamily: typography.bold,
+    color: colors.warning,
     marginBottom: 8
   },
   bannerTitle: {
     fontSize: 16,
     fontWeight: "900",
-    color: "#92400e",
+    fontFamily: typography.bold,
+    color: colors.warning,
     textAlign: "center",
     marginBottom: 4
   },
   bannerHint: {
     fontSize: 13,
     fontWeight: "700",
-    color: "#78350f",
+    fontFamily: typography.bold,
+    color: colors.warning,
     textAlign: "center",
     lineHeight: 18
   },
   entFieldRow: {
     ...lhcboStyles.row,
-    backgroundColor: "#fffbeb"
+    backgroundColor: colors.warningLight
   },
   entLabel: {
     ...lhcboStyles.label,
-    color: "#92400e"
+    color: colors.warning
   },
   entInput: {
     ...lhcboStyles.input,
-    backgroundColor: "#fef7c6",
-    borderColor: "#f59e0b",
+    backgroundColor: colors.warningLight,
+    borderColor: colors.warning,
     minHeight: 52,
     fontSize: 13,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   entServicesInput: {
     ...lhcboStyles.input,
@@ -3739,14 +3937,15 @@ export const chcEntStyles = StyleSheet.create({
   },
   fixedActivityRow: {
     ...lhcboStyles.row,
-    backgroundColor: "#ecfdf5",
-    borderColor: "#6ee7b7"
+    backgroundColor: colors.successLight,
+    borderColor: colors.successLight
   },
   fixedActivityText: {
     ...lhcboStyles.input,
-    color: "#059669",
+    color: colors.success,
     fontWeight: "900",
-    backgroundColor: "#d1fae5"
+    fontFamily: typography.bold,
+    backgroundColor: colors.successLight
   }
 });
 
@@ -3755,28 +3954,29 @@ export const lhGuideStyles = StyleSheet.create({
     gap: 8,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: "#a5b4c8",
-    backgroundColor: "#e2e8f0",
+    borderColor: colors.border,
+    backgroundColor: colors.border,
     padding: 10
   },
   headerCard: {
-    backgroundColor: "#6b7280",
+    backgroundColor: colors.textSecondary,
     borderWidth: 1,
-    borderColor: "#4b5563",
+    borderColor: colors.border,
     paddingHorizontal: 10,
     paddingVertical: 8,
     gap: 2
   },
   headerLine: {
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   formCard: {
     borderWidth: 1,
-    borderColor: "#a8b2c3",
-    backgroundColor: "#d9dee6",
-    padding: 8,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    padding: spacing.cardPad,
     gap: 8
   },
   dropdownRow: {
@@ -3786,15 +3986,16 @@ export const lhGuideStyles = StyleSheet.create({
   },
   dropdownLabel: {
     width: 118,
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   dropdownValueBox: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#9ca3af",
-    backgroundColor: "#ffffff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: 4,
     paddingHorizontal: 8,
     paddingVertical: 6,
@@ -3803,29 +4004,32 @@ export const lhGuideStyles = StyleSheet.create({
     alignItems: "center"
   },
   dropdownValue: {
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 11,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   dropdownArrow: {
-    color: "#f97316",
-    fontWeight: "900"
+    color: colors.accent,
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   rulesCard: {
     borderWidth: 1,
-    borderColor: "#9ca3af",
-    backgroundColor: "#e5e7eb",
-    padding: 8,
+    borderColor: colors.border,
+    backgroundColor: colors.border,
+    padding: spacing.cardPad,
     gap: 4
   },
   ruleLine: {
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 12,
     lineHeight: 24,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   ruleLineActive: {
-    color: "#dc2626"
+    color: colors.error
   },
   footerRow: {
     flexDirection: "row",
@@ -3840,38 +4044,39 @@ export const lhGuideStyles = StyleSheet.create({
     borderWidth: 1
   },
   geoDotGreen: {
-    backgroundColor: "#22c55e",
-    borderColor: "#15803d"
+    backgroundColor: colors.success,
+    borderColor: colors.success
   },
   geoDotIdle: {
-    backgroundColor: "#94a3b8",
-    borderColor: "#64748b"
+    backgroundColor: colors.textPlaceholder,
+    borderColor: colors.textSecondary
   },
   geoDotRed: {
-    backgroundColor: "#ef4444",
-    borderColor: "#b91c1c"
+    backgroundColor: colors.error,
+    borderColor: colors.error
   },
   saveBtn: {
     flex: 1,
-    backgroundColor: "#f97316",
+    backgroundColor: colors.accent,
     borderWidth: 1,
-    borderColor: "#c2410c",
+    borderColor: colors.accent,
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 10
   },
   saveBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 13,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   backBtn: {
     alignSelf: "flex-end",
-    backgroundColor: "#1f2937",
+    backgroundColor: colors.textPrimary,
     borderWidth: 1,
-    borderColor: "#111827",
-    borderRadius: 6,
+    borderColor: colors.textPrimary,
+    borderRadius: radii.button,
     minWidth: 40,
     alignItems: "center",
     justifyContent: "center",
@@ -3879,9 +4084,10 @@ export const lhGuideStyles = StyleSheet.create({
     paddingHorizontal: 10
   },
   backBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   }
 });
 
@@ -3890,38 +4096,40 @@ export const lhcboStatusStyles = StyleSheet.create({
     gap: 8,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: "#9ca3af",
-    backgroundColor: "#e5e7eb",
+    borderColor: colors.border,
+    backgroundColor: colors.border,
     padding: 10
   },
   titleText: {
     fontSize: 15,
     fontWeight: "900",
+    fontFamily: typography.bold,
     textAlign: "left"
   },
   titlePage: {
-    color: "#111827"
+    color: colors.textPrimary
   },
   titleRed: {
-    color: "#dc2626"
+    color: colors.error
   },
   headerCard: {
-    backgroundColor: "#6b7280",
+    backgroundColor: colors.textSecondary,
     borderWidth: 1,
-    borderColor: "#4b5563",
+    borderColor: colors.border,
     paddingHorizontal: 10,
     paddingVertical: 8,
     gap: 2
   },
   headerLine: {
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   contentCard: {
     borderWidth: 1,
-    borderColor: "#7f8794",
-    backgroundColor: "#e5e7eb",
+    borderColor: colors.border,
+    backgroundColor: colors.border,
     minHeight: 470,
     paddingVertical: 18,
     paddingHorizontal: 10,
@@ -3934,23 +4142,24 @@ export const lhcboStatusStyles = StyleSheet.create({
   blockBtn: {
     alignSelf: "center",
     width: "74%",
-    backgroundColor: "#4a75c6",
+    backgroundColor: colors.primary,
     borderWidth: 1,
-    borderColor: "#3159a5",
-    borderRadius: 10,
+    borderColor: colors.primary,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 14,
-    shadowColor: "#334155",
+    shadowColor: colors.textSecondary,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.25,
     shadowRadius: 8,
     elevation: 4
   },
   blockBtnText: {
-    color: "#f8fafc",
+    color: colors.textOnPrimary,
     fontSize: 18,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   chcDetailsWrap: {
     width: "100%",
@@ -3962,8 +4171,8 @@ export const lhcboStatusStyles = StyleSheet.create({
     width: 136,
     height: 176,
     borderWidth: 1.5,
-    borderColor: "#111827",
-    backgroundColor: "#e5e7eb",
+    borderColor: colors.textPrimary,
+    backgroundColor: colors.border,
     marginTop: 90
   },
   footerRow: {
@@ -3980,43 +4189,45 @@ export const lhcboStatusStyles = StyleSheet.create({
     borderWidth: 1
   },
   geoDotGreen: {
-    backgroundColor: "#22c55e",
-    borderColor: "#15803d"
+    backgroundColor: colors.success,
+    borderColor: colors.success
   },
   geoDotRed: {
-    backgroundColor: "#ef4444",
-    borderColor: "#b91c1c"
+    backgroundColor: colors.error,
+    borderColor: colors.error
   },
   saveBtn: {
     flex: 1,
-    backgroundColor: "#f97316",
+    backgroundColor: colors.accent,
     borderWidth: 1,
-    borderColor: "#c2410c",
+    borderColor: colors.accent,
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 11
   },
   saveBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 14,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   }
 });
 
 export const lhStyles = StyleSheet.create({
   headerCard: {
-    backgroundColor: "#6b7280",
+    backgroundColor: colors.textSecondary,
     borderWidth: 1,
-    borderColor: "#4b5563",
+    borderColor: colors.border,
     paddingHorizontal: 10,
     paddingVertical: 8,
     gap: 3
   },
   headerLine: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   dropdownRow: {
     flexDirection: "row",
@@ -4025,15 +4236,16 @@ export const lhStyles = StyleSheet.create({
   },
   dropdownLabel: {
     width: 108,
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   dropdownValueBox: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#9ca3af",
-    backgroundColor: "#ffffff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: 4,
     paddingHorizontal: 8,
     paddingVertical: 6,
@@ -4042,37 +4254,41 @@ export const lhStyles = StyleSheet.create({
     justifyContent: "space-between"
   },
   dropdownValue: {
-    color: "#1f2937",
+    color: colors.textPrimary,
     fontSize: 12,
-    fontWeight: "700"
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   dropdownArrow: {
-    color: "#f97316",
-    fontWeight: "900"
+    color: colors.accent,
+    fontWeight: "900",
+    fontFamily: typography.bold,
   },
   notesCard: {
     borderWidth: 1,
-    borderColor: "#9ca3af",
-    backgroundColor: "#f8fafc",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     paddingHorizontal: 8,
     paddingVertical: 8
   },
   noteLine: {
-    color: "#111827",
+    color: colors.textPrimary,
     fontSize: 12,
     lineHeight: 18
   },
   noteDivider: {
-    color: "#6b7280",
+    color: colors.textSecondary,
     marginVertical: 3
   },
   notePlain: {
-    color: "#111827",
-    fontWeight: "700"
+    color: colors.textPrimary,
+    fontWeight: "700",
+    fontFamily: typography.bold,
   },
   noteHighlight: {
-    color: "#dc2626",
-    fontWeight: "800"
+    color: colors.error,
+    fontWeight: "800",
+    fontFamily: typography.bold,
   },
   footerRow: {
     flexDirection: "row",
@@ -4086,26 +4302,27 @@ export const lhStyles = StyleSheet.create({
     borderWidth: 1
   },
   geoDotGreen: {
-    backgroundColor: "#22c55e",
-    borderColor: "#15803d"
+    backgroundColor: colors.success,
+    borderColor: colors.success
   },
   geoDotRed: {
-    backgroundColor: "#ef4444",
-    borderColor: "#b91c1c"
+    backgroundColor: colors.error,
+    borderColor: colors.error
   },
   saveBtn: {
     flex: 1,
-    backgroundColor: "#f97316",
+    backgroundColor: colors.accent,
     borderWidth: 1,
-    borderColor: "#c2410c",
-    borderRadius: 5,
+    borderColor: colors.accent,
+    borderRadius: radii.button,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 10
   },
   saveBtnText: {
-    color: "#ffffff",
+    color: colors.textOnPrimary,
     fontSize: 12,
-    fontWeight: "800"
+    fontWeight: "800",
+    fontFamily: typography.bold,
   }
 });

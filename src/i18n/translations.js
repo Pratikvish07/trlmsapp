@@ -11,7 +11,8 @@ export const LANGUAGE_OPTIONS = [
   { code: "gu", name: "Gujarati", nativeName: "ગુજરાતી" },
   { code: "kn", name: "Kannada", nativeName: "ಕನ್ನಡ" },
   { code: "ml", name: "Malayalam", nativeName: "മലയാളം" },
-  { code: "pa", name: "Punjabi", nativeName: "ਪੰਜਾਬੀ" }
+  { code: "pa", name: "Punjabi", nativeName: "ਪੰਜਾਬੀ" },
+  { code: "as", name: "Assamese", nativeName: "অসমীয়া" }
 ];
 
 export const LANGUAGE_CODE_MAP = Object.fromEntries(

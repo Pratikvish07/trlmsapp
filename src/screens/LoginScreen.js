@@ -691,7 +691,11 @@ export default function LoginScreen({
               </View>
             </Field>
 
-            <Field label={t("CRP ID / Master ID")} required>
+            <Field
+              label={t("CRP ID / Master ID")}
+              required
+              helper={t("Enter the ID matching the type selected above")}
+            >
               <TextInput
                 style={styles.loginInput}
                 placeholder={t("Enter ID")}
@@ -767,7 +771,11 @@ export default function LoginScreen({
 
             <View style={styles.signupRow}>
               <View style={styles.signupHalfInput}>
-                <Field label={t("Aadhaar No")} required>
+                <Field
+                  label={t("Aadhaar No")}
+                  required
+                  helper={t("As printed on your Aadhaar card")}
+                >
                   <TextInput
                     style={styles.loginInput}
                     placeholder="12 digits"
@@ -798,7 +806,11 @@ export default function LoginScreen({
               </View>
 
               <View style={styles.signupHalfInput}>
-                <Field label={t("LokOS ID")} required>
+                <Field
+                  label={t("LokOS ID")}
+                  required
+                  helper={t("Given to you by your project office")}
+                >
                   <TextInput
                     style={styles.loginInput}
                     placeholder="12 digits"
@@ -896,7 +908,11 @@ export default function LoginScreen({
 
             <View style={styles.signupRow}>
               <View style={styles.signupHalfInput}>
-                <Field label={t("Contact No")} required>
+                <Field
+                  label={t("Contact No")}
+                  required
+                  helper={t("10-digit mobile number, without +91")}
+                >
                   <TextInput
                     style={styles.loginInput}
                     placeholder="10 digits"
@@ -988,7 +1004,11 @@ export default function LoginScreen({
 
             <View style={styles.signupRow}>
               <View style={styles.signupHalfInput}>
-                <Field label={t("Password")} required>
+                <Field
+                  label={t("Password")}
+                  required
+                  helper={t("Include an uppercase letter, a lowercase letter, a number, and a special character")}
+                >
                   <TextInput
                     style={styles.loginInput}
                     placeholder={t("Set password")}

@@ -12,9 +12,11 @@ import {
   fetchCrpTypes,
   fetchGpsByBlock,
   fetchLandTypes,
+  fetchMemberActivities,
   fetchProductionMaster,
   fetchSeasons,
   fetchShgMembersByVillage,
+  fetchShgTrackingSupport,
   fetchSubCategoriesByActivity,
   fetchTradeOptions,
   fetchTrainingAgencyOptions,
@@ -111,22 +113,26 @@ function DropdownField({
       </Pressable>
       {open ? (
         <View style={smStyles.dropdownMenu}>
-          {normalizedOptions.map((item) => (
-            <Pressable
-              key={`${item.id}-${item.name}`}
-              style={[smStyles.dropdownItem, value === item.name && smStyles.dropdownItemActive]}
-              onPress={() => onSelect(item.rawValue)}
-            >
-              <Text
-                style={[
-                  smStyles.dropdownItemText,
-                  value === item.name && smStyles.dropdownItemTextActive
-                ]}
+          {normalizedOptions.length ? (
+            normalizedOptions.map((item) => (
+              <Pressable
+                key={`${item.id}-${item.name}`}
+                style={[smStyles.dropdownItem, value === item.name && smStyles.dropdownItemActive]}
+                onPress={() => onSelect(item.rawValue)}
               >
-                {item.name}
-              </Text>
-            </Pressable>
-          ))}
+                <Text
+                  style={[
+                    smStyles.dropdownItemText,
+                    value === item.name && smStyles.dropdownItemTextActive
+                  ]}
+                >
+                  {item.name}
+                </Text>
+              </Pressable>
+            ))
+          ) : (
+            <Text style={smStyles.dropdownItemText}>No options available yet</Text>
+          )}
         </View>
       ) : null}
     </View>
@@ -319,7 +325,7 @@ function DatePickerInput({ value, onChange }) {
   }
 
   return (
-    <RNTextInput
+    <TextInput
       style={tsDetailStyles.modalDateInput}
       value={value}
       onChangeText={onChange}
@@ -340,7 +346,7 @@ function EditableSelect({ value, options, onChange, placeholder, inputStyle }) {
 
   return (
     <View style={tsDetailStyles.selectWrap}>
-      <RNTextInput
+      <TextInput
         style={[tsDetailStyles.selectInput, inputStyle]}
         value={value}
         onFocus={() => setOpen(true)}
@@ -373,6 +379,15 @@ function EditableSelect({ value, options, onChange, placeholder, inputStyle }) {
           </ScrollView>
         </View>
       ) : null}
+      {open && !filteredOptions.length ? (
+        <View style={tsDetailStyles.selectMenu}>
+          <Text style={tsDetailStyles.selectEmptyText}>
+            {normalizedOptions.length
+              ? "No matching options - check the spelling or try a different search"
+              : "No options available yet"}
+          </Text>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -382,14 +397,6 @@ const FARM_TYPE_OPTIONS = ["Seasonal", "Perennial"];
 const FARM_SEASON_OPTIONS = ["Rabi", "Kharif", "Summer", "Winter", "Rainy"];
 const FARM_LAND_OPTIONS = ["Tilla", "Low", "Plain"];
 const FARM_PRODUCTION_UNIT_OPTIONS = ["KG", "Quintal"];
-const SUPPORT_ACTIVITY_OPTIONS = [
-  "Paddy Cultivation",
-  "Vegetable Farming",
-  "Piggery",
-  "Poultry",
-  "Fishery",
-  "Goat Rearing"
-];
 const SUPPORT_SOURCE_OPTIONS = [
   "SHG Loan",
   "Bank Loan",
@@ -498,6 +505,11 @@ export default function DashboardHomeTab({
   const [nonFarmSetupCategoryOptions, setNonFarmSetupCategoryOptions] = useState(
     ["Manufacturing", "Service", "Trading"]
   );
+  const [memberActivityOptions, setMemberActivityOptions] = useState([]);
+  // Full {id, name} records so Financial Support save can resolve the
+  // numeric activityId the API requires - the plain-name options above
+  // only carry the label the dropdown displays.
+  const [memberActivityRecords, setMemberActivityRecords] = useState([]);
   // Full {id, name} records (not just display names) so the Activity
   // Profile payload can resolve unitId/seasonId/landTypeId - the API
   // requires the numeric id, not the label.
@@ -568,6 +580,8 @@ export default function DashboardHomeTab({
   const [trackingSubmitting, setTrackingSubmitting] = useState(false);
   const [apiSavingKey, setApiSavingKey] = useState("");
   const [supportStage, setSupportStage] = useState("");
+  const [supportHistory, setSupportHistory] = useState(null);
+  const [supportHistoryLoading, setSupportHistoryLoading] = useState(false);
   const [activityProfile, setActivityProfile] = useState({
     activityName: "",
     areaQuantity: "",
@@ -1183,21 +1197,25 @@ export default function DashboardHomeTab({
     // instead of a clear message about production creation itself failing.
     // Now it throws, so the real reason surfaces in the Save alert.
     //
-    // CONFIRMED via live GET /api/production-master/get-all: the entity's
-    // real field is "ProductionName" (PascalCase), not "name" - sending
-    // "name" left ProductionName empty server-side and triggered "The name
-    // field is required" on save regardless of what was typed.
-    const response = await submitProductionMaster({ ProductionName: trimmedName });
-    const savedRecord = Array.isArray(response) ? response[0] : response;
-    const newId =
-      savedRecord?.productionId ??
-      savedRecord?.ProductionId ??
-      savedRecord?.id ??
-      savedRecord?.Id ??
-      0;
+    // CONFIRMED via live swagger.json: /api/production-master/save takes
+    // `id`/`name` as query-string params (same shape as submitTrainingAgency),
+    // not a JSON body - the old {ProductionName} JSON body was always
+    // ignored server-side, hence "The name field is required" every time.
+    // The save response is a plain success message with no id in it, so the
+    // new productionId has to be looked up afterward.
+    //
+    // /production-master/search came back empty right after a successful
+    // save (confirmed live) - not reliable for a just-created row. Using
+    // get-all instead, same as the initial options list is loaded with.
+    await submitProductionMaster({ name: trimmedName });
+    const matches = await fetchProductionMaster();
+    const savedRecord =
+      matches.find((item) => item.name.trim().toLowerCase() === trimmedName.toLowerCase()) ||
+      matches[0];
+    const newId = savedRecord?.id ?? 0;
     if (!newId) {
       throw new Error(
-        `Production "${trimmedName}" was saved but no id came back in the response (got: ${JSON.stringify(savedRecord)}). The field name guess for the id is probably wrong.`
+        `Production "${trimmedName}" was saved but couldn't be found afterward in the list (got: ${JSON.stringify(matches)}).`
       );
     }
     setProductionMasterOptions((prev) => [...prev, { id: Number(newId), name: trimmedName }]);
@@ -1251,6 +1269,10 @@ export default function DashboardHomeTab({
       // id (`{"Message":"Inserted Successfully","Id":2}`). Every previous
       // theory about what value this needed (0, the /api/livelihood id)
       // was wrong - the fix was to not send the key at all.
+      //
+      // activityProfileId must be sent explicitly as null on create (per
+      // your instruction) - not omitted, and not 0.
+      activityProfileId: null,
       activityId: resolvedActivityId,
       area: Number(areaValue) || 0,
       activityTypeId: resolvedActivityTypeId,
@@ -1518,6 +1540,65 @@ export default function DashboardHomeTab({
     ].join("\n");
   };
 
+  // CONFIRMED via live Swagger test on trlm.pickitover.com: /api/financial-support/insert
+  // takes {financialSupportId, shgMemberId, activityId, isFinancialSupportRequired,
+  // loanCycleId} and returns {"Message":"Inserted Successfully","Id":17} - financialSupportId
+  // is sent as null (not omitted, not 0) on create, same as activityProfileId elsewhere.
+  const handleSaveFinancialSupport = async () => {
+    if (apiSavingKey) {
+      return;
+    }
+
+    if (!selectedAssignedMember) {
+      showAppAlert("Financial Support", "No SHG member selected for this financial support record.");
+      return;
+    }
+
+    if (!financialSupportForm.activityOfMember || !financialSupportForm.loanCyclePreferred) {
+      showAppAlert(
+        "Financial Support",
+        "Select activity and loan cycle before saving."
+      );
+      return;
+    }
+
+    const resolvedActivityId =
+      memberActivityRecords.find((item) => item.name === financialSupportForm.activityOfMember)?.id || 0;
+    if (!resolvedActivityId) {
+      showAppAlert("Financial Support", "Select a valid Activity of the Member before saving.");
+      return;
+    }
+
+    const cycleMatch = String(financialSupportForm.loanCyclePreferred || "").match(/(\d+)/);
+    const resolvedLoanCycleId = Number(cycleMatch?.[1]) || 0;
+
+    const payload = {
+      financialSupportId: null,
+      shgMemberId: Number(selectedAssignedMember.id) || 0,
+      activityId: resolvedActivityId,
+      isFinancialSupportRequired: !!financialSupportForm.financialSupportRequired,
+      loanCycleId: resolvedLoanCycleId
+    };
+
+    try {
+      setApiSavingKey("financialSupport");
+      await submitFinancialSupport(payload);
+      const calculationSummary = buildFinancialSupportProjection();
+      const enteredValuesSummary = buildSaveSummary(financialSupportForm);
+      const popupMessage = calculationSummary
+        ? `${calculationSummary}\n\nEntered Values\n${enteredValuesSummary}`
+        : enteredValuesSummary;
+      showResponsePopup("Saved", popupMessage, "technicalSupport");
+    } catch (error) {
+      showAppAlert(
+        "Financial Support",
+        error.message || "Unable to save financial support right now."
+      );
+    } finally {
+      setApiSavingKey("");
+    }
+  };
+
   // technicalSupportForm.skillDate/edpDate are stored in DD-MM-YYYY display
   // format (see formatIsoDateToDisplay, used when the date picker confirms
   // a selection) - not ISO. new Date("16-09-2026") is not a format the JS
@@ -1602,6 +1683,41 @@ export default function DashboardHomeTab({
     onOpenUpdateData(targetView);
   };
 
+  // CONFIRMED live via GET /api/shg-tracking/get_Support/{shgMemberId}:
+  // {SHGMemberId, PastSupport:{Financial:[],Technical:[]}, PresentSupport:
+  // {...}, SupportRequired:{...}} - one fetch backs all three segment
+  // buttons, keyed by which one was tapped.
+  const handleOpenSupportHistory = async (stageLabel) => {
+    const meters = await checkRadiusDistance(false);
+    const canProceed = meters !== null && meters <= 50;
+
+    if (!canProceed) {
+      showResponsePopup(
+        "Geo Verification Required",
+        "Enable location and get the green geo token before opening support modules."
+      );
+      return;
+    }
+
+    if (!selectedAssignedMember) {
+      showAppAlert("Support History", "No SHG member selected.");
+      return;
+    }
+
+    setSupportStage(stageLabel);
+
+    try {
+      setSupportHistoryLoading(true);
+      const data = await fetchShgTrackingSupport(Number(selectedAssignedMember.id) || 0);
+      setSupportHistory(data);
+      onOpenUpdateData("technicalSupportHistory");
+    } catch (error) {
+      showAppAlert("Support History", error.message || "Unable to load support history right now.");
+    } finally {
+      setSupportHistoryLoading(false);
+    }
+  };
+
   const openDatePicker = (scope, field, title, currentValue = "") => {
     setTrainingDatePicker({
       visible: true,
@@ -1654,21 +1770,21 @@ export default function DashboardHomeTab({
         >
           <View style={pageStyles.dashboardAlertHeader}>
             <View style={pageStyles.dashboardAlertIconWrap}>
-              <RNText style={pageStyles.dashboardAlertIcon}>!</RNText>
+              <Text style={pageStyles.dashboardAlertIcon}>!</Text>
             </View>
             <View style={pageStyles.dashboardAlertCopy}>
-              <RNText style={pageStyles.dashboardAlertTitle}>Notifications</RNText>
-              <RNText style={pageStyles.dashboardAlertHint}>{firstDashboardNotification}</RNText>
+              <Text style={pageStyles.dashboardAlertTitle}>Notifications</Text>
+              <Text style={pageStyles.dashboardAlertHint}>{firstDashboardNotification}</Text>
             </View>
             <View style={pageStyles.dashboardAlertBadge}>
-              <RNText style={pageStyles.dashboardAlertBadgeText}>{dashboardAlertCount}</RNText>
+              <Text style={pageStyles.dashboardAlertBadgeText}>{dashboardAlertCount}</Text>
             </View>
           </View>
           <View style={pageStyles.dashboardAlertList}>
             {dashboardNotificationItems.map((item, index) => (
               <View key={`${item}-${index}`} style={pageStyles.dashboardAlertListRow}>
                 <View style={pageStyles.dashboardAlertListDot} />
-                <RNText style={pageStyles.dashboardAlertListText}>{item}</RNText>
+                <Text style={pageStyles.dashboardAlertListText}>{item}</Text>
               </View>
             ))}
           </View>
@@ -2362,7 +2478,8 @@ export default function DashboardHomeTab({
         fetchProductionMaster(),
         fetchActivityTypes(),
         fetchTradeOptions(),
-        fetchTrainingAgencyOptions()
+        fetchTrainingAgencyOptions(),
+        fetchMemberActivities()
       ]);
 
       if (!active) {
@@ -2380,7 +2497,8 @@ export default function DashboardHomeTab({
         productionRes,
         activityTypesRes,
         tradeRes,
-        trainingAgencyRes
+        trainingAgencyRes,
+        memberActivityRes
       ] = results;
 
       if (crpTypesRes.status === "fulfilled" && crpTypesRes.value.length) {
@@ -2415,6 +2533,10 @@ export default function DashboardHomeTab({
       }
       if (trainingAgencyRes.status === "fulfilled" && trainingAgencyRes.value.length) {
         setTrainingAgencyRecords(trainingAgencyRes.value);
+      }
+      if (memberActivityRes.status === "fulfilled" && memberActivityRes.value.length) {
+        setMemberActivityOptions(memberActivityRes.value.map((item) => item.name));
+        setMemberActivityRecords(memberActivityRes.value);
       }
       if (activitiesRes.status === "fulfilled" && activitiesRes.value.length) {
         // "Non-Farm" category (CategoryId 2) activity names are exactly
@@ -5007,7 +5129,7 @@ export default function DashboardHomeTab({
                   ].map(([key, label]) => (
                     <View key={key} style={tsDetailStyles.fieldBlock}>
                       <Text style={tsDetailStyles.label}>{label}</Text>
-                      <RNTextInput
+                      <TextInput
                         style={tsDetailStyles.selectInput}
                         value={chcDetailForm[key]}
                         onChangeText={(text) =>
@@ -5214,7 +5336,7 @@ export default function DashboardHomeTab({
             <View style={tsDetailStyles.sectionCard}>
               <View style={tsDetailStyles.fieldBlock}>
                 <Text style={tsDetailStyles.label}>Product / Activity Details</Text>
-                <RNTextInput
+                <TextInput
                   style={tsDetailStyles.selectInput}
                   value={nfcActivityProfileForm.productActivityDetails}
                   onChangeText={(text) =>
@@ -5256,7 +5378,7 @@ export default function DashboardHomeTab({
               ))}
               <View style={tsDetailStyles.fieldBlock}>
                 <Text style={tsDetailStyles.label}>Total Employment associated</Text>
-                <RNTextInput
+                <TextInput
                   style={tsDetailStyles.selectInput}
                   value={nfcActivityProfileForm.totalEmploymentAssociated}
                   onChangeText={(text) =>
@@ -5282,7 +5404,7 @@ export default function DashboardHomeTab({
               ].map(([key, label]) => (
                 <View key={key} style={tsDetailStyles.fieldBlock}>
                   <Text style={tsDetailStyles.label}>{label}</Text>
-                  <RNTextInput
+                  <TextInput
                     style={tsDetailStyles.selectInput}
                     value={nfcActivityProfileForm[key]}
                     onChangeText={(text) =>
@@ -5295,7 +5417,7 @@ export default function DashboardHomeTab({
               ))}
               <View style={tsDetailStyles.fieldBlock}>
                 <Text style={tsDetailStyles.label}>Monthly Production Volume</Text>
-                <RNTextInput
+                <TextInput
                   style={tsDetailStyles.selectInput}
                   value={nfcActivityProfileForm.monthlyProductionVolume}
                   onChangeText={(text) =>
@@ -5413,7 +5535,7 @@ export default function DashboardHomeTab({
               {financialMeta.fields.map(([key, label]) => (
                 <View key={key} style={tsDetailStyles.fieldBlock}>
                   <Text style={tsDetailStyles.label}>{label}</Text>
-                  <RNTextInput
+                  <TextInput
                     style={tsDetailStyles.selectInput}
                     value={activeFinancialForm[key]}
                     onChangeText={(text) =>
@@ -5478,7 +5600,7 @@ export default function DashboardHomeTab({
               ].map(([key, label]) => (
                 <View key={key} style={tsDetailStyles.fieldBlock}>
                   <Text style={tsDetailStyles.label}>{label}</Text>
-                  <RNTextInput
+                  <TextInput
                     style={tsDetailStyles.selectInput}
                     value={activeIncomeForm[key]}
                     onChangeText={(text) =>
@@ -5597,13 +5719,8 @@ export default function DashboardHomeTab({
                     supportStage === item && tsCardStyles.segmentBtnActive,
                     geoStatusVariant !== "green" && tsCardStyles.lockedButton
                   ]}
-                  onPress={() => {
-                    if (item === "Past Supports") {
-                      handleOpenTechnicalSupportModule("technicalSupportPast", item);
-                      return;
-                    }
-                    handleOpenTechnicalSupportModule("technicalSupportFinancial", item);
-                  }}
+                  onPress={() => handleOpenSupportHistory(item)}
+                  disabled={supportHistoryLoading}
                 >
                   <Text style={tsCardStyles.segmentBtnText}>
                     {item === "Past Supports"
@@ -5858,7 +5975,7 @@ export default function DashboardHomeTab({
   }
 
   if (homeView === "technicalSupportFinancial") {
-    const activityOptions = SUPPORT_ACTIVITY_OPTIONS;
+    const activityOptions = memberActivityOptions;
     const loanCycleOptions = ["Cycle 1", "Cycle 2", "Cycle 3"];
 
     return (
@@ -5973,17 +6090,12 @@ export default function DashboardHomeTab({
               </Pressable>
               <Pressable
                 style={fsStyles.saveActionBtn}
-                onPress={() => {
-                  const calculationSummary = buildFinancialSupportProjection();
-                  const enteredValuesSummary = buildSaveSummary(financialSupportForm);
-                  const popupMessage = calculationSummary
-                    ? `${calculationSummary}\n\nEntered Values\n${enteredValuesSummary}`
-                    : enteredValuesSummary;
-
-                  showResponsePopup("Saved", popupMessage, "technicalSupport");
-                }}
+                onPress={handleSaveFinancialSupport}
+                disabled={apiSavingKey === "financialSupport"}
               >
-                <Text style={fsStyles.saveActionBtnText}>Save</Text>
+                <Text style={fsStyles.saveActionBtnText}>
+                  {apiSavingKey === "financialSupport" ? "Saving..." : "Save"}
+                </Text>
               </Pressable>
             </View>
           </View>
@@ -5993,8 +6105,87 @@ export default function DashboardHomeTab({
     );
   }
 
+  if (homeView === "technicalSupportHistory") {
+    const stageKeyByLabel = {
+      "Past Supports": "PastSupport",
+      "Present Support": "PresentSupport",
+      "Support Required": "SupportRequired"
+    };
+    const stageKey = stageKeyByLabel[supportStage] || "PastSupport";
+    const stageData = supportHistory?.[stageKey] || {};
+    const financialEntries = Array.isArray(stageData.Financial) ? stageData.Financial : [];
+    const technicalEntries = Array.isArray(stageData.Technical) ? stageData.Technical : [];
+
+    const resolveActivityName = (activityId) =>
+      memberActivityRecords.find((item) => String(item.id) === String(activityId))?.name ||
+      `Activity #${activityId}`;
+
+    const formatSupportDate = (value) => {
+      const parsed = value ? new Date(value) : null;
+      return parsed && !Number.isNaN(parsed.getTime()) ? parsed.toLocaleDateString() : "-";
+    };
+
+    return (
+      <View style={pageStyles.screen}>
+        <View style={flowStyles.investmentShell}>
+          <View style={flowStyles.investmentHero}>
+            <View style={flowStyles.investmentTitleWrap}>
+              <Text style={flowStyles.investmentTitle}>{supportStage || "Support History"}</Text>
+            </View>
+            <Text style={flowStyles.investmentEyebrow}>Technical Support</Text>
+            <Text style={flowStyles.investmentHint}>
+              Live records from the server for {selectedMemberName}.
+            </Text>
+          </View>
+
+          <View style={fsStyles.card}>
+            <Text style={fsStyles.fieldLabel}>Financial Support</Text>
+            {financialEntries.length === 0 ? (
+              <Text style={fsStyles.fieldLabel}>No records yet.</Text>
+            ) : (
+              financialEntries.map((entry, index) => (
+                <View key={entry.FinancialSupportId ?? index} style={fsStyles.fieldBlock}>
+                  <Text style={fsStyles.fieldLabel}>{resolveActivityName(entry.ActivityId)}</Text>
+                  <Text>
+                    Support Required: {entry.IsFinancialSupportRequired ? "Yes" : "No"}
+                    {"\n"}
+                    Loan Cycle: {entry.LoanCycleName || entry.LoanCycleId || "-"}
+                    {"\n"}
+                    Saved On: {formatSupportDate(entry.CreatedDate)}
+                  </Text>
+                </View>
+              ))
+            )}
+          </View>
+
+          <View style={fsStyles.card}>
+            <Text style={fsStyles.fieldLabel}>Technical Support</Text>
+            {technicalEntries.length === 0 ? (
+              <Text style={fsStyles.fieldLabel}>No records yet.</Text>
+            ) : (
+              technicalEntries.map((entry, index) => (
+                <View key={entry.TechnicalSupportId ?? index} style={fsStyles.fieldBlock}>
+                  <Text style={fsStyles.fieldLabel}>{resolveActivityName(entry.ActivityId)}</Text>
+                  <Text>Saved On: {formatSupportDate(entry.CreatedDate)}</Text>
+                </View>
+              ))
+            )}
+          </View>
+
+          <Pressable
+            style={fsStyles.saveActionBtn}
+            onPress={() => onOpenUpdateData("technicalSupport")}
+          >
+            <Text style={fsStyles.saveActionBtnText}>Back</Text>
+          </Pressable>
+        </View>
+        {renderResponsePopup()}
+      </View>
+    );
+  }
+
   if (homeView === "technicalSupportPast") {
-    const activityOptions = SUPPORT_ACTIVITY_OPTIONS;
+    const activityOptions = memberActivityOptions;
     const sourceOptions = SUPPORT_SOURCE_OPTIONS;
     const rateOptions = ["8", "10", "12", "14"];
     const statusOptions = ["Pending", "Completed"];

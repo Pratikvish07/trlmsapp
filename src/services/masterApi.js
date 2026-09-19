@@ -68,7 +68,13 @@ export const API_ENDPOINTS = {
       "/api/shg-tracking/upload-video",
     shgTrackingGeo:
       process.env.EXPO_PUBLIC_SHG_TRACKING_GEO_PATH ||
-      "/api/shg-tracking/geo"
+      "/api/shg-tracking/geo",
+    // CONFIRMED live via Swagger: returns {SHGMemberId, PastSupport:
+    // {Financial:[],Technical:[]}, PresentSupport:{...}, SupportRequired:
+    // {...}} - backs the Past Supports / Present Support / Support Required
+    // segment buttons on the Technical Support screen.
+    shgTrackingGetSupport: (shgMemberId) =>
+      `${process.env.EXPO_PUBLIC_SHG_TRACKING_GET_SUPPORT_PATH || "/api/shg-tracking/get_Support"}/${shgMemberId}`
   },
   activityProfile: {
     save:
@@ -138,6 +144,11 @@ export const API_ENDPOINTS = {
     save:
       process.env.EXPO_PUBLIC_PRODUCTION_MASTER_SAVE_PATH ||
       "/api/production-master/save"
+  },
+  memberActivity: {
+    getAll:
+      process.env.EXPO_PUBLIC_MEMBER_ACTIVITY_GET_ALL_PATH ||
+      "/api/member-activity/get-all"
   }
 };
 
@@ -716,6 +727,13 @@ export async function submitShgTrackingGeo(payload) {
   return executeJsonRequest(API_ENDPOINTS.livelihood.shgTrackingGeo, "SHG tracking geo", payload);
 }
 
+export async function fetchShgTrackingSupport(shgMemberId) {
+  return executeRequest(
+    API_ENDPOINTS.livelihood.shgTrackingGetSupport(shgMemberId),
+    "SHG support history"
+  );
+}
+
 export async function submitShgTrackingCreate(payload) {
   return executeJsonRequest(API_ENDPOINTS.livelihood.shgTrackingCreate, "SHG tracking create", payload);
 }
@@ -767,12 +785,54 @@ export async function fetchProductionMaster() {
   ]);
 }
 
+// CONFIRMED live via GET /api/member-activity/get-all: returns
+// [{"ActivityId":1,"ActivityName":"Paddy Cultivation",...}, ...] - the same
+// six values ("Activity of the Member" on the Financial Support form) that
+// were previously hardcoded in SUPPORT_ACTIVITY_OPTIONS.
+export async function fetchMemberActivities() {
+  const payload = await executeRequest(
+    API_ENDPOINTS.memberActivity.getAll,
+    "member activity"
+  );
+  return mapCollection(payload, ["activityId", "ActivityId", "id", "value"], [
+    "activityName",
+    "ActivityName",
+    "name",
+    "label"
+  ]);
+}
+
 // Used when the CRP types a production name that isn't in the master list
 // yet - creates it server-side so we get back a real productionId instead
 // of submitting 0 (which is what was silently happening before, and part
 // of why /activity-profile/save was rejecting the request).
-export async function submitProductionMaster(payload) {
-  return executeJsonRequest(API_ENDPOINTS.productionMaster.save, "production master", payload);
+//
+// CONFIRMED via live swagger.json (trlm.pickitover.com/api/swagger/v1/swagger.json):
+// this endpoint takes `id` and `name` as query-string parameters, not a JSON
+// body - same shape as submitTrainingAgency() below. Sending {ProductionName}
+// as a JSON body (the old code) always hit "The name field is required" (400)
+// because the server never looks at the body at all.
+//
+// NOTE: even called correctly, this endpoint currently 500s server-side on
+// trlm.pickitover.com - `{"detail":"@ActivityTypeId is not a parameter for
+// procedure sp_ProductionMaster_CRUD."}` - for every request, including the
+// bare minimum id=0/name=X. That's a backend stored-procedure bug (confirmed
+// via direct curl against the live API), not a client payload problem -
+// needs the backend team to fix sp_ProductionMaster_CRUD before "add new
+// production" can work at all.
+export async function submitProductionMaster({ id = 0, name = "" }) {
+  const query = new URLSearchParams({
+    id: String(Number(id) || 0),
+    name: String(name || "")
+  });
+
+  return executeRequest(
+    `${API_ENDPOINTS.productionMaster.save}?${query.toString()}`,
+    "production master",
+    {
+      method: "POST"
+    }
+  );
 }
 
 // UNVERIFIED: exact request shape for /api/financial-support/loan-projectio
