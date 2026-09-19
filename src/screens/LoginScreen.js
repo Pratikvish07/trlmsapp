@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useI18n } from "../i18n/I18nProvider";
+import { LANGUAGE_OPTIONS, getLanguageCode, getLanguageNativeName } from "../i18n/translations";
 import {
   fetchBlocksByDistrict,
   fetchCategories,
@@ -147,7 +148,9 @@ export default function LoginScreen({
   signupApiModal,
   onCloseSignupApiModal
 }) {
-  const { t } = useI18n();
+  const { t, language, setLanguage } = useI18n();
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  const currentLanguageCode = getLanguageCode(language);
   const [mode, setMode] = useState("login");
   const [districts, setDistricts] = useState([]);
   const [blocks, setBlocks] = useState([]);
@@ -564,6 +567,42 @@ export default function LoginScreen({
         contentContainerStyle={styles.loginFormArea}
         keyboardShouldPersistTaps="handled"
       >
+        <View style={styles.loginTopBar}>
+          <Pressable
+            style={styles.loginLanguageSwitcherButton}
+            onPress={() => setShowLanguageMenu((prev) => !prev)}
+          >
+            <Text style={styles.loginLanguageSwitcherText}>
+              {getLanguageNativeName(currentLanguageCode)}
+            </Text>
+          </Pressable>
+        </View>
+
+        {showLanguageMenu ? (
+          <View style={styles.loginLanguageMenuPopup}>
+            {LANGUAGE_OPTIONS.map((item) => {
+              const activeLanguage = item.code === currentLanguageCode;
+              return (
+                <Pressable
+                  key={item.code}
+                  style={[styles.languageMenuItem, activeLanguage && styles.languageMenuItemActive]}
+                  onPress={() => {
+                    setShowLanguageMenu(false);
+                    setLanguage(item.code);
+                  }}
+                >
+                  <Text style={[styles.languageMenuText, activeLanguage && styles.languageMenuTextActive]}>
+                    {item.nativeName}
+                  </Text>
+                  <Text style={[styles.languageMenuHint, activeLanguage && styles.languageMenuTextActive]}>
+                    {item.name}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+        ) : null}
+
         <Animated.View
           style={[
             styles.loginHeader,

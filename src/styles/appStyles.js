@@ -1569,6 +1569,44 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     fontFamily: typography.bold
   },
+  loginTopBar: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    paddingHorizontal: 4,
+    paddingTop: 4
+  },
+  loginLanguageSwitcherButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    height: 34,
+    borderRadius: radii.pill,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: 10
+  },
+  loginLanguageSwitcherText: {
+    color: colors.textPrimary,
+    fontSize: 12,
+    fontWeight: "700",
+    fontFamily: typography.semiBold
+  },
+  loginLanguageMenuPopup: {
+    alignSelf: "flex-end",
+    marginTop: 6,
+    width: 190,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radii.card,
+    paddingVertical: 6,
+    shadowColor: colors.textPrimary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    elevation: 8
+  },
 
   // Enhanced Login/Signup Screen Styles
   loginContainer: {
