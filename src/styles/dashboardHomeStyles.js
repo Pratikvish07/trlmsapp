@@ -6,6 +6,7 @@ export const pageStyles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: spacing.screenPad,
     position: "relative",
+    overflow: "hidden",
     backgroundColor: colors.appBg
   },
   bgGlowTop: {

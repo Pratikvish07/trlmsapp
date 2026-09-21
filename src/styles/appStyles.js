@@ -610,6 +610,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: spacing.screenPad,
+    position: "relative",
+    overflow: "hidden",
   },
   splashTopBand: {
     position: "absolute",
@@ -939,6 +941,7 @@ const styles = StyleSheet.create({
   dashboardWrap: {
     flex: 1,
     position: "relative",
+    overflow: "hidden",
     backgroundColor: colors.appBg
   },
   dashboardGlowTop: {
