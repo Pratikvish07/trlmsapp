@@ -63,6 +63,8 @@ import {
   CHC_ACTIVITY_DISPLAY,
   LIVELIHOOD_CBO_NAME_OPTIONS
 } from "../../constants/livelihoodOptions";
+import { DashboardContextProvider } from "./dashboard/DashboardContext";
+import WorkingReportView from "./dashboard/views/WorkingReportView";
 
 // CRP ID / GP / Village / SHG / Member selection lived only in this
 // component's React state, with no persistence - a page reload (common on
@@ -2732,170 +2734,85 @@ export default function DashboardHomeTab({
       });
   };
 
-    if (homeView === "workingReport") {
-      return (
-        <View style={pageStyles.screen}>
-          {renderAlertPopup()}
-          <View style={pageStyles.frame}>
-          <View style={pageStyles.topRow}>
-            <View style={pageStyles.imageCard}>
-              <Text style={pageStyles.imageText}>CRP{"\n"}Image</Text>
-            </View>
-            <View style={pageStyles.infoCard}>
-              <Text style={pageStyles.infoLine}>CRP ID: {headerCrpId}</Text>
-              <Text style={pageStyles.infoLine}>Name: {headerCrpName}</Text>
-            </View>
-          </View>
+  const dashboardContextValue = {
+    user, dashboardMetrics, workingReport, setWorkingReport, onSubmitWorkingReport,
+    assignedShgMembers, onLockAssignedShgLocation, onOpenWorkingReport, onOpenShgMember,
+    onOpenLhCboActivity, onOpenNewEnrolment, onOpenUpdateData, alerts, activities, homeView,
+    onBackToDashboard, showPostCheckoutModal, setShowPostCheckoutModal, onLogout,
+    apiAssignedShgMembers, setApiAssignedShgMembers, showCrpTypeMenu, setShowCrpTypeMenu,
+    activityOptions, setActivityOptions, subCategoryOptions, setSubCategoryOptions,
+    selectedCrpType, setSelectedCrpType, crpTypeOptions, setCrpTypeOptions,
+    landTypeOptions, setLandTypeOptions, unitOfAreaOptions, setUnitOfAreaOptions,
+    seasonOptions, setSeasonOptions, livestockSubCategoryOptions, setLivestockSubCategoryOptions,
+    fisherySubCategoryOptions, setFisherySubCategoryOptions,
+    nonFarmSetupCategoryOptions, setNonFarmSetupCategoryOptions,
+    memberActivityOptions, setMemberActivityOptions, memberActivityRecords, setMemberActivityRecords,
+    unitOfAreaRecords, setUnitOfAreaRecords, seasonRecords, setSeasonRecords,
+    landTypeRecords, setLandTypeRecords, tradeRecords, setTradeRecords,
+    trainingAgencyRecords, setTrainingAgencyRecords, activityTypeRecords, setActivityTypeRecords,
+    productionMasterOptions, setProductionMasterOptions,
+    shgName, setShgName, memberName, setMemberName, activityType, setActivityType,
+    subCategory, setSubCategory, openShgDropdown, setOpenShgDropdown,
+    openMemberDropdown, setOpenMemberDropdown, openActivityDropdown, setOpenActivityDropdown,
+    openSubCategoryDropdown, setOpenSubCategoryDropdown, lhCboType, setLhCboType,
+    selectedLhCboName, setSelectedLhCboName, selectedLhCboActivity, setSelectedLhCboActivity,
+    isChcEnterprisesMode, setIsChcEnterprisesMode, chcEnterpriseName, setChcEnterpriseName,
+    chcServices, setChcServices, lhCboImages, setLhCboImages, lhCboImageIndex, setLhCboImageIndex,
+    memberBelongsToLhCbo, setMemberBelongsToLhCbo, lhCboName, setLhCboName,
+    distanceToMember, setDistanceToMember, isDistanceLoading, setIsDistanceLoading,
+    locationPromptRequired, setLocationPromptRequired, currentCrpLocation, setCurrentCrpLocation,
+    activityCoordinates, setActivityCoordinates, uploadedImageName, setUploadedImageName,
+    uploadedImageDate, setUploadedImageDate, uploadedImageUri, setUploadedImageUri,
+    uploadedVideoName, setUploadedVideoName, uploadedVideoDate, setUploadedVideoDate,
+    uploadedVideoUri, setUploadedVideoUri, trackingRemarks, setTrackingRemarks,
+    trackingSubmitting, setTrackingSubmitting, apiSavingKey, setApiSavingKey,
+    supportStage, setSupportStage, supportHistory, setSupportHistory,
+    supportHistoryLoading, setSupportHistoryLoading, activityProfile, setActivityProfile,
+    nonFarmEnterprise, setNonFarmEnterprise, technicalSupportForm, setTechnicalSupportForm,
+    trainingDatePicker, setTrainingDatePicker, responsePopup, setResponsePopup,
+    pgActivityProfileForm, setPgActivityProfileForm, nfcActivityProfileForm, setNfcActivityProfileForm,
+    chcDetailForm, setChcDetailForm, lhCboFinancialForms, setLhCboFinancialForms,
+    lhCboIncomeForms, setLhCboIncomeForms, financialSupportForm, setFinancialSupportForm,
+    pastSupportForm, setPastSupportForm, transactionDetailsForm, setTransactionDetailsForm,
+    investmentProfile, setInvestmentProfile, incomeProfile, setIncomeProfile,
+    activityProfileIdByMember, setActivityProfileIdByMember,
+    graphType, setGraphType, graphImageFailed, setGraphImageFailed,
+    gpOptions, setGpOptions, villageOptions, setVillageOptions,
+    selectedGpId, setSelectedGpId, selectedVillageId, setSelectedVillageId,
+    openGpSelector, setOpenGpSelector, openVillageSelector, setOpenVillageSelector,
+    crpOptions, setCrpOptions, selectedCrpRegistrationId, setSelectedCrpRegistrationId,
+    openCrpSelector, setOpenCrpSelector, selectionHydrated, setSelectionHydrated,
+    showDashboardAlerts, setShowDashboardAlerts, hasAutoShownDashboardAlerts, setHasAutoShownDashboardAlerts,
+    reportGeofenceRadius, effectiveAssignedShgMembers, shgNames, activityTypes, subCategories,
+    livelihoodCboTypeOptions, livelihoodCboActivityOptions, shgMembers, livelihoodCboNameOptions,
+    dashboardNotificationItems, dashboardAlertCount, firstDashboardNotification, dashboardInlineAlertMessage,
+    selectedAssignedMember, selectedShgName, selectedMemberName, currentMemberKey,
+    lastActivityProfileId, setLastActivityProfileId, showResponsePopup, showResponsePopupWithImage,
+    closeResponsePopup, showAppAlert, renderResponsePopup, buildSaveFields, buildSaveSummary,
+    showSavedDataPopup, buildActivityProfilePayload, saveActivityProfile, resolveProductionId,
+    buildFarmLivestockFisheryPayload, handleSaveFarmLivestockFisheryProfile,
+    handleSaveInvestmentProfile, handleSaveIncomeProfile, buildFinancialSupportProjection,
+    handleSaveFinancialSupport, toIsoDateOrNull, handleSaveTechnicalSupport,
+    handleOpenTechnicalSupportModule, handleOpenSupportHistory, openDatePicker,
+    closeTrainingDatePicker, confirmTrainingDatePicker, renderAlertPopup, handleGraphPress,
+    closeGraphView, graphData, pieMetaByType, selectedPieMeta, selectedPieTotal, selectedGraphMax,
+    isWithin50Meters, geoStatusVariant, selectedGp, selectedVillage, selectedCrpRecord,
+    headerCrpId, headerCrpName, headerCrpInitials, dashboardDateLabel, dashboardHighlights,
+    effectiveBlockId, normalizedSubCategory, statusBySubCategory, activityBySubCategory,
+    currentStatusView, selectedLhCboTypeKey, lhCboStatusViewByType, selectedLhCboStatusView,
+    displayedLhCboActivity, activeLhCboImage, checkRadiusDistance, handleSaveAndNext,
+    handleLhCboSaveAndNext, handleLhCboGuideSaveAndNext, handleChcEnterprisesSaveAndNext,
+    handleProfileSave, closeAllShgDropdowns, handleUploadImage, handleUploadVideo,
+    handleUploadPaymentSlip, handleSubmitCrpTrackingReport, handleSaveTrackedStatus,
+    handleShgTrackingGeoCheck, handleShgTrackingImageUpload, handleShgTrackingVideoUpload,
+    handleUploadLhCboImage
+  };
 
-          <View style={wrStyles.metricBox}>
-            <Text style={wrStyles.metricLabel}>Total Field Visit in last 30 days</Text>
-            <View style={wrStyles.metricValueBox}>
-              <Text style={wrStyles.metricValueText}>{dashboardMetrics.totalVisits30}</Text>
-            </View>
-          </View>
-
-          <View style={wrStyles.metricBox}>
-            <Text style={wrStyles.metricLabel}>Total SHG Members Visited</Text>
-            <View style={wrStyles.metricValueBox}>
-              <Text style={wrStyles.metricValueText}>{dashboardMetrics.totalMembersVisited}</Text>
-            </View>
-          </View>
-
-          <View style={wrStyles.metricBox}>
-            <Text style={wrStyles.metricLabel}>No. of Days Attendance Counted</Text>
-            <View style={wrStyles.metricValueBox}>
-              <Text style={wrStyles.metricValueText}>{dashboardMetrics.attendanceDays}</Text>
-            </View>
-          </View>
-
-          <View style={wrStyles.metricBox}>
-            <Text style={wrStyles.metricLabel}>Honorarium to be Claimed</Text>
-            <View style={wrStyles.metricValueBox}>
-              <Text style={wrStyles.metricValueText}>
-                {dashboardMetrics.honorariumToBeClaimed}
-              </Text>
-            </View>
-          </View>
-
-          <View style={wrStyles.metricBox}>
-            <Text style={wrStyles.metricLabel}>Last Honorarium Received</Text>
-            <View style={wrStyles.metricValueBox}>
-              <Text style={wrStyles.metricValueText}>{workingReport.amountReceived}</Text>
-            </View>
-          </View>
-
-          <View style={wrStyles.reportWorkflowCard}>
-            <Text style={wrStyles.workflowTitle}>CRP Daily Tracking Workflow</Text>
-            <Text style={wrStyles.workflowHint}>
-              SHG assignment is locked with geolocation. Image and video upload are mandatory,
-              and attendance counts only when CRP location matches within 150 metres.
-            </Text>
-            <Text style={wrStyles.workflowHint}>
-              First tap on `Match 150m Geo` to lock the SHG location from the current device position.
-            </Text>
-
-            <View style={wrStyles.workflowRow}>
-              <Text style={wrStyles.workflowLabel}>Assigned SHG</Text>
-              <Text style={wrStyles.workflowValue}>
-                {selectedAssignedMember?.shgName || "No SHG assigned"}
-              </Text>
-            </View>
-            <View style={wrStyles.workflowRow}>
-              <Text style={wrStyles.workflowLabel}>Assigned Member</Text>
-              <Text style={wrStyles.workflowValue}>
-                {selectedAssignedMember?.memberName || "No member assigned"}
-              </Text>
-            </View>
-            <View style={wrStyles.workflowRow}>
-              <Text style={wrStyles.workflowLabel}>Locked SHG Geo</Text>
-              <Text style={wrStyles.workflowValue}>
-                {selectedAssignedMember &&
-                Number.isFinite(Number(selectedAssignedMember.latitude)) &&
-                Number.isFinite(Number(selectedAssignedMember.longitude))
-                  ? `${selectedAssignedMember.latitude.toFixed(6)}, ${selectedAssignedMember.longitude.toFixed(6)}`
-                  : "Not locked yet"}
-              </Text>
-            </View>
-            <View style={wrStyles.workflowRow}>
-              <Text style={wrStyles.workflowLabel}>Members Visited Today</Text>
-              <Text style={wrStyles.workflowValue}>{dashboardMetrics.totalMembersVisitedToday}</Text>
-            </View>
-
-            <View style={wrStyles.workflowMediaRow}>
-              <Pressable style={wrStyles.mediaBtn} onPress={handleUploadImage}>
-                <Text style={wrStyles.mediaBtnText}>Upload Image*</Text>
-              </Pressable>
-              <Pressable style={wrStyles.mediaBtn} onPress={handleUploadVideo}>
-                <Text style={wrStyles.mediaBtnText}>Upload Video*</Text>
-              </Pressable>
-            </View>
-
-            <Text style={wrStyles.mediaStatusText}>
-              Image: {uploadedImageName ? `${uploadedImageName} (${uploadedImageDate})` : "Pending"}
-            </Text>
-            <Text style={wrStyles.mediaStatusText}>
-              Video: {uploadedVideoName ? `${uploadedVideoName} (${uploadedVideoDate})` : "Pending"}
-            </Text>
-
-            <View style={wrStyles.workflowActions}>
-              <Pressable style={wrStyles.locationBtn} onPress={() => checkRadiusDistance(false)}>
-                <Text style={wrStyles.locationBtnText}>
-                  {isDistanceLoading ? "Checking..." : "Match 150m Geo"}
-                </Text>
-              </Pressable>
-              <Pressable style={wrStyles.submitBtn} onPress={handleSubmitCrpTrackingReport}>
-                <Text style={wrStyles.submitBtnText}>Submit Daily Report</Text>
-              </Pressable>
-            </View>
-
-            <Text style={wrStyles.distanceText}>
-              {distanceToMember === null
-                ? "Distance not checked yet."
-                : `Current distance from SHG geolocation: ${distanceToMember}m`}
-            </Text>
-          </View>
-
-          <Pressable style={pageStyles.dashboardInlineAlert} onPress={() => setShowDashboardAlerts(true)}>
-            <View style={pageStyles.dashboardInlineAlertHeader}>
-              <View style={pageStyles.dashboardInlineAlertBadge}>
-                <Text style={pageStyles.dashboardInlineAlertBadgeText}>!</Text>
-              </View>
-              <View style={pageStyles.dashboardInlineAlertCopy}>
-                <Text style={pageStyles.dashboardInlineAlertTitle}>Pending & Upcoming Notifications</Text>
-                <Text style={pageStyles.dashboardInlineAlertSubtitle}>
-                  {dashboardAlertCount} item{dashboardAlertCount > 1 ? "s" : ""} need attention
-                </Text>
-              </View>
-            </View>
-
-            <View style={pageStyles.dashboardInlineAlertList}>
-              {dashboardNotificationItems.map((item, index) => (
-                <View key={`wr-inline-alert-${index}-${item}`} style={pageStyles.dashboardInlineAlertItem}>
-                  <View style={pageStyles.dashboardAlertDot} />
-                  <Text style={pageStyles.dashboardInlineAlertText}>{item}</Text>
-                </View>
-              ))}
-            </View>
-          </Pressable>
-
-          <View style={wrStyles.activityCard}>
-            <Text style={wrStyles.activityTitle}>Different Activities of the Concern CRP</Text>
-            {activities.length ? (
-              activities.slice(0, 3).map((item) => (
-                <Text key={item.id} style={wrStyles.activityLine}>
-                  - {item.title} ({item.reportDate})
-                </Text>
-              ))
-            ) : (
-              <Text style={wrStyles.activityLine}>- No daily report submitted yet</Text>
-            )}
-          </View>
-
-          <Pressable style={wrStyles.backBtn} onPress={onBackToDashboard}>
-            <Text style={wrStyles.backBtnText}>Back to Dashboard</Text>
-          </Pressable>
-        </View>
-      </View>
+  if (homeView === "workingReport") {
+    return (
+      <DashboardContextProvider value={dashboardContextValue}>
+        <WorkingReportView />
+      </DashboardContextProvider>
     );
   }
 
