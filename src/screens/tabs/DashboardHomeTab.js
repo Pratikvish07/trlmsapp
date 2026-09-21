@@ -81,6 +81,8 @@ import LhCboStatusGuideView from "./dashboard/views/LhCboStatusGuideView";
 import LhCboStatusView from "./dashboard/views/LhCboStatusView";
 import LhCboPgActivityProfileView from "./dashboard/views/LhCboPgActivityProfileView";
 import LhCboNfcActivityProfileView from "./dashboard/views/LhCboNfcActivityProfileView";
+import LhCboFinancialStatusView from "./dashboard/views/LhCboFinancialStatusView";
+import LhCboIncomeStatusView from "./dashboard/views/LhCboIncomeStatusView";
 
 // CRP ID / GP / Village / SHG / Member selection lived only in this
 // component's React state, with no persistence - a page reload (common on
@@ -2972,166 +2974,18 @@ export default function DashboardHomeTab({
   }
 
   if (homeView === "lhCboFinancialStatus") {
-    const financialMetaByType = {
-      pg: {
-        title: "Financial Status",
-        subtitle: "Producer Group",
-        fields: [
-          ["totalWorkingCapitalReceived", "Total Working Capital Received"],
-          ["totalInfrastructureFundReceived", "Total Infrastructure Fund Received"],
-          ["totalFundReceivedFromOtherSource", "Total Fund received from Other Source"],
-          ["otherSourceDetails", "Other Source Details"],
-          ["totalRepaymentDone", "Total Repayment done as on reporting Month"],
-          ["balanceFundToBeRepaid", "Balance Fund to be repaid"]
-        ]
-      },
-      nfc: {
-        title: "Financial Status",
-        subtitle: "Non-Farm Collective",
-        fields: [
-          ["totalWorkingCapitalApproved", "Total Working Capital Approved"],
-          ["totalWorkingCapitalUsed", "Total Working Capital Used"],
-          ["totalRepaymentDone", "Total Repayment done as on reporting Month"],
-          ["balanceFundToBeRepaid", "Balance Fund to be repaid"]
-        ]
-      },
-      ifc: {
-        title: "Financial Status",
-        subtitle: "Integrated Farming Cluster",
-        fields: [
-          ["totalWorkingCapitalApproved", "Total Working Capital Approved"],
-          ["totalWorkingCapitalUsed", "Total Working Capital Used"],
-          ["totalShareMoneyUsed", "Total Share Money Used"],
-          ["balanceFund", "Balance Fund"]
-        ]
-      },
-      fpc: {
-        title: "Loan Status",
-        subtitle: "Farmer Producer Company",
-        fields: [
-          ["totalWorkingCapitalApproved", "Total Working Capital Approved"],
-          ["totalWorkingCapitalUsed", "Total Working Capital Used"],
-          ["totalShareMoneyUsed", "Total Share Money Used"],
-          ["balanceFund", "Balance Fund"]
-        ]
-      }
-    };
-    const financialMeta = financialMetaByType[selectedLhCboTypeKey] || financialMetaByType.pg;
-    const activeFinancialForm = lhCboFinancialForms[selectedLhCboTypeKey] || lhCboFinancialForms.pg;
-
     return (
-      <View style={pageStyles.screen}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={[pageStyles.frame, tsDetailStyles.frame]}>
-            <View style={tsDetailStyles.heroCard}>
-              <View style={tsDetailStyles.titleWrap}>
-                <Text style={tsDetailStyles.title}>{financialMeta.title}</Text>
-              </View>
-              <Text style={tsDetailStyles.sectionType}>{financialMeta.subtitle}</Text>
-              <Text style={tsDetailStyles.sectionHint}>
-                Enter the financial values and save to review them in the response popup.
-              </Text>
-            </View>
-            <View style={tsDetailStyles.sectionCard}>
-              {financialMeta.fields.map(([key, label]) => (
-                <View key={key} style={tsDetailStyles.fieldBlock}>
-                  <Text style={tsDetailStyles.label}>{label}</Text>
-                  <TextInput
-                    style={tsDetailStyles.selectInput}
-                    value={activeFinancialForm[key]}
-                    onChangeText={(text) =>
-                      setLhCboFinancialForms((prev) => ({
-                        ...prev,
-                        [selectedLhCboTypeKey]: {
-                          ...prev[selectedLhCboTypeKey],
-                          [key]: key.toLowerCase().includes("detail") ? text : text.replace(/[^\d.]/g, "")
-                        }
-                      }))
-                    }
-                    keyboardType={key.toLowerCase().includes("detail") ? "default" : "numeric"}
-                    placeholder={label}
-                    placeholderTextColor="#64748b"
-                  />
-                </View>
-              ))}
-              <Pressable
-                style={tsDetailStyles.modalPrimaryBtnWide}
-                onPress={() =>
-                  showSavedDataPopup(`${financialMeta.subtitle} ${financialMeta.title}`, activeFinancialForm, selectedLhCboStatusView)
-                }
-              >
-                <Text style={tsDetailStyles.modalPrimaryBtnText}>Save</Text>
-              </Pressable>
-            </View>
-          </View>
-        </ScrollView>
-        {renderResponsePopup()}
-      </View>
+      <DashboardContextProvider value={dashboardContextValue}>
+        <LhCboFinancialStatusView />
+      </DashboardContextProvider>
     );
   }
 
   if (homeView === "lhCboIncomeStatus") {
-    const incomeTitleByType = {
-      pg: "Income Status - Producer Group",
-      nfc: "Income Status - Non-Farm Collective",
-      ifc: "Income Status - Integrated Farming Cluster",
-      fpc: "Income Status - Farmer Producer Company"
-    };
-    const activeIncomeForm = lhCboIncomeForms[selectedLhCboTypeKey] || lhCboIncomeForms.pg;
-
     return (
-      <View style={pageStyles.screen}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={[pageStyles.frame, tsDetailStyles.frame]}>
-            <View style={tsDetailStyles.heroCard}>
-              <View style={tsDetailStyles.titleWrap}>
-                <Text style={tsDetailStyles.title}>Income Status</Text>
-              </View>
-              <Text style={tsDetailStyles.sectionType}>{incomeTitleByType[selectedLhCboTypeKey] || incomeTitleByType.pg}</Text>
-              <Text style={tsDetailStyles.sectionHint}>
-                Save the latest income and expenditure numbers for the selected livelihood CBO.
-              </Text>
-            </View>
-            <View style={tsDetailStyles.sectionCard}>
-              {[
-                ["totalIncomeSinceLastYear", "Total Income Since last year"],
-                ["totalIncomeUpToLastMonth", "Total Income incurred up to last Month"],
-                ["totalRecurringExpenditureLastMonth", "Total Recurring expenditure on last month"],
-                ["netProfitUpToLastMonth", "Net Profit incurred up to last month"]
-              ].map(([key, label]) => (
-                <View key={key} style={tsDetailStyles.fieldBlock}>
-                  <Text style={tsDetailStyles.label}>{label}</Text>
-                  <TextInput
-                    style={tsDetailStyles.selectInput}
-                    value={activeIncomeForm[key]}
-                    onChangeText={(text) =>
-                      setLhCboIncomeForms((prev) => ({
-                        ...prev,
-                        [selectedLhCboTypeKey]: {
-                          ...prev[selectedLhCboTypeKey],
-                          [key]: text.replace(/[^\d.]/g, "")
-                        }
-                      }))
-                    }
-                    keyboardType="numeric"
-                    placeholder={label}
-                    placeholderTextColor="#64748b"
-                  />
-                </View>
-              ))}
-              <Pressable
-                style={tsDetailStyles.modalPrimaryBtnWide}
-                onPress={() =>
-                  showSavedDataPopup("Income Status", activeIncomeForm, selectedLhCboStatusView)
-                }
-              >
-                <Text style={tsDetailStyles.modalPrimaryBtnText}>Save</Text>
-              </Pressable>
-            </View>
-          </View>
-        </ScrollView>
-        {renderResponsePopup()}
-      </View>
+      <DashboardContextProvider value={dashboardContextValue}>
+        <LhCboIncomeStatusView />
+      </DashboardContextProvider>
     );
   }
 
