@@ -277,7 +277,7 @@ export default function AppRouter() {
       return undefined;
     }
 
-    const timer = setTimeout(() => setStep(postSplashStep), 1800);
+    const timer = setTimeout(() => setStep(postSplashStep), 900);
     return () => clearTimeout(timer);
   }, [appHydrated, postSplashStep, step]);
 
