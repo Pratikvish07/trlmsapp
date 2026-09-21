@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import PostCheckoutModal from "./PostCheckoutModal";
 import { Image, Modal, Platform, Pressable, ScrollView, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { getCurrentLocation, calculateDistance } from "../../utils/geofence";
@@ -32,12 +31,7 @@ import {
   submitTrainingAgency
 } from "../../services/masterApi";
 import { pageStyles, wrStyles, neStyles, smStyles, flowStyles, apStyles, nfStyles, tsCardStyles, tsDetailStyles, fsStyles, pastStyles, txnStyles, lhcboStyles, lhGuideStyles, lhcboStatusStyles, lhStyles, chcEntStyles } from "../../styles/dashboardHomeStyles";
-import { Text, TextInput } from "../../components/dashboard/TranslatedInputs";
-import DropdownField from "../../components/dashboard/DropdownField";
-import CycleDropdown from "../../components/dashboard/CycleDropdown";
-import DateField from "../../components/dashboard/DateField";
-import DatePickerInput from "../../components/dashboard/DatePickerInput";
-import EditableSelect from "../../components/dashboard/EditableSelect";
+import { Text } from "../../components/dashboard/TranslatedInputs";
 import {
   getMimeTypeFromUri,
   getVideoMimeTypeFromUri,
@@ -45,9 +39,6 @@ import {
   humanizeKey,
   formatIsoDateToDisplay,
   formatDisplayDateToIso,
-  toNumberOrZero,
-  toBooleanValue,
-  findOptionIdByName,
   getLhCboTypeKey
 } from "../../utils/dashboardFormatters";
 import {
@@ -56,7 +47,6 @@ import {
   FARM_SEASON_OPTIONS,
   FARM_LAND_OPTIONS,
   FARM_PRODUCTION_UNIT_OPTIONS,
-  SUPPORT_SOURCE_OPTIONS,
   LIVELIHOOD_CBO_TYPE_OPTIONS,
   LIVELIHOOD_CBO_ACTIVITY_OPTIONS,
   CHC_ACTIVITY_VALUE,
@@ -85,6 +75,11 @@ import LhCboFinancialStatusView from "./dashboard/views/LhCboFinancialStatusView
 import LhCboIncomeStatusView from "./dashboard/views/LhCboIncomeStatusView";
 import TechnicalSupportView from "./dashboard/views/TechnicalSupportView";
 import TechnicalSupportTechView from "./dashboard/views/TechnicalSupportTechView";
+import TechnicalSupportFinancialView from "./dashboard/views/TechnicalSupportFinancialView";
+import TechnicalSupportHistoryView from "./dashboard/views/TechnicalSupportHistoryView";
+import TechnicalSupportPastView from "./dashboard/views/TechnicalSupportPastView";
+import TechnicalSupportTransactionView from "./dashboard/views/TechnicalSupportTransactionView";
+import DashboardHomeView from "./dashboard/views/DashboardHomeView";
 
 // CRP ID / GP / Village / SHG / Member selection lived only in this
 // component's React state, with no persistence - a page reload (common on
@@ -3008,741 +3003,40 @@ export default function DashboardHomeTab({
   }
 
   if (homeView === "technicalSupportFinancial") {
-    const activityOptions = memberActivityOptions;
-    const loanCycleOptions = ["Cycle 1", "Cycle 2", "Cycle 3"];
-
     return (
-      <View style={pageStyles.screen}>
-        <View style={flowStyles.investmentShell}>
-          <View style={flowStyles.investmentHero}>
-            <View style={flowStyles.investmentTitleWrap}>
-              <Text style={flowStyles.investmentTitle}>Financial Support</Text>
-            </View>
-            <Text style={flowStyles.investmentEyebrow}>Loan Assessment</Text>
-            <Text style={flowStyles.investmentHint}>
-              Select the support requirement and preferred cycle to view the loan projection.
-            </Text>
-          </View>
-
-          <View style={fsStyles.card}>
-            <View style={fsStyles.fieldBlock}>
-              <Text style={fsStyles.fieldLabel}>Activity of the Member</Text>
-              <EditableSelect
-                value={financialSupportForm.activityOfMember}
-                options={activityOptions}
-                onChange={(value) =>
-                  setFinancialSupportForm((prev) => ({ ...prev, activityOfMember: value }))
-                }
-                placeholder="Select or type activity"
-                inputStyle={fsStyles.cardInput}
-              />
-            </View>
-
-            <View style={fsStyles.fieldBlock}>
-              <Text style={fsStyles.fieldLabel}>Financial Support Required</Text>
-              <View style={fsStyles.togglePillRow}>
-                <Pressable
-                  style={[
-                    fsStyles.togglePill,
-                    financialSupportForm.financialSupportRequired && fsStyles.togglePillActive
-                  ]}
-                  onPress={() =>
-                    setFinancialSupportForm((prev) => ({
-                      ...prev,
-                      financialSupportRequired: true
-                    }))
-                  }
-                >
-                  <Text
-                    style={[
-                      fsStyles.togglePillText,
-                      financialSupportForm.financialSupportRequired && fsStyles.togglePillTextActive
-                    ]}
-                  >
-                    Yes
-                  </Text>
-                </Pressable>
-                <Pressable
-                  style={[
-                    fsStyles.togglePill,
-                    !financialSupportForm.financialSupportRequired && fsStyles.togglePillActive
-                  ]}
-                  onPress={() =>
-                    setFinancialSupportForm((prev) => ({
-                      ...prev,
-                      financialSupportRequired: false
-                    }))
-                  }
-                >
-                  <Text
-                    style={[
-                      fsStyles.togglePillText,
-                      !financialSupportForm.financialSupportRequired && fsStyles.togglePillTextActive
-                    ]}
-                  >
-                    No
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
-
-            <View style={fsStyles.fieldBlock}>
-              <Text style={fsStyles.fieldLabel}>Loan Cycle of Support Preferred</Text>
-              <EditableSelect
-                value={financialSupportForm.loanCyclePreferred}
-                options={loanCycleOptions}
-                onChange={(value) =>
-                  setFinancialSupportForm((prev) => ({ ...prev, loanCyclePreferred: value }))
-                }
-                placeholder="Select or type cycle"
-                inputStyle={fsStyles.cardInput}
-              />
-            </View>
-
-            <View style={fsStyles.actionRow}>
-              <Pressable
-                style={[
-                  fsStyles.popupActionBtn,
-                  !financialSupportForm.financialSupportRequired && fsStyles.popupActionBtnDisabled
-                ]}
-                onPress={() => {
-                  if (!financialSupportForm.financialSupportRequired) {
-                    return;
-                  }
-                  if (!financialSupportForm.activityOfMember || !financialSupportForm.loanCyclePreferred) {
-                    showResponsePopup(
-                      "Incomplete Details",
-                      "Select activity and loan cycle before viewing the loan projection."
-                    );
-                    return;
-                  }
-                  showResponsePopup("Loan Projection", buildFinancialSupportProjection());
-                }}
-              >
-                <Text style={fsStyles.popupActionBtnText}>Loan Projection</Text>
-              </Pressable>
-              <Pressable
-                style={fsStyles.saveActionBtn}
-                onPress={handleSaveFinancialSupport}
-                disabled={apiSavingKey === "financialSupport"}
-              >
-                <Text style={fsStyles.saveActionBtnText}>
-                  {apiSavingKey === "financialSupport" ? "Saving..." : "Save"}
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-        </View>
-        {renderResponsePopup()}
-      </View>
+      <DashboardContextProvider value={dashboardContextValue}>
+        <TechnicalSupportFinancialView />
+      </DashboardContextProvider>
     );
   }
 
   if (homeView === "technicalSupportHistory") {
-    const stageKeyByLabel = {
-      "Past Supports": "PastSupport",
-      "Present Support": "PresentSupport",
-      "Support Required": "SupportRequired"
-    };
-    const stageKey = stageKeyByLabel[supportStage] || "PastSupport";
-    const stageData = supportHistory?.[stageKey] || {};
-    const financialEntries = Array.isArray(stageData.Financial) ? stageData.Financial : [];
-    const technicalEntries = Array.isArray(stageData.Technical) ? stageData.Technical : [];
-
-    const resolveActivityName = (activityId) =>
-      memberActivityRecords.find((item) => String(item.id) === String(activityId))?.name ||
-      `Activity #${activityId}`;
-
-    const formatSupportDate = (value) => {
-      const parsed = value ? new Date(value) : null;
-      return parsed && !Number.isNaN(parsed.getTime()) ? parsed.toLocaleDateString() : "-";
-    };
-
     return (
-      <View style={pageStyles.screen}>
-        <View style={flowStyles.investmentShell}>
-          <View style={flowStyles.investmentHero}>
-            <View style={flowStyles.investmentTitleWrap}>
-              <Text style={flowStyles.investmentTitle}>{supportStage || "Support History"}</Text>
-            </View>
-            <Text style={flowStyles.investmentEyebrow}>Technical Support</Text>
-            <Text style={flowStyles.investmentHint}>
-              Live records from the server for {selectedMemberName}.
-            </Text>
-          </View>
-
-          <View style={fsStyles.card}>
-            <Text style={fsStyles.fieldLabel}>Financial Support</Text>
-            {financialEntries.length === 0 ? (
-              <Text style={fsStyles.fieldLabel}>No records yet.</Text>
-            ) : (
-              financialEntries.map((entry, index) => (
-                <View key={entry.FinancialSupportId ?? index} style={fsStyles.fieldBlock}>
-                  <Text style={fsStyles.fieldLabel}>{resolveActivityName(entry.ActivityId)}</Text>
-                  <Text>
-                    Support Required: {entry.IsFinancialSupportRequired ? "Yes" : "No"}
-                    {"\n"}
-                    Loan Cycle: {entry.LoanCycleName || entry.LoanCycleId || "-"}
-                    {"\n"}
-                    Saved On: {formatSupportDate(entry.CreatedDate)}
-                  </Text>
-                </View>
-              ))
-            )}
-          </View>
-
-          <View style={fsStyles.card}>
-            <Text style={fsStyles.fieldLabel}>Technical Support</Text>
-            {technicalEntries.length === 0 ? (
-              <Text style={fsStyles.fieldLabel}>No records yet.</Text>
-            ) : (
-              technicalEntries.map((entry, index) => (
-                <View key={entry.TechnicalSupportId ?? index} style={fsStyles.fieldBlock}>
-                  <Text style={fsStyles.fieldLabel}>{resolveActivityName(entry.ActivityId)}</Text>
-                  <Text>Saved On: {formatSupportDate(entry.CreatedDate)}</Text>
-                </View>
-              ))
-            )}
-          </View>
-
-          <Pressable
-            style={fsStyles.saveActionBtn}
-            onPress={() => onOpenUpdateData("technicalSupport")}
-          >
-            <Text style={fsStyles.saveActionBtnText}>Back</Text>
-          </Pressable>
-        </View>
-        {renderResponsePopup()}
-      </View>
+      <DashboardContextProvider value={dashboardContextValue}>
+        <TechnicalSupportHistoryView />
+      </DashboardContextProvider>
     );
   }
 
   if (homeView === "technicalSupportPast") {
-    const activityOptions = memberActivityOptions;
-    const sourceOptions = SUPPORT_SOURCE_OPTIONS;
-    const rateOptions = ["8", "10", "12", "14"];
-    const statusOptions = ["Pending", "Completed"];
-    const topBalance = Math.max(
-      (Number(pastSupportForm.topAmount) || 0) - (Number(pastSupportForm.repaymentCompleted) || 0),
-      0
-    );
-
     return (
-      <View style={pageStyles.screen}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={flowStyles.investmentShell}>
-            <View style={flowStyles.investmentHero}>
-              <View style={flowStyles.investmentTitleWrap}>
-                <Text style={flowStyles.investmentTitle}>Past Support</Text>
-              </View>
-              <Text style={flowStyles.investmentEyebrow}>Loan History</Text>
-              <Text style={flowStyles.investmentHint}>
-                Review earlier financial support details and repayment status for this member.
-              </Text>
-            </View>
-
-            <View style={pastStyles.sectionCard}>
-              <Text style={pastStyles.sectionTitle}>Previous Support Snapshot</Text>
-
-              <View style={pastStyles.fieldBlock}>
-                <Text style={pastStyles.fieldLabel}>Financial Support Taken on LH Activity</Text>
-                <EditableSelect
-                  value={pastSupportForm.topActivity}
-                  options={activityOptions}
-                  onChange={(value) => setPastSupportForm((prev) => ({ ...prev, topActivity: value }))}
-                  placeholder="Select or type activity"
-                  inputStyle={pastStyles.cardInput}
-                />
-              </View>
-              <View style={pastStyles.fieldBlock}>
-                <Text style={pastStyles.fieldLabel}>Amount of Loan Taken</Text>
-                <TextInput
-                  style={pastStyles.cardInput}
-                  value={pastSupportForm.topAmount}
-                  onChangeText={(text) =>
-                    setPastSupportForm((prev) => ({ ...prev, topAmount: text.replace(/[^\d.]/g, "") }))
-                  }
-                  keyboardType="numeric"
-                  placeholder="0"
-                  placeholderTextColor="#64748b"
-                />
-              </View>
-              <View style={pastStyles.fieldBlock}>
-                <Text style={pastStyles.fieldLabel}>SHG Loan taken through</Text>
-                <EditableSelect
-                  value={pastSupportForm.topLoanThrough}
-                  options={sourceOptions}
-                  onChange={(value) =>
-                    setPastSupportForm((prev) => ({ ...prev, topLoanThrough: value }))
-                  }
-                  placeholder="Select or type source"
-                  inputStyle={pastStyles.cardInput}
-                />
-              </View>
-            </View>
-
-            <View style={pastStyles.sectionCard}>
-              <Text style={pastStyles.sectionTitle}>Repayment & Transaction Status</Text>
-
-              <View style={pastStyles.fieldBlock}>
-                <Text style={pastStyles.fieldLabel}>Financial Support Taken on LH Activity</Text>
-                <EditableSelect
-                  value={pastSupportForm.bottomActivity}
-                  options={activityOptions}
-                  onChange={(value) =>
-                    setPastSupportForm((prev) => ({ ...prev, bottomActivity: value }))
-                  }
-                  placeholder="Select or type activity"
-                  inputStyle={pastStyles.cardInput}
-                />
-              </View>
-              <View style={pastStyles.fieldBlock}>
-                <Text style={pastStyles.fieldLabel}>Amount of Loan Taken</Text>
-                <TextInput
-                  style={pastStyles.cardInput}
-                  value={pastSupportForm.bottomAmount}
-                  onChangeText={(text) =>
-                    setPastSupportForm((prev) => ({ ...prev, bottomAmount: text.replace(/[^\d.]/g, "") }))
-                  }
-                  keyboardType="numeric"
-                  placeholder="0"
-                  placeholderTextColor="#64748b"
-                />
-              </View>
-              <View style={pastStyles.fieldBlock}>
-                <Text style={pastStyles.fieldLabel}>SHG Loan taken through</Text>
-                <EditableSelect
-                  value={pastSupportForm.bottomLoanThrough}
-                  options={sourceOptions}
-                  onChange={(value) =>
-                    setPastSupportForm((prev) => ({ ...prev, bottomLoanThrough: value }))
-                  }
-                  placeholder="Select or type source"
-                  inputStyle={pastStyles.cardInput}
-                />
-              </View>
-              <View style={pastStyles.fieldBlock}>
-                <Text style={pastStyles.fieldLabel}>Rate of Interest</Text>
-                <EditableSelect
-                  value={pastSupportForm.interestRate}
-                  options={rateOptions}
-                  onChange={(value) => setPastSupportForm((prev) => ({ ...prev, interestRate: value }))}
-                  placeholder="Select or type rate"
-                  inputStyle={pastStyles.cardInput}
-                />
-              </View>
-              <View style={pastStyles.fieldBlock}>
-                <Text style={pastStyles.fieldLabel}>Repayment Completed</Text>
-                <TextInput
-                  style={pastStyles.cardInput}
-                  value={pastSupportForm.repaymentCompleted}
-                  onChangeText={(text) =>
-                    setPastSupportForm((prev) => ({
-                      ...prev,
-                      repaymentCompleted: text.replace(/[^\d.]/g, "")
-                    }))
-                  }
-                  keyboardType="numeric"
-                  placeholder="0"
-                  placeholderTextColor="#64748b"
-                />
-              </View>
-              <View style={pastStyles.fieldBlock}>
-                <Text style={pastStyles.fieldLabel}>Balance Amount</Text>
-                <TextInput style={pastStyles.cardInputReadOnly} value={`${topBalance}`} editable={false} />
-              </View>
-              <View style={pastStyles.fieldBlock}>
-                <Text style={pastStyles.fieldLabel}>Transaction Status</Text>
-                <EditableSelect
-                  value={pastSupportForm.transactionStatus}
-                  options={statusOptions}
-                  onChange={(value) =>
-                    setPastSupportForm((prev) => ({ ...prev, transactionStatus: value }))
-                  }
-                  placeholder="Select or type status"
-                  inputStyle={pastStyles.cardInput}
-                />
-              </View>
-
-              <View style={pastStyles.actionRow}>
-                <Pressable
-                  style={pastStyles.linkBtn}
-                  onPress={() => onOpenUpdateData("technicalSupportTransaction")}
-                >
-                  <Text style={pastStyles.linkBtnText}>Transaction Details</Text>
-                </Pressable>
-                <Pressable
-                  style={pastStyles.saveBtn}
-                  onPress={() => {
-                    showSavedDataPopup("Past support details", pastSupportForm, "technicalSupport");
-                  }}
-                >
-                  <Text style={pastStyles.saveBtnText}>Save</Text>
-                </Pressable>
-              </View>
-            </View>
-          </View>
-        </ScrollView>
-        {renderResponsePopup()}
-      </View>
+      <DashboardContextProvider value={dashboardContextValue}>
+        <TechnicalSupportPastView />
+      </DashboardContextProvider>
     );
   }
 
   if (homeView === "technicalSupportTransaction") {
-    const paymentByOptions = ["SHG", "VO", "CLF", "Bank"];
-    const principalDue = Number(pastSupportForm.bottomAmount) || 0;
-    const interestDue = Number(((principalDue * (Number(pastSupportForm.interestRate) || 0)) / 100).toFixed(2));
-    const totalDue = Number((principalDue + interestDue).toFixed(2));
-    const monthName = new Date().toLocaleString("en-US", { month: "short" });
-    const outstandingAmount = Math.max(
-      totalDue - ((Number(transactionDetailsForm.principalPaid) || 0) + (Number(transactionDetailsForm.interestPaid) || 0)),
-      0
-    ).toFixed(2);
-
     return (
-      <View style={pageStyles.screen}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={flowStyles.investmentShell}>
-            <View style={flowStyles.investmentHero}>
-              <View style={flowStyles.investmentTitleWrap}>
-                <Text style={flowStyles.investmentTitle}>Transaction Details</Text>
-              </View>
-              <Text style={flowStyles.investmentEyebrow}>Repayment Record</Text>
-              <Text style={flowStyles.investmentHint}>
-                Capture monthly repayment, upload the payment slip, and review the outstanding amount.
-              </Text>
-            </View>
-
-            <View style={txnStyles.sectionCard}>
-              <Text style={txnStyles.sectionTitle}>Payment Entry</Text>
-
-              <View style={txnStyles.fieldBlock}>
-                <Text style={txnStyles.fieldLabel}>Present Month Loan Repayment Status</Text>
-                <TextInput
-                  style={txnStyles.cardInput}
-                  value={transactionDetailsForm.presentMonthLoanRepaymentStatus}
-                  onChangeText={(text) =>
-                    setTransactionDetailsForm((prev) => ({
-                      ...prev,
-                      presentMonthLoanRepaymentStatus: text
-                    }))
-                  }
-                  placeholder="Auto (Present Month)"
-                  placeholderTextColor="#64748b"
-                />
-              </View>
-
-              <View style={txnStyles.fieldBlock}>
-                <Text style={txnStyles.fieldLabel}>Payment Details of Loan Taken By</Text>
-                <EditableSelect
-                  value={transactionDetailsForm.paymentDetailsBy}
-                  options={paymentByOptions}
-                  onChange={(value) =>
-                    setTransactionDetailsForm((prev) => ({ ...prev, paymentDetailsBy: value }))
-                  }
-                  placeholder="Select or type payment source"
-                  inputStyle={txnStyles.cardInput}
-                />
-              </View>
-
-              <View style={txnStyles.fieldBlock}>
-                <Text style={txnStyles.fieldLabel}>Upload Payment Slip (PDF / Image)</Text>
-                <View style={txnStyles.uploadRow}>
-                  <Pressable style={txnStyles.uploadBtn} onPress={handleUploadPaymentSlip}>
-                    <Text style={txnStyles.uploadBtnText}>Upload Slip</Text>
-                  </Pressable>
-                  <View style={txnStyles.uploadMetaCard}>
-                    <Text style={txnStyles.uploadMetaLabel}>
-                      {transactionDetailsForm.paymentSlipType || "Pending"}
-                    </Text>
-                    <Text style={txnStyles.uploadMetaValue}>
-                      {transactionDetailsForm.paymentSlipName || "No file selected"}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-
-              <View style={txnStyles.metricsGrid}>
-                <View style={txnStyles.metricCard}>
-                  <Text style={txnStyles.metricLabel}>Principal Due</Text>
-                  <Text style={txnStyles.metricValue}>{principalDue}</Text>
-                </View>
-                <View style={txnStyles.metricCard}>
-                  <Text style={txnStyles.metricLabel}>Interest Due</Text>
-                  <Text style={txnStyles.metricValue}>{interestDue}</Text>
-                </View>
-                <View style={txnStyles.metricCard}>
-                  <Text style={txnStyles.metricLabel}>Total Due</Text>
-                  <Text style={txnStyles.metricValue}>{totalDue}</Text>
-                </View>
-              </View>
-
-              <View style={txnStyles.fieldBlock}>
-                <Text style={txnStyles.fieldLabel}>Principal (Amount Paid)</Text>
-                <TextInput
-                  style={txnStyles.cardInput}
-                  value={transactionDetailsForm.principalPaid}
-                  onChangeText={(text) =>
-                    setTransactionDetailsForm((prev) => ({
-                      ...prev,
-                      principalPaid: text.replace(/[^\d.]/g, "")
-                    }))
-                  }
-                  keyboardType="numeric"
-                  placeholder="0"
-                  placeholderTextColor="#64748b"
-                />
-              </View>
-              <View style={txnStyles.fieldBlock}>
-                <Text style={txnStyles.fieldLabel}>Interest (Amount Paid)</Text>
-                <TextInput
-                  style={txnStyles.cardInput}
-                  value={transactionDetailsForm.interestPaid}
-                  onChangeText={(text) =>
-                    setTransactionDetailsForm((prev) => ({
-                      ...prev,
-                      interestPaid: text.replace(/[^\d.]/g, "")
-                    }))
-                  }
-                  keyboardType="numeric"
-                  placeholder="0"
-                  placeholderTextColor="#64748b"
-                />
-              </View>
-              <View style={txnStyles.fieldBlock}>
-                <Text style={txnStyles.fieldLabel}>Total (Amount Paid)</Text>
-                <TextInput
-                  style={txnStyles.cardInput}
-                  value={transactionDetailsForm.totalPaid}
-                  onChangeText={(text) =>
-                    setTransactionDetailsForm((prev) => ({
-                      ...prev,
-                      totalPaid: text.replace(/[^\d.]/g, "")
-                    }))
-                  }
-                  keyboardType="numeric"
-                  placeholder="0"
-                  placeholderTextColor="#64748b"
-                />
-              </View>
-            </View>
-
-            <View style={txnStyles.sectionCard}>
-              <Text style={txnStyles.sectionTitle}>Month-wise Repayment Status</Text>
-              <View style={txnStyles.summaryCard}>
-                <View style={txnStyles.summaryRow}>
-                  <Text style={txnStyles.summaryLabel}>Month</Text>
-                  <Text style={txnStyles.summaryValue}>{monthName}</Text>
-                </View>
-                <View style={txnStyles.summaryRow}>
-                  <Text style={txnStyles.summaryLabel}>Principal to be Paid</Text>
-                  <Text style={txnStyles.summaryValue}>{principalDue}</Text>
-                </View>
-                <View style={txnStyles.summaryRow}>
-                  <Text style={txnStyles.summaryLabel}>Interest to be Paid</Text>
-                  <Text style={txnStyles.summaryValue}>{interestDue}</Text>
-                </View>
-                <View style={txnStyles.summaryRow}>
-                  <Text style={txnStyles.summaryLabel}>Principal Paid</Text>
-                  <Text style={txnStyles.summaryValue}>{transactionDetailsForm.principalPaid || "0"}</Text>
-                </View>
-                <View style={txnStyles.summaryRow}>
-                  <Text style={txnStyles.summaryLabel}>Interest Paid</Text>
-                  <Text style={txnStyles.summaryValue}>{transactionDetailsForm.interestPaid || "0"}</Text>
-                </View>
-                <View style={txnStyles.summaryRow}>
-                  <Text style={txnStyles.summaryLabel}>Outstanding</Text>
-                  <Text style={txnStyles.summaryValue}>{outstandingAmount}</Text>
-                </View>
-              </View>
-
-              <View style={txnStyles.actionRow}>
-                <Pressable
-                  style={txnStyles.saveBtn}
-                  onPress={() => {
-                    showSavedDataPopup("Transaction details", transactionDetailsForm, "technicalSupportPast");
-                  }}
-                >
-                  <Text style={txnStyles.saveBtnText}>Save</Text>
-                </Pressable>
-                <Pressable
-                  style={txnStyles.backBtn}
-                  onPress={() => onOpenUpdateData("technicalSupportPast")}
-                >
-                  <Text style={txnStyles.backBtnText}>Back</Text>
-                </Pressable>
-              </View>
-            </View>
-          </View>
-        </ScrollView>
-        {renderResponsePopup()}
-      </View>
+      <DashboardContextProvider value={dashboardContextValue}>
+        <TechnicalSupportTransactionView />
+      </DashboardContextProvider>
     );
   }
 
   return (
-    <View style={pageStyles.screen}>
-      <View style={pageStyles.bgGlowTop} />
-      <View style={pageStyles.bgGlowBottom} />
-      <View style={pageStyles.frame}>
-        <View style={pageStyles.topRow}>
-          <View style={pageStyles.imageCard}>
-            <Text style={pageStyles.imageAvatarText}>{headerCrpInitials}</Text>
-            <Text style={pageStyles.imageText}>CRP</Text>
-          </View>
-          <View style={pageStyles.infoCard}>
-            <Text style={pageStyles.infoLine}>CRP ID: {headerCrpId}</Text>
-            <Text style={pageStyles.infoLine}>Name: {headerCrpName}</Text>
-          </View>
-        </View>
-
-        <View style={pageStyles.dropdownWrap}>
-          <Pressable
-            style={pageStyles.dropdownTrigger}
-            onPress={() => setShowCrpTypeMenu((prev) => !prev)}
-          >
-            <Text style={pageStyles.dropdownText}>Type of CRP: {selectedCrpType}</Text>
-            <Text style={pageStyles.dropdownArrow}>{showCrpTypeMenu ? "^" : "v"}</Text>
-          </Pressable>
-          {showCrpTypeMenu ? (
-            <View style={pageStyles.dropdownMenu}>
-              {crpTypeOptions.map((item) => (
-                <Pressable
-                  key={item}
-                  style={[
-                    pageStyles.dropdownItem,
-                    selectedCrpType === item && pageStyles.dropdownItemActive
-                  ]}
-                  onPress={() => {
-                    setSelectedCrpType(item);
-                    setShowCrpTypeMenu(false);
-                  }}
-                >
-                  <Text
-                    style={[
-                      pageStyles.dropdownItemText,
-                      selectedCrpType === item && pageStyles.dropdownItemTextActive
-                    ]}
-                  >
-                    {item}
-                  </Text>
-                </Pressable>
-              ))}
-            </View>
-          ) : null}
-        </View>
-
-        {renderAlertPopup()}
-
-        <View style={pageStyles.dashboardCard}>
-          <View style={pageStyles.dashboardHeadingRow}>
-            <View>
-              <Text style={pageStyles.dashboardEyebrow}>Live Performance</Text>
-              <Text style={pageStyles.dashboardTitle}>Dashboard</Text>
-            </View>
-            <View style={pageStyles.dashboardDateBadge}>
-              <Text style={pageStyles.dashboardDateLabel}>{dashboardDateLabel}</Text>
-            </View>
-          </View>
-
-          <View style={pageStyles.metricGrid}>
-            {dashboardHighlights.map((item) => (
-              <View key={item.key} style={pageStyles.metricStatCard}>
-                <View style={[pageStyles.metricAccent, { backgroundColor: item.tint }]} />
-                <Text style={pageStyles.metricStatLabel}>{item.label}</Text>
-                <Text style={pageStyles.metricStatValue}>{item.value}</Text>
-                <Text style={pageStyles.metricStatHint}>{item.hint}</Text>
-              </View>
-            ))}
-          </View>
-
-          <View style={pageStyles.dashboardGraphStrip}>
-            <View style={pageStyles.dashboardGraphStripCopy}>
-              <Text style={pageStyles.dashboardGraphStripTitle}>Insights & Trends</Text>
-              <Text style={pageStyles.dashboardGraphStripHint}>
-                Open visual summaries for visits, member coverage, and honorarium.
-              </Text>
-            </View>
-            <View style={pageStyles.dashboardGraphStripActions}>
-              <Pressable style={pageStyles.graphPill} onPress={() => handleGraphPress("visits")}>
-                <Text style={pageStyles.graphText}>Visits</Text>
-              </Pressable>
-              <Pressable style={[pageStyles.graphPill, pageStyles.graphPillTeal]} onPress={() => handleGraphPress("members")}>
-                <Text style={pageStyles.graphText}>Members</Text>
-              </Pressable>
-              <Pressable style={[pageStyles.graphPill, pageStyles.graphPillOrange]} onPress={() => handleGraphPress("honorarium")}>
-                <Text style={pageStyles.graphText}>Honorarium</Text>
-              </Pressable>
-            </View>
-          </View>
-
-          <View style={pageStyles.submitActionRow}>
-            <Pressable style={pageStyles.graphActionBtn} onPress={() => handleGraphPress("visits")}>
-              <Text style={pageStyles.graphActionBtnText}>Open Graphs</Text>
-            </Pressable>
-            <Pressable style={pageStyles.submitActionBtn} onPress={onOpenWorkingReport}>
-              <Text style={pageStyles.submitActionBtnText}>Submit</Text>
-            </Pressable>
-          </View>
-
-          <View style={pageStyles.dashboardInlineAlert}>
-            <View style={pageStyles.dashboardInlineAlertHeader}>
-              <View style={pageStyles.dashboardInlineAlertBadge}>
-                <Text style={pageStyles.dashboardInlineAlertBadgeText}>!</Text>
-              </View>
-              <View style={pageStyles.dashboardInlineAlertCopy}>
-                <Text style={pageStyles.dashboardInlineAlertTitle}>Pending & Upcoming Notifications</Text>
-                <Text style={pageStyles.dashboardInlineAlertSubtitle}>
-                  {dashboardAlertCount} item{dashboardAlertCount > 1 ? "s" : ""} need attention
-                </Text>
-              </View>
-            </View>
-
-            <View style={pageStyles.dashboardInlineAlertList}>
-              {dashboardNotificationItems.map((item, index) => (
-                <View key={`inline-alert-${index}-${item}`} style={pageStyles.dashboardInlineAlertItem}>
-                  <View style={pageStyles.dashboardAlertDot} />
-                  <Text style={pageStyles.dashboardInlineAlertText}>{item}</Text>
-                </View>
-              ))}
-            </View>
-          </View>
-
-          <View style={pageStyles.dashboardActivityPanel}>
-            <Text style={pageStyles.dashboardActivityTitle}>Different Activities of the Concern CRP</Text>
-            {activities.length ? (
-              activities.slice(0, 3).map((item) => (
-                <Text key={item.id} style={pageStyles.dashboardActivityLine}>
-                  - {item.title}
-                </Text>
-              ))
-            ) : (
-              <Text style={pageStyles.dashboardActivityEmpty}>Daily visit reports will appear here.</Text>
-            )}
-          </View>
-        </View>
-
-        <View style={pageStyles.quickActionsCard}>
-          <Text style={pageStyles.quickActionsTitle}>Quick Actions</Text>
-          <View style={pageStyles.actionsRow}>
-            <Pressable style={[pageStyles.actionBtnMuted, pageStyles.actionBtnAmber]} onPress={onOpenNewEnrolment}>
-              <Text style={pageStyles.actionTextMuted}>New{"\n"}Enrolment</Text>
-            </Pressable>
-            <Pressable style={pageStyles.actionBtnPrimary} onPress={onOpenShgMember}>
-              <Text style={pageStyles.actionTextPrimary}>SHG{"\n"}Member</Text>
-            </Pressable>
-            <Pressable style={[pageStyles.actionBtnMuted, pageStyles.actionBtnSlate]} onPress={onOpenUpdateData}>
-              <Text style={pageStyles.actionTextMuted}>Update Data</Text>
-            </Pressable>
-          </View>
-        </View>
-
-        <PostCheckoutModal
-          visible={showPostCheckoutModal}
-          onClose={() => setShowPostCheckoutModal(false)}
-          onLogout={onLogout}
-        />
-      </View>
-    </View>
+    <DashboardContextProvider value={dashboardContextValue}>
+      <DashboardHomeView />
+    </DashboardContextProvider>
   );
 }
