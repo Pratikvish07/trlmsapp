@@ -182,7 +182,10 @@ export default function DashboardHomeView() {
             <Pressable style={pageStyles.actionBtnPrimary} onPress={onOpenShgMember}>
               <Text style={pageStyles.actionTextPrimary}>SHG{"\n"}Member</Text>
             </Pressable>
-            <Pressable style={[pageStyles.actionBtnMuted, pageStyles.actionBtnSlate]} onPress={onOpenUpdateData}>
+            <Pressable
+              style={[pageStyles.actionBtnMuted, pageStyles.actionBtnSlate]}
+              onPress={() => onOpenUpdateData("newEnrolment")}
+            >
               <Text style={pageStyles.actionTextMuted}>Update Data</Text>
             </Pressable>
           </View>
