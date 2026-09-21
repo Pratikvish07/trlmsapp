@@ -1,9 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PostCheckoutModal from "./PostCheckoutModal";
-import { Image, Modal, Platform, Pressable, ScrollView, Text as RNText, TextInput as RNTextInput, View } from "react-native";
+import { Image, Modal, Platform, Pressable, ScrollView, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { useTranslatedValue } from "../../i18n/I18nProvider";
 import { getCurrentLocation, calculateDistance } from "../../utils/geofence";
 import {
   fetchActivities,
@@ -33,6 +32,37 @@ import {
   submitTrainingAgency
 } from "../../services/masterApi";
 import { pageStyles, wrStyles, neStyles, smStyles, flowStyles, apStyles, nfStyles, tsCardStyles, tsDetailStyles, fsStyles, pastStyles, txnStyles, lhcboStyles, lhGuideStyles, lhcboStatusStyles, lhStyles, chcEntStyles } from "../../styles/dashboardHomeStyles";
+import { Text, TextInput } from "../../components/dashboard/TranslatedInputs";
+import DropdownField from "../../components/dashboard/DropdownField";
+import CycleDropdown from "../../components/dashboard/CycleDropdown";
+import DateField from "../../components/dashboard/DateField";
+import DatePickerInput from "../../components/dashboard/DatePickerInput";
+import EditableSelect from "../../components/dashboard/EditableSelect";
+import {
+  getMimeTypeFromUri,
+  getVideoMimeTypeFromUri,
+  firstOption,
+  humanizeKey,
+  formatIsoDateToDisplay,
+  formatDisplayDateToIso,
+  toNumberOrZero,
+  toBooleanValue,
+  findOptionIdByName,
+  getLhCboTypeKey
+} from "../../utils/dashboardFormatters";
+import {
+  FARM_UNIT_AREA_OPTIONS,
+  FARM_TYPE_OPTIONS,
+  FARM_SEASON_OPTIONS,
+  FARM_LAND_OPTIONS,
+  FARM_PRODUCTION_UNIT_OPTIONS,
+  SUPPORT_SOURCE_OPTIONS,
+  LIVELIHOOD_CBO_TYPE_OPTIONS,
+  LIVELIHOOD_CBO_ACTIVITY_OPTIONS,
+  CHC_ACTIVITY_VALUE,
+  CHC_ACTIVITY_DISPLAY,
+  LIVELIHOOD_CBO_NAME_OPTIONS
+} from "../../constants/livelihoodOptions";
 
 // CRP ID / GP / Village / SHG / Member selection lived only in this
 // component's React state, with no persistence - a page reload (common on
@@ -44,425 +74,6 @@ import { pageStyles, wrStyles, neStyles, smStyles, flowStyles, apStyles, nfStyle
 // key persists that selection the same way APP_NAV_STORAGE_KEY in
 // AppRouter.js already persists homeView/activeTab.
 const DASHBOARD_SELECTION_STORAGE_KEY = "trlmDashboardSelectionState";
-
-function Text({ children, ...props }) {
-  const plainText = typeof children === "string" || typeof children === "number"
-    ? String(children)
-    : "";
-  const translated = useTranslatedValue(plainText);
-  const resolvedChildren =
-    plainText && typeof translated === "string" && translated.trim()
-      ? translated
-      : children;
-
-  return <RNText {...props}>{resolvedChildren}</RNText>;
-}
-
-function TextInput({ placeholder, ...props }) {
-  const translatedPlaceholder = useTranslatedValue(placeholder);
-  const resolvedPlaceholder =
-    typeof translatedPlaceholder === "string" && translatedPlaceholder.trim()
-      ? translatedPlaceholder
-      : placeholder;
-
-  return <RNTextInput {...props} placeholder={resolvedPlaceholder} />;
-}
-
-function getMimeTypeFromUri(uri = "") {
-  const normalized = String(uri).toLowerCase();
-  if (normalized.endsWith(".png")) {
-    return "image/png";
-  }
-  if (normalized.endsWith(".webp")) {
-    return "image/webp";
-  }
-  return "image/jpeg";
-}
-
-function getVideoMimeTypeFromUri(uri = "") {
-  const normalized = String(uri).toLowerCase();
-  if (normalized.endsWith(".mov")) {
-    return "video/quicktime";
-  }
-  if (normalized.endsWith(".webm")) {
-    return "video/webm";
-  }
-  return "video/mp4";
-}
-
-function DropdownField({
-  label,
-  value,
-  options,
-  open,
-  onToggle,
-  onSelect
-}) {
-  const normalizedOptions = options.map((item) =>
-    typeof item === "string"
-      ? { id: item, name: item, rawValue: item }
-      : { id: item.id, name: item.name, rawValue: item }
-  );
-
-  return (
-    <View style={smStyles.fieldRow}>
-      <Text style={smStyles.fieldLabel}>{label}</Text>
-      <Pressable style={smStyles.dropdownTrigger} onPress={onToggle}>
-        <Text style={smStyles.dropdownTriggerText}>{value}</Text>
-        <Text style={smStyles.dropdownArrow}>{open ? "^" : "v"}</Text>
-      </Pressable>
-      {open ? (
-        <View style={smStyles.dropdownMenu}>
-          {normalizedOptions.length ? (
-            normalizedOptions.map((item) => (
-              <Pressable
-                key={`${item.id}-${item.name}`}
-                style={[smStyles.dropdownItem, value === item.name && smStyles.dropdownItemActive]}
-                onPress={() => onSelect(item.rawValue)}
-              >
-                <Text
-                  style={[
-                    smStyles.dropdownItemText,
-                    value === item.name && smStyles.dropdownItemTextActive
-                  ]}
-                >
-                  {item.name}
-                </Text>
-              </Pressable>
-            ))
-          ) : (
-            <Text style={smStyles.dropdownItemText}>No options available yet</Text>
-          )}
-        </View>
-      ) : null}
-    </View>
-  );
-}
-
-function CycleDropdown({ value, options, onChange, style }) {
-  const [open, setOpen] = useState(false);
-  const normalizedOptions = options.map((item) =>
-    typeof item === "string" ? item : item?.name || item?.label || ""
-  ).filter(Boolean);
-  const displayValue = typeof value === "string" || typeof value === "number"
-    ? String(value)
-    : "";
-
-  // If nothing has been explicitly picked yet, this used to just show
-  // blank and leave the underlying state as "" until the user manually
-  // opened the dropdown. That's how Season silently resolved to 0 in the
-  // Activity Profile payload even though the real season list loaded
-  // fine - the field looked selectable but nothing had actually been
-  // written into state. Auto-selecting the first option here fixes this
-  // for every dropdown built on this shared component, not just Season.
-  useEffect(() => {
-    if (!displayValue && normalizedOptions.length > 0) {
-      onChange(normalizedOptions[0]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [displayValue, normalizedOptions.join("|")]);
-
-  return (
-    <View style={flowStyles.ddWrap}>
-      <Pressable
-        style={[flowStyles.ddBox, style]}
-        disabled={normalizedOptions.length === 0}
-        onPress={() => {
-          if (!normalizedOptions.length) {
-            return;
-          }
-          setOpen((prev) => !prev);
-        }}
-      >
-        <Text style={flowStyles.ddText}>{displayValue}</Text>
-        <Text style={flowStyles.ddArrow}>{open ? "^" : "v"}</Text>
-      </Pressable>
-
-      {open ? (
-        <View style={flowStyles.ddMenu}>
-          <ScrollView nestedScrollEnabled style={flowStyles.ddScroll}>
-            {normalizedOptions.map((option) => {
-              const active = option === value;
-
-              return (
-                <Pressable
-                  key={option}
-                  style={[flowStyles.ddOption, active && flowStyles.ddOptionActive]}
-                  onPress={() => {
-                    onChange(option);
-                    setOpen(false);
-                  }}
-                >
-                  <Text
-                    style={[flowStyles.ddOptionText, active && flowStyles.ddOptionTextActive]}
-                  >
-                    {option}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </ScrollView>
-        </View>
-      ) : null}
-    </View>
-  );
-}
-
-function firstOption(options) {
-  const first = options[0];
-
-  if (!first) {
-    return "";
-  }
-
-  if (typeof first === "string" || typeof first === "number") {
-    return String(first);
-  }
-
-  if (typeof first === "object") {
-    return first.name || first.label || first.value || first.id || "";
-  }
-
-  return "";
-}
-
-function humanizeKey(key) {
-  return String(key || "")
-    .replace(/([a-z])([A-Z])/g, "$1 $2")
-    .replace(/[_-]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .replace(/^./, (char) => char.toUpperCase());
-}
-
-function formatIsoDateToDisplay(value) {
-  if (!value) {
-    return "";
-  }
-
-  const [year, month, day] = String(value).split("-");
-  if (!year || !month || !day) {
-    return value;
-  }
-
-  return `${day}-${month}-${year}`;
-}
-
-function formatDisplayDateToIso(value) {
-  if (!value) {
-    return "";
-  }
-
-  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return value;
-  }
-
-  const [day, month, year] = String(value).split("-");
-  if (!day || !month || !year) {
-    return "";
-  }
-
-  return `${year.padStart(4, "20")}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-}
-
-function toNumberOrZero(value) {
-  const numeric = Number(value);
-  return Number.isFinite(numeric) ? numeric : 0;
-}
-
-function toBooleanValue(value) {
-  if (typeof value === "boolean") {
-    return value;
-  }
-
-  return ["yes", "true", "1"].includes(String(value || "").trim().toLowerCase());
-}
-
-function findOptionIdByName(options, name) {
-  const match = options.find((item) => String(item?.name || "") === String(name || ""));
-  return toNumberOrZero(match?.id);
-}
-
-function DateField({ value, placeholder, onPress, style, textStyle, placeholderStyle, iconStyle }) {
-  return (
-    <Pressable style={[tsDetailStyles.dateTrigger, style]} onPress={onPress}>
-      <Text
-        style={[
-          tsDetailStyles.dateTriggerText,
-          textStyle,
-          !value && tsDetailStyles.datePlaceholderText,
-          !value && placeholderStyle
-        ]}
-      >
-        {value || placeholder}
-      </Text>
-      <Text style={[tsDetailStyles.dateTriggerIcon, iconStyle]}>Cal</Text>
-    </Pressable>
-  );
-}
-
-function DatePickerInput({ value, onChange }) {
-  if (Platform.OS === "web") {
-    return (
-      <input
-        type="date"
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        style={{
-          width: "100%",
-          minHeight: "48px",
-          border: "1px solid #cbd5e1",
-          borderRadius: "12px",
-          backgroundColor: "#ffffff",
-          color: "#111827",
-          fontSize: "14px",
-          padding: "12px",
-          outline: "none",
-          boxSizing: "border-box"
-        }}
-      />
-    );
-  }
-
-  return (
-    <TextInput
-      style={tsDetailStyles.modalDateInput}
-      value={value}
-      onChangeText={onChange}
-      placeholder="YYYY-MM-DD"
-      placeholderTextColor="#94a3b8"
-    />
-  );
-}
-
-function EditableSelect({ value, options, onChange, placeholder, inputStyle }) {
-  const [open, setOpen] = useState(false);
-  const normalizedOptions = options.map((item) =>
-    typeof item === "string" ? item : item?.name || item?.label || ""
-  ).filter(Boolean);
-  const filteredOptions = normalizedOptions.filter((item) =>
-    !value ? true : item.toLowerCase().includes(String(value).toLowerCase())
-  );
-
-  return (
-    <View style={tsDetailStyles.selectWrap}>
-      <TextInput
-        style={[tsDetailStyles.selectInput, inputStyle]}
-        value={value}
-        onFocus={() => setOpen(true)}
-        onChangeText={(text) => {
-          onChange(text);
-          setOpen(true);
-        }}
-        placeholder={placeholder}
-        placeholderTextColor="#64748b"
-      />
-      <Pressable style={tsDetailStyles.selectChevronWrap} onPress={() => setOpen((prev) => !prev)}>
-        <Text style={tsDetailStyles.selectChevron}>{open ? "^" : "v"}</Text>
-      </Pressable>
-
-      {open && filteredOptions.length ? (
-        <View style={tsDetailStyles.selectMenu}>
-          <ScrollView nestedScrollEnabled style={tsDetailStyles.selectScroll}>
-            {filteredOptions.map((option) => (
-              <Pressable
-                key={option}
-                style={tsDetailStyles.selectOption}
-                onPress={() => {
-                  onChange(option);
-                  setOpen(false);
-                }}
-              >
-                <Text style={tsDetailStyles.selectOptionText}>{option}</Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-        </View>
-      ) : null}
-      {open && !filteredOptions.length ? (
-        <View style={tsDetailStyles.selectMenu}>
-          <Text style={tsDetailStyles.selectEmptyText}>
-            {normalizedOptions.length
-              ? "No matching options - check the spelling or try a different search"
-              : "No options available yet"}
-          </Text>
-        </View>
-      ) : null}
-    </View>
-  );
-}
-
-const FARM_UNIT_AREA_OPTIONS = ["Kani", "Gonda"];
-const FARM_TYPE_OPTIONS = ["Seasonal", "Perennial"];
-const FARM_SEASON_OPTIONS = ["Rabi", "Kharif", "Summer", "Winter", "Rainy"];
-const FARM_LAND_OPTIONS = ["Tilla", "Low", "Plain"];
-const FARM_PRODUCTION_UNIT_OPTIONS = ["KG", "Quintal"];
-const SUPPORT_SOURCE_OPTIONS = [
-  "SHG Loan",
-  "Bank Loan",
-  "VO Support",
-  "CLF Support",
-  "Own Contribution"
-];
-const LIVELIHOOD_CBO_TYPE_OPTIONS = [
-  "Producer Group (PG)",
-  "Non-Farm Collective (NFC)",
-  "Integrated Farming Cluster (IFC)",
-  "Custom Hiring Center (CHC)",
-  "Farmer Producer Company (FPC)"
-];
-const LIVELIHOOD_CBO_ACTIVITY_OPTIONS = [
-  "Farming",
-  "Livestock",
-  "Fishery",
-  "Enterprise"
-];
-const CHC_ACTIVITY_VALUE = "Enterprise";
-const CHC_ACTIVITY_DISPLAY = "Enterprises";
-const LIVELIHOOD_CBO_NAME_OPTIONS = {
-  "Producer Group (PG)": [
-    "PG Green Harvest",
-    "PG Maa Laxmi",
-    "PG Rural Producers"
-  ],
-  "Non-Farm Collective (NFC)": [
-    "NFC Women Enterprise",
-    "NFC Bamboo Craft Cluster",
-    "NFC Village Value Group"
-  ],
-  "Integrated Farming Cluster (IFC)": [
-    "IFC Sunrise Cluster",
-    "IFC Tripura Farm Net",
-    "IFC Green Field Circle"
-  ],
-  "Custom Hiring Center (CHC)": [
-    "CHC Farm Equipment Hub",
-    "CHC Rural Service Point",
-    "CHC Mechanised Support Unit"
-  ],
-  "Farmer Producer Company (FPC)": [
-    "FPC Agro Growth Ltd",
-    "FPC Rural Harvest Producer Co",
-    "FPC Tripura Farmer Collective"
-  ]
-};
-
-function getLhCboTypeKey(type) {
-  switch (type) {
-    case "Producer Group (PG)":
-      return "pg";
-    case "Non-Farm Collective (NFC)":
-      return "nfc";
-    case "Integrated Farming Cluster (IFC)":
-      return "ifc";
-    case "Custom Hiring Center (CHC)":
-      return "chc";
-    case "Farmer Producer Company (FPC)":
-      return "fpc";
-    default:
-      return "pg";
-  }
-}
 
 export default function DashboardHomeTab({
   user,
