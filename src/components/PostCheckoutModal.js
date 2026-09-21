@@ -1,8 +1,8 @@
 import React from "react";
 import { Modal, Pressable, Text as RNText, View } from "react-native";
-import PrimaryButton from "../../components/PrimaryButton";
-import { useTranslatedValue } from "../../i18n/I18nProvider";
-import styles from "../../styles/appStyles";
+import PrimaryButton from "./PrimaryButton";
+import { useTranslatedValue } from "../i18n/I18nProvider";
+import styles from "../styles/appStyles";
 
 function Text({ children, ...props }) {
   const plainText =
