@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, Pressable, ActivityIndicator, StyleSheet, Modal, Alert, Platform } from 'react-native';
+import { View, Text, Pressable, ActivityIndicator, StyleSheet, Modal, Platform } from 'react-native';
 import * as Location from 'expo-location';
 import { useI18n } from '../i18n/I18nProvider';
+import { showAlert } from '../utils/showAlert';
 
 export default function LeafletLocationPicker({ 
   visible, 
@@ -67,7 +68,7 @@ export default function LeafletLocationPicker({
           await getBrowserLocation();
           return;
         }
-        Alert.alert('Permission Denied', 'Location permission is required');
+        showAlert('Permission Denied', 'Location permission is required');
         setLocationStatus('denied');
         setIsLoading(false);
         return;
@@ -97,7 +98,7 @@ export default function LeafletLocationPicker({
       if (Platform.OS === 'web') {
         await getBrowserLocation();
       } else {
-        Alert.alert('Error', 'Could not get current location');
+        showAlert('Error', 'Could not get current location');
         setLocationStatus('error');
       }
     } finally {

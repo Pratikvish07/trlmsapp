@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   Animated,
   Modal,
   Pressable,
@@ -30,6 +29,7 @@ import {
   isPasswordStrong
 } from "../utils/appCalculations";
 import { getCurrentLocation } from "../utils/geofence";
+import { showAlert } from "../utils/showAlert";
 
 const EMPTY_ARRAY = [];
 
@@ -188,7 +188,7 @@ export default function SignupScreen({
         if (active) {
           setCategories([]);
           setCrpTypes([]);
-          Alert.alert(t("Signup data"), error.message || t("Unable to load signup master data."));
+          showAlert(t("Signup data"), error.message || t("Unable to load signup master data."));
         }
       } finally {
         if (active) setMastersLoading(false);
@@ -206,7 +206,7 @@ export default function SignupScreen({
     fetchBlocksByDistrict(signupForm.districtId)
       .then((payload) => { if (active) setBlocks(payload); })
       .catch((error) => {
-        if (active) Alert.alert(t("Signup data"), error.message || t("Unable to load blocks."));
+        if (active) showAlert(t("Signup data"), error.message || t("Unable to load blocks."));
       });
 
     return () => { active = false; };
@@ -219,7 +219,7 @@ export default function SignupScreen({
     fetchGpsByBlock(signupForm.blockId)
       .then((payload) => { if (active) setGps(payload); })
       .catch((error) => {
-        if (active) Alert.alert(t("Signup data"), error.message || t("Unable to load Gram Panchayat / VC list."));
+        if (active) showAlert(t("Signup data"), error.message || t("Unable to load Gram Panchayat / VC list."));
       });
 
     return () => { active = false; };
@@ -232,7 +232,7 @@ export default function SignupScreen({
     fetchVillagesByGp(signupForm.gpId)
       .then((payload) => { if (active) setVillages(payload); })
       .catch((error) => {
-        if (active) Alert.alert(t("Signup data"), error.message || t("Unable to load villages."));
+        if (active) showAlert(t("Signup data"), error.message || t("Unable to load villages."));
       });
 
     return () => { active = false; };
@@ -294,7 +294,7 @@ export default function SignupScreen({
     try {
       const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (permission.status !== "granted") {
-        Alert.alert(t("Permission needed"), t("Photo library permission is required to select a profile photo."));
+        showAlert(t("Permission needed"), t("Photo library permission is required to select a profile photo."));
         return;
       }
       const result = await ImagePicker.launchImageLibraryAsync({
@@ -306,7 +306,7 @@ export default function SignupScreen({
         updateSignup({ pictureFile: result.assets[0].uri });
       }
     } catch (error) {
-      Alert.alert(t("Photo selection"), error.message || t("Unable to select profile photo."));
+      showAlert(t("Photo selection"), error.message || t("Unable to select profile photo."));
     }
   };
 
@@ -315,12 +315,12 @@ export default function SignupScreen({
       setLocationState((prev) => ({ ...prev, loading: true }));
       const coords = await getCurrentLocation();
       if (!coords) {
-        Alert.alert(t("Location"), t("Unable to capture current location. You can still continue and submit 0,0 coordinates."));
+        showAlert(t("Location"), t("Unable to capture current location. You can still continue and submit 0,0 coordinates."));
       }
       setLocationState({ loading: false, coords });
     } catch (error) {
       setLocationState({ loading: false, coords: null });
-      Alert.alert(t("Location"), error.message || t("Unable to capture current location."));
+      showAlert(t("Location"), error.message || t("Unable to capture current location."));
     }
   };
 

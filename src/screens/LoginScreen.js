@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Animated,
-  Alert,
   Image,
   Modal,
   Pressable,
@@ -32,6 +31,7 @@ import {
   isPasswordStrong
 } from "../utils/appCalculations";
 import { getCurrentLocation } from "../utils/geofence";
+import { showAlert } from "../utils/showAlert";
 
 const EMPTY_ARRAY = [];
 const ID_TYPE_OPTIONS = ["CRP ID", "Master ID"];
@@ -236,7 +236,7 @@ export default function LoginScreen({
         if (active) {
           setCategories([]);
           setCrpTypes([]);
-          Alert.alert(
+          showAlert(
             t("Signup data"),
             error.message || t("Unable to load signup master data.")
           );
@@ -271,7 +271,7 @@ export default function LoginScreen({
         }
       } catch (error) {
         if (active) {
-          Alert.alert(t("Signup data"), error.message || t("Unable to load blocks."));
+          showAlert(t("Signup data"), error.message || t("Unable to load blocks."));
         }
       }
     }
@@ -299,7 +299,7 @@ export default function LoginScreen({
         }
       } catch (error) {
         if (active) {
-          Alert.alert(
+          showAlert(
             t("Signup data"),
             error.message || t("Unable to load Gram Panchayat / VC list.")
           );
@@ -330,7 +330,7 @@ export default function LoginScreen({
         }
       } catch (error) {
         if (active) {
-          Alert.alert(
+          showAlert(
             t("Signup data"),
             error.message || t("Unable to load villages.")
           );
@@ -430,7 +430,7 @@ export default function LoginScreen({
     try {
       const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (permission.status !== "granted") {
-        Alert.alert(
+        showAlert(
           t("Permission needed"),
           t("Photo library permission is required to select a profile photo.")
         );
@@ -449,7 +449,7 @@ export default function LoginScreen({
         });
       }
     } catch (error) {
-      Alert.alert(
+      showAlert(
         t("Photo selection"),
         error.message || t("Unable to select profile photo.")
       );
@@ -461,7 +461,7 @@ export default function LoginScreen({
       setLocationState((prev) => ({ ...prev, loading: true }));
       const coords = await getCurrentLocation();
       if (!coords) {
-        Alert.alert(
+        showAlert(
           t("Location"),
           t("Unable to capture current location. You can still continue and submit 0,0 coordinates.")
         );
@@ -475,7 +475,7 @@ export default function LoginScreen({
         loading: false,
         coords: null
       });
-      Alert.alert(
+      showAlert(
         t("Location"),
         error.message || t("Unable to capture current location.")
       );

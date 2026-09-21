@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, Alert, Platform, Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Platform, Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from "react-redux";
 import BottomNav from "../components/BottomNav";
@@ -22,6 +22,7 @@ import {
   isPasswordStrong
 } from "../utils/appCalculations";
 import { getCurrentLocation } from "../utils/geofence";
+import { showAlert } from "../utils/showAlert";
 import {
   clearAuthToken,
   decodeJwtToken,
@@ -71,22 +72,6 @@ const EMPTY_CHECKIN_INFO = {
   accuracy: 0,
   geoEnabled: false
 };
-
-// react-native's Alert.alert is a documented no-op on react-native-web -
-// it silently does nothing visible in a browser. This file relies on it in
-// 29 places (every login/signup/check-in error and confirmation), which
-// means essentially none of those messages have ever actually appeared on
-// screen when running on web - they fired, the underlying logic ran (e.g.
-// routing back to login), but the user never saw why. Falls back to the
-// browser's native window.alert on web; unchanged native behavior on
-// iOS/Android.
-function showAlert(title, message) {
-  if (Platform.OS === "web" && typeof window !== "undefined" && window.alert) {
-    window.alert(message ? `${title}\n\n${message}` : title);
-    return;
-  }
-  Alert.alert(title, message);
-}
 
 function getTodayIsoDate() {
   return new Date().toISOString().slice(0, 10);
