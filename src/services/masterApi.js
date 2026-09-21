@@ -85,6 +85,9 @@ export const API_ENDPOINTS = {
     checkIn:
       process.env.EXPO_PUBLIC_CRP_ATTENDANCE_CHECKIN_PATH ||
       "/api/crp-attendance/checkin",
+    checkOut:
+      process.env.EXPO_PUBLIC_CRP_ATTENDANCE_CHECKOUT_PATH ||
+      "/api/crp-attendance/checkout",
     byId: (crpRegistrationId) =>
       `${process.env.EXPO_PUBLIC_CRP_ATTENDANCE_BY_ID_PATH || "/api/crp-attendance"}/${crpRegistrationId}`,
     // CONFIRMED BROKEN AS A BARE GET: the server answers 400 without query
@@ -850,6 +853,16 @@ export async function submitActivityProfile(payload) {
 
 export async function submitCrpAttendanceCheckIn(payload) {
   return executeJsonRequest(API_ENDPOINTS.attendance.checkIn, "CRP attendance check-in", payload);
+}
+
+// CONFIRMED via live Swagger test on trlm.pickitover.com: POST
+// /api/crp-attendance/checkout takes {attendanceId, crpRegistrationId,
+// livelihoodId, latitude, longitude} and returns {"Message": "Check-Out
+// Successful"}. attendanceId is the id returned by the check-in call for
+// today's session - the caller is responsible for having captured it from
+// submitCrpAttendanceCheckIn's response.
+export async function submitCrpAttendanceCheckout(payload) {
+  return executeJsonRequest(API_ENDPOINTS.attendance.checkOut, "CRP attendance check-out", payload);
 }
 
 export async function submitFinancialSupport(payload, mode = "insert") {

@@ -33,7 +33,8 @@ import {
   loginUser,
   setAuthToken,
   submitCrpSignup,
-  submitCrpAttendanceCheckIn
+  submitCrpAttendanceCheckIn,
+  submitCrpAttendanceCheckout
 } from "../services/masterApi";
 import {
   loginSuccess,
@@ -70,7 +71,8 @@ const EMPTY_CHECKIN_INFO = {
   latitude: null,
   longitude: null,
   accuracy: 0,
-  geoEnabled: false
+  geoEnabled: false,
+  attendanceId: null
 };
 
 function getTodayIsoDate() {
@@ -121,6 +123,7 @@ export default function AppRouter() {
   const [appHydrated, setAppHydrated] = useState(false);
   const [geoLoading, setGeoLoading] = useState(false);
   const [checkInSubmitting, setCheckInSubmitting] = useState(false);
+  const [checkOutSubmitting, setCheckOutSubmitting] = useState(false);
 
   const [loginForm, setLoginForm] = useState({
     idType: "",
@@ -1179,6 +1182,18 @@ export default function AppRouter() {
       const response = await submitCrpAttendanceCheckIn(payload);
       console.log("CRP CHECK-IN RESPONSE:", response);
 
+      // Checkout needs this same session's attendanceId back (confirmed via
+      // live Swagger test on /api/crp-attendance/checkout). The check-in
+      // response shape hasn't been confirmed the same way yet, so this
+      // tries every casing/name already seen elsewhere in this codebase for
+      // "the id of the row that was just created" rather than assuming one.
+      const attendanceId =
+        response?.attendanceId ??
+        response?.AttendanceId ??
+        response?.id ??
+        response?.Id ??
+        null;
+
       setCheckInInfo((prev) => ({
         ...prev,
         isCheckedIn: true,
@@ -1188,7 +1203,8 @@ export default function AppRouter() {
         latitude,
         longitude,
         accuracy,
-        geoEnabled: true
+        geoEnabled: true,
+        attendanceId
       }));
 
       showAlert(
@@ -1220,23 +1236,73 @@ export default function AppRouter() {
     }
   };
 
-  const handleCheckOut = ({ onComplete } = {}) => {
-    const checkoutAt = new Date().toISOString();
+  const handleCheckOut = async ({ onComplete } = {}) => {
+    if (checkOutSubmitting) {
+      return;
+    }
 
-    setCheckInInfo((prev) => ({
-      ...EMPTY_CHECKIN_INFO,
-      currentDate: getTodayIsoDate(),
-      checkInAt: prev.checkInAt,
-      checkOutAt: checkoutAt
-    }));
-    setShowPostCheckoutModal(true);
+    setCheckOutSubmitting(true);
 
-    if (typeof onComplete === "function") {
-      onComplete(checkoutAt);
-    } else {
-      setPostSplashStep("login");
-      setStep("login");
-      setShowPostCheckoutModal(false);
+    try {
+      let latitude = 0;
+      let longitude = 0;
+
+      try {
+        const currentLocation = await getCurrentLocation();
+        if (currentLocation) {
+          const resolvedLatitude = Number(currentLocation.latitude);
+          const resolvedLongitude = Number(currentLocation.longitude);
+          if (Number.isFinite(resolvedLatitude) && Number.isFinite(resolvedLongitude)) {
+            latitude = resolvedLatitude;
+            longitude = resolvedLongitude;
+          }
+        }
+      } catch (locationError) {
+        console.error("Check-out location error:", locationError);
+      }
+
+      try {
+        const response = await submitCrpAttendanceCheckout({
+          attendanceId: Number(checkInInfo.attendanceId) || 0,
+          crpRegistrationId: Number(user?.crpRegistrationId) || 0,
+          livelihoodId: 0,
+          latitude,
+          longitude
+        });
+        console.log("CRP CHECK-OUT RESPONSE:", response);
+      } catch (checkoutError) {
+        console.error("CRP CHECK-OUT FAILED:", checkoutError);
+        // Checkout still proceeds locally even when the server call fails -
+        // the CRP still needs to be able to end their session/log out on a
+        // bad connection. They're warned here so they know attendance may
+        // not have recorded server-side, same tradeoff already made for the
+        // rest of this app's offline tolerance.
+        showAlert(
+          t("Check Out"),
+          checkoutError?.message ||
+            t("Unable to record check-out on the server. Your session was still checked out on this device.")
+        );
+      }
+
+      const checkoutAt = new Date().toISOString();
+
+      setCheckInInfo((prev) => ({
+        ...EMPTY_CHECKIN_INFO,
+        currentDate: getTodayIsoDate(),
+        checkInAt: prev.checkInAt,
+        checkOutAt: checkoutAt
+      }));
+      setShowPostCheckoutModal(true);
+
+      if (typeof onComplete === "function") {
+        await onComplete(checkoutAt);
+      } else {
+        setPostSplashStep("login");
+        setStep("login");
+        setShowPostCheckoutModal(false);
+      }
+    } finally {
+      setCheckOutSubmitting(false);
     }
   };
 
@@ -1451,8 +1517,14 @@ export default function AppRouter() {
                     <Text style={styles.sessionStatusBadgeText}>{checkInStatusLabel}</Text>
                   </View>
                   {checkInInfo.isCheckedIn && !checkInInfo.checkOutAt ? (
-                    <Pressable style={styles.sessionStripButton} onPress={() => handleCheckOut()}>
-                      <Text style={styles.sessionStripButtonText}>Check Out</Text>
+                    <Pressable
+                      style={styles.sessionStripButton}
+                      onPress={() => handleCheckOut()}
+                      disabled={checkOutSubmitting}
+                    >
+                      <Text style={styles.sessionStripButtonText}>
+                        {checkOutSubmitting ? "Checking Out..." : "Check Out"}
+                      </Text>
                     </Pressable>
                   ) : (
                     <Pressable style={styles.sessionStripButton} onPress={() => setStep("attendanceGate")}>
