@@ -39,8 +39,8 @@ const BUTTON_LABEL_MAP = {
 const ACTIVITY_ROUTE_MAP = {
   lhCboStatusPg: "lhCboPgActivityProfile",
   lhCboStatusNfc: "lhCboNfcActivityProfile",
-  lhCboStatusIfc: "",
-  lhCboStatusFpc: ""
+  lhCboStatusIfc: "lhCboIfcActivityProfile",
+  lhCboStatusFpc: "lhCboFpcActivityProfile"
 };
 const CHC_FIELDS = [
   ["districtName", "Name of the District"],

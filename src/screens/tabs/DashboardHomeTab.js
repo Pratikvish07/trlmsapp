@@ -71,6 +71,8 @@ import LhCboStatusGuideView from "./dashboard/views/LhCboStatusGuideView";
 import LhCboStatusView from "./dashboard/views/LhCboStatusView";
 import LhCboPgActivityProfileView from "./dashboard/views/LhCboPgActivityProfileView";
 import LhCboNfcActivityProfileView from "./dashboard/views/LhCboNfcActivityProfileView";
+import LhCboIfcActivityProfileView from "./dashboard/views/LhCboIfcActivityProfileView";
+import LhCboFpcActivityProfileView from "./dashboard/views/LhCboFpcActivityProfileView";
 import LhCboFinancialStatusView from "./dashboard/views/LhCboFinancialStatusView";
 import LhCboIncomeStatusView from "./dashboard/views/LhCboIncomeStatusView";
 import TechnicalSupportView from "./dashboard/views/TechnicalSupportView";
@@ -303,6 +305,36 @@ export default function DashboardHomeTab({
     volumeUnit: "",
     productionShed: "",
     homeBasedProduction: ""
+  });
+  const [ifcActivityProfileForm, setIfcActivityProfileForm] = useState({
+    householdsProfiled: "",
+    plannedLivelihoodActivities: "",
+    clusterVillagesCovered: "",
+    agroEcologicalPractices: "",
+    livestockStockTracked: "",
+    vaccinationHealthEventsRecorded: "",
+    waterHarvestingMicroIrrigation: "",
+    ntfpCollectionTracked: ""
+  });
+  const [fpcActivityProfileForm, setFpcActivityProfileForm] = useState({
+    membersOnboarded: "",
+    shareCapitalCollected: "",
+    boardMeetingHeld: "",
+    lastMeetingDate: "",
+    bookkeepingMaintained: "",
+    passbookUpdated: "",
+    loanApplicationsProcessed: "",
+    gstComplianceFiled: "",
+    demandIndentCollected: "",
+    bulkProcurementDone: "",
+    inputsDistributedToMembers: "",
+    advisoryProvided: "",
+    trainingConducted: "",
+    machineryBookingUsage: "",
+    produceAggregatedQty: "",
+    qualityGradingDone: "",
+    warehouseStockManaged: "",
+    salesInvoiced: ""
   });
   const [chcDetailForm, setChcDetailForm] = useState({
     districtName: "",
@@ -2786,6 +2818,7 @@ export default function DashboardHomeTab({
     nonFarmEnterprise, setNonFarmEnterprise, technicalSupportForm, setTechnicalSupportForm,
     trainingDatePicker, setTrainingDatePicker, responsePopup, setResponsePopup,
     pgActivityProfileForm, setPgActivityProfileForm, nfcActivityProfileForm, setNfcActivityProfileForm,
+    ifcActivityProfileForm, setIfcActivityProfileForm, fpcActivityProfileForm, setFpcActivityProfileForm,
     chcDetailForm, setChcDetailForm, lhCboFinancialForms, setLhCboFinancialForms,
     lhCboIncomeForms, setLhCboIncomeForms, financialSupportForm, setFinancialSupportForm,
     pastSupportForm, setPastSupportForm, transactionDetailsForm, setTransactionDetailsForm,
@@ -2966,6 +2999,22 @@ export default function DashboardHomeTab({
     return (
       <DashboardContextProvider value={dashboardContextValue}>
         <LhCboNfcActivityProfileView />
+      </DashboardContextProvider>
+    );
+  }
+
+  if (homeView === "lhCboIfcActivityProfile") {
+    return (
+      <DashboardContextProvider value={dashboardContextValue}>
+        <LhCboIfcActivityProfileView />
+      </DashboardContextProvider>
+    );
+  }
+
+  if (homeView === "lhCboFpcActivityProfile") {
+    return (
+      <DashboardContextProvider value={dashboardContextValue}>
+        <LhCboFpcActivityProfileView />
       </DashboardContextProvider>
     );
   }
