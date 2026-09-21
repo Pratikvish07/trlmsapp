@@ -6,7 +6,6 @@ import { getCurrentLocation, calculateDistance } from "../../utils/geofence";
 import {
   fetchActivities,
   fetchActivityTypes,
-  fetchAllCrps,
   fetchCrpTypes,
   fetchGpsByBlock,
   fetchLandTypes,
@@ -93,6 +92,22 @@ import DashboardHomeView from "./dashboard/views/DashboardHomeView";
 // key persists that selection the same way APP_NAV_STORAGE_KEY in
 // AppRouter.js already persists homeView/activeTab.
 const DASHBOARD_SELECTION_STORAGE_KEY = "trlmDashboardSelectionState";
+
+// Land types, units, seasons, activities, trade options, etc. are static
+// reference data shared by every CRP - they don't vary per user and don't
+// change mid-session. AppRouter.js unmounts/remounts this whole component
+// every time the user switches between the Home and Profile tabs, which
+// used to re-run every mount-time effect, including a 12-call
+// Promise.allSettled fetching all of this fresh each time. At the scale
+// this app is meant to run at (multiple lakh CRPs), re-fetching 12
+// effectively-static endpoints on every tab switch is the kind of load
+// multiplier that hits the backend hardest for the least benefit. Cached
+// at module scope so it survives remounts within the same app session -
+// only cached once every endpoint actually succeeds, so a rural-network
+// hiccup still gets a clean retry on the next mount instead of being
+// stuck on fallback values for the rest of the session.
+let staticMasterListsCache = null;
+let staticMasterListsPromise = null;
 
 export default function DashboardHomeTab({
   user,
@@ -2126,26 +2141,7 @@ export default function DashboardHomeTab({
   useEffect(() => {
     let active = true;
 
-    async function loadStaticMasterLists() {
-      const results = await Promise.allSettled([
-        fetchCrpTypes(),
-        fetchLandTypes(),
-        fetchUnitsOfArea(),
-        fetchSeasons(),
-        fetchSubCategoriesByActivity(3), // Livestock
-        fetchSubCategoriesByActivity(2), // Fishery Based
-        fetchActivities(),
-        fetchProductionMaster(),
-        fetchActivityTypes(),
-        fetchTradeOptions(),
-        fetchTrainingAgencyOptions(),
-        fetchMemberActivities()
-      ]);
-
-      if (!active) {
-        return;
-      }
-
+    function applyStaticMasterListResults(results) {
       const [
         crpTypesRes,
         landTypesRes,
@@ -2211,6 +2207,42 @@ export default function DashboardHomeTab({
       }
     }
 
+    async function loadStaticMasterLists() {
+      if (staticMasterListsCache) {
+        applyStaticMasterListResults(staticMasterListsCache);
+        return;
+      }
+
+      if (!staticMasterListsPromise) {
+        staticMasterListsPromise = Promise.allSettled([
+          fetchCrpTypes(),
+          fetchLandTypes(),
+          fetchUnitsOfArea(),
+          fetchSeasons(),
+          fetchSubCategoriesByActivity(3), // Livestock
+          fetchSubCategoriesByActivity(2), // Fishery Based
+          fetchActivities(),
+          fetchProductionMaster(),
+          fetchActivityTypes(),
+          fetchTradeOptions(),
+          fetchTrainingAgencyOptions(),
+          fetchMemberActivities()
+        ]).then((results) => {
+          if (results.every((item) => item.status === "fulfilled")) {
+            staticMasterListsCache = results;
+          }
+          staticMasterListsPromise = null;
+          return results;
+        });
+      }
+
+      const results = await staticMasterListsPromise;
+
+      if (active) {
+        applyStaticMasterListResults(results);
+      }
+    }
+
     loadStaticMasterLists();
 
     return () => {
@@ -2249,41 +2281,40 @@ export default function DashboardHomeTab({
     };
   }, [activityType, activityTypes]);
 
+  // Used to always call fetchAllCrps() (the only CRP-directory endpoint the
+  // backend exposes - there is no "get one CRP by id") just to filter the
+  // full response down to the single record matching the logged-in
+  // identity. AppRouter.js's onLogin already fetches that same full list
+  // once at login time to resolve this exact CRP's block/GP/village, and
+  // hands the result down as `user` - re-fetching the entire CRP directory
+  // again here on every dashboard mount (and, since this effect used to
+  // write to its own dependency, sometimes twice) was pure waste. At the
+  // scale this app is meant to run at (multiple lakh CRPs), that "fetch
+  // everyone to find one row" pattern, repeated on every login and every
+  // Home/Profile tab switch, is the kind of thing that takes the backend
+  // down first. `crpOptions` only ever showed this CRP's own record
+  // anyway (never a real multi-choice), so it can be built directly from
+  // `user` with no network call at all.
   useEffect(() => {
-    let active = true;
-
-    async function loadCrpOptions() {
-      try {
-        const payload = await fetchAllCrps();
-        if (!active) {
-          return;
-        }
-        const approvedCrps = payload.filter((item) => Number(item.approvalStatus) === 1);
-        // Only the logged-in CRP's own record should appear on this dashboard.
-        const normalizedIdentity = String(user.identity || "").trim().toUpperCase();
-        const ownCrpRecords = normalizedIdentity
-          ? approvedCrps.filter(
-              (item) =>
-                String(item.crpId || "").trim().toUpperCase() === normalizedIdentity
-            )
-          : [];
-        setCrpOptions(ownCrpRecords);
-        if (!selectedCrpRegistrationId && ownCrpRecords.length > 0) {
-          setSelectedCrpRegistrationId(String(ownCrpRecords[0].id));
-        }
-      } catch (error) {
-        if (active) {
-          setCrpOptions([]);
-        }
-      }
+    if (!user.identity || !user.crpRegistrationId) {
+      setCrpOptions([]);
+      return;
     }
 
-    loadCrpOptions();
-
-    return () => {
-      active = false;
-    };
-  }, [selectedCrpRegistrationId, user.identity]);
+    setCrpOptions([
+      {
+        id: user.crpRegistrationId,
+        crpRegistrationId: user.crpRegistrationId,
+        crpId: user.identity,
+        name: user.name,
+        fullName: user.name,
+        blockId: user.blockId,
+        gpId: user.gpId,
+        villageId: user.villageId
+      }
+    ]);
+    setSelectedCrpRegistrationId((prev) => prev || String(user.crpRegistrationId));
+  }, [user.crpRegistrationId, user.identity, user.name, user.blockId, user.gpId, user.villageId]);
 
   useEffect(() => {
     const shouldLoadGpOptions =
