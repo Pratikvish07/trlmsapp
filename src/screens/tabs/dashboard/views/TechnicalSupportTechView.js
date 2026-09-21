@@ -1,10 +1,10 @@
 import React from "react";
 import { Modal, Pressable, ScrollView, View } from "react-native";
-import { Text } from "../../../../components/dashboard/TranslatedInputs";
-import EditableSelect from "../../../../components/dashboard/EditableSelect";
-import DateField from "../../../../components/dashboard/DateField";
-import DatePickerInput from "../../../../components/dashboard/DatePickerInput";
-import { pageStyles, tsDetailStyles } from "../../../../styles/dashboardHomeStyles";
+import { Text } from "@/components/dashboard/TranslatedInputs";
+import EditableSelect from "@/components/dashboard/EditableSelect";
+import DateField from "@/components/dashboard/DateField";
+import DatePickerInput from "@/components/dashboard/DatePickerInput";
+import { pageStyles, tsDetailStyles } from "@/styles/dashboardHomeStyles";
 import { useDashboardContext } from "../DashboardContext";
 
 const YES_NO_OPTIONS = ["Yes", "No"];

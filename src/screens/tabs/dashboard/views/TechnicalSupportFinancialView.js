@@ -1,8 +1,8 @@
 import React from "react";
 import { Pressable, View } from "react-native";
-import { Text } from "../../../../components/dashboard/TranslatedInputs";
-import EditableSelect from "../../../../components/dashboard/EditableSelect";
-import { pageStyles, flowStyles, fsStyles } from "../../../../styles/dashboardHomeStyles";
+import { Text } from "@/components/dashboard/TranslatedInputs";
+import EditableSelect from "@/components/dashboard/EditableSelect";
+import { pageStyles, flowStyles, fsStyles } from "@/styles/dashboardHomeStyles";
 import { useDashboardContext } from "../DashboardContext";
 
 const LOAN_CYCLE_OPTIONS = ["Cycle 1", "Cycle 2", "Cycle 3"];

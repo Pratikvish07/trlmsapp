@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, View } from "react-native";
-import { Text } from "../../../../components/dashboard/TranslatedInputs";
-import { pageStyles, lhGuideStyles } from "../../../../styles/dashboardHomeStyles";
+import { Text } from "@/components/dashboard/TranslatedInputs";
+import { pageStyles, lhGuideStyles } from "@/styles/dashboardHomeStyles";
 import { useDashboardContext } from "../DashboardContext";
 
 const RULE_TEXT_BY_TYPE = {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, View } from "react-native";
-import { Text } from "../../../../components/dashboard/TranslatedInputs";
-import { pageStyles, wrStyles } from "../../../../styles/dashboardHomeStyles";
+import { Text } from "@/components/dashboard/TranslatedInputs";
+import { pageStyles, wrStyles } from "@/styles/dashboardHomeStyles";
 import { useDashboardContext } from "../DashboardContext";
 
 export default function WorkingReportView() {

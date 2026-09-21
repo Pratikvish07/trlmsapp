@@ -1,7 +1,7 @@
 import React from "react";
 import { Platform } from "react-native";
 import { TextInput } from "./TranslatedInputs";
-import { tsDetailStyles } from "../../styles/dashboardHomeStyles";
+import { tsDetailStyles } from "@/styles/dashboardHomeStyles";
 
 export default function DatePickerInput({ value, onChange }) {
   if (Platform.OS === "web") {

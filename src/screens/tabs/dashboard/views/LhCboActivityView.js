@@ -1,9 +1,9 @@
 import React from "react";
 import { Image, Pressable, ScrollView, View } from "react-native";
-import { Text, TextInput } from "../../../../components/dashboard/TranslatedInputs";
-import CycleDropdown from "../../../../components/dashboard/CycleDropdown";
-import { pageStyles, lhcboStyles, chcEntStyles, wrStyles } from "../../../../styles/dashboardHomeStyles";
-import { CHC_ACTIVITY_DISPLAY } from "../../../../constants/livelihoodOptions";
+import { Text, TextInput } from "@/components/dashboard/TranslatedInputs";
+import CycleDropdown from "@/components/dashboard/CycleDropdown";
+import { pageStyles, lhcboStyles, chcEntStyles, wrStyles } from "@/styles/dashboardHomeStyles";
+import { CHC_ACTIVITY_DISPLAY } from "@/constants/livelihoodOptions";
 import { useDashboardContext } from "../DashboardContext";
 
 export default function LhCboActivityView() {

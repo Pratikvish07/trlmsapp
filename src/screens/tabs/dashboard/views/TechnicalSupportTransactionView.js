@@ -1,8 +1,8 @@
 import React from "react";
 import { Pressable, ScrollView, View } from "react-native";
-import { Text, TextInput } from "../../../../components/dashboard/TranslatedInputs";
-import EditableSelect from "../../../../components/dashboard/EditableSelect";
-import { pageStyles, flowStyles, txnStyles } from "../../../../styles/dashboardHomeStyles";
+import { Text, TextInput } from "@/components/dashboard/TranslatedInputs";
+import EditableSelect from "@/components/dashboard/EditableSelect";
+import { pageStyles, flowStyles, txnStyles } from "@/styles/dashboardHomeStyles";
 import { useDashboardContext } from "../DashboardContext";
 
 const PAYMENT_BY_OPTIONS = ["SHG", "VO", "CLF", "Bank"];

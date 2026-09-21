@@ -1,9 +1,9 @@
 import React from "react";
 import { Pressable, ScrollView, View } from "react-native";
-import { Text, TextInput } from "../../../../components/dashboard/TranslatedInputs";
-import CycleDropdown from "../../../../components/dashboard/CycleDropdown";
-import DateField from "../../../../components/dashboard/DateField";
-import { pageStyles, nfStyles } from "../../../../styles/dashboardHomeStyles";
+import { Text, TextInput } from "@/components/dashboard/TranslatedInputs";
+import CycleDropdown from "@/components/dashboard/CycleDropdown";
+import DateField from "@/components/dashboard/DateField";
+import { pageStyles, nfStyles } from "@/styles/dashboardHomeStyles";
 import { useDashboardContext } from "../DashboardContext";
 
 // No live endpoint exists for this field (Enterprise "Set-up Type");

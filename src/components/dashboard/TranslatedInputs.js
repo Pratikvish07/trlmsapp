@@ -1,6 +1,6 @@
 import React from "react";
 import { Text as RNText, TextInput as RNTextInput } from "react-native";
-import { useTranslatedValue } from "../../i18n/I18nProvider";
+import { useTranslatedValue } from "@/i18n/I18nProvider";
 
 export function Text({ children, ...props }) {
   const plainText = typeof children === "string" || typeof children === "number"

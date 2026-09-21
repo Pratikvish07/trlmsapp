@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, View } from "react-native";
-import { Text } from "../../../../components/dashboard/TranslatedInputs";
-import { pageStyles, tsCardStyles } from "../../../../styles/dashboardHomeStyles";
+import { Text } from "@/components/dashboard/TranslatedInputs";
+import { pageStyles, tsCardStyles } from "@/styles/dashboardHomeStyles";
 import { useDashboardContext } from "../DashboardContext";
 
 const SEGMENTS = ["Past Supports", "Present Support", "Support Required"];

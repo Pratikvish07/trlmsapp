@@ -1,9 +1,9 @@
 import React from "react";
 import { Pressable, ScrollView, View } from "react-native";
-import { Text, TextInput } from "../../../../components/dashboard/TranslatedInputs";
-import EditableSelect from "../../../../components/dashboard/EditableSelect";
-import { pageStyles, flowStyles, pastStyles } from "../../../../styles/dashboardHomeStyles";
-import { SUPPORT_SOURCE_OPTIONS } from "../../../../constants/livelihoodOptions";
+import { Text, TextInput } from "@/components/dashboard/TranslatedInputs";
+import EditableSelect from "@/components/dashboard/EditableSelect";
+import { pageStyles, flowStyles, pastStyles } from "@/styles/dashboardHomeStyles";
+import { SUPPORT_SOURCE_OPTIONS } from "@/constants/livelihoodOptions";
 import { useDashboardContext } from "../DashboardContext";
 
 const RATE_OPTIONS = ["8", "10", "12", "14"];

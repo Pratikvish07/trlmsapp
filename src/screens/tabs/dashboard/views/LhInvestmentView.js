@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, View } from "react-native";
-import { Text, TextInput } from "../../../../components/dashboard/TranslatedInputs";
-import { pageStyles, flowStyles } from "../../../../styles/dashboardHomeStyles";
+import { Text, TextInput } from "@/components/dashboard/TranslatedInputs";
+import { pageStyles, flowStyles } from "@/styles/dashboardHomeStyles";
 import { useDashboardContext } from "../DashboardContext";
 
 const NUMERIC_FIELDS = [

@@ -18,22 +18,3 @@ export const GEOFENCE_SETTINGS = {
   showMapOnLogin: true
 };
 
-export const LANGUAGE_OPTIONS = [
-  { name: "English", nativeName: "English", code: "en" },
-  { name: "Hindi", nativeName: "हिंदी", code: "hi" },
-  { name: "Tamil", nativeName: "தமிழ்", code: "ta" },
-  { name: "Telugu", nativeName: "తెలుగు", code: "te" },
-  { name: "Bengali", nativeName: "বাংলা", code: "bn" },
-  { name: "Marathi", nativeName: "मराठी", code: "mr" },
-  { name: "Gujarati", nativeName: "ગુજરાતી", code: "gu" },
-  { name: "Kannada", nativeName: "ಕನ್ನಡ", code: "kn" },
-  { name: "Malayalam", nativeName: "മലയാളം", code: "ml" },
-  { name: "Punjabi", nativeName: "ਪੰਜਾਬੀ", code: "pa" }
-];
-export const LANGUAGES = LANGUAGE_OPTIONS.map((item) => item.name);
-export const BLOCKS = [];
-export const VILLAGES = [];
-
-export const ROLE_CARDS = {};
-
-export const MOCK_SHGS = [];

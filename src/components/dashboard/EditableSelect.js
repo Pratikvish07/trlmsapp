@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { Text, TextInput } from "./TranslatedInputs";
-import { tsDetailStyles } from "../../styles/dashboardHomeStyles";
+import { tsDetailStyles } from "@/styles/dashboardHomeStyles";
 
 export default function EditableSelect({ value, options, onChange, placeholder, inputStyle }) {
   const [open, setOpen] = useState(false);

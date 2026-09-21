@@ -1,8 +1,8 @@
 import React from "react";
 import { Image, Pressable, View } from "react-native";
-import { Text, TextInput } from "../../../../components/dashboard/TranslatedInputs";
-import DropdownField from "../../../../components/dashboard/DropdownField";
-import { pageStyles, smStyles, wrStyles } from "../../../../styles/dashboardHomeStyles";
+import { Text, TextInput } from "@/components/dashboard/TranslatedInputs";
+import DropdownField from "@/components/dashboard/DropdownField";
+import { pageStyles, smStyles, wrStyles } from "@/styles/dashboardHomeStyles";
 import { useDashboardContext } from "../DashboardContext";
 
 export default function ShgMemberView() {

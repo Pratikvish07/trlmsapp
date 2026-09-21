@@ -1,8 +1,8 @@
 import React from "react";
 import { Pressable, View } from "react-native";
-import { Text } from "../../../../components/dashboard/TranslatedInputs";
-import DropdownField from "../../../../components/dashboard/DropdownField";
-import { pageStyles, neStyles, wrStyles } from "../../../../styles/dashboardHomeStyles";
+import { Text } from "@/components/dashboard/TranslatedInputs";
+import DropdownField from "@/components/dashboard/DropdownField";
+import { pageStyles, neStyles, wrStyles } from "@/styles/dashboardHomeStyles";
 import { useDashboardContext } from "../DashboardContext";
 
 export default function NewEnrolmentView() {

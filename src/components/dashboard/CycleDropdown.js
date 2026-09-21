@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { Text } from "./TranslatedInputs";
-import { flowStyles } from "../../styles/dashboardHomeStyles";
+import { flowStyles } from "@/styles/dashboardHomeStyles";
 
 export default function CycleDropdown({ value, options, onChange, style }) {
   const [open, setOpen] = useState(false);

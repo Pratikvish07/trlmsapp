@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable } from "react-native";
 import { Text } from "./TranslatedInputs";
-import { tsDetailStyles } from "../../styles/dashboardHomeStyles";
+import { tsDetailStyles } from "@/styles/dashboardHomeStyles";
 
 export default function DateField({ value, placeholder, onPress, style, textStyle, placeholderStyle, iconStyle }) {
   return (

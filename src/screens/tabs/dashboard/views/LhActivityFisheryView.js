@@ -1,8 +1,8 @@
 import React from "react";
 import { Pressable, View } from "react-native";
-import { Text, TextInput } from "../../../../components/dashboard/TranslatedInputs";
-import CycleDropdown from "../../../../components/dashboard/CycleDropdown";
-import { pageStyles, flowStyles, wrStyles } from "../../../../styles/dashboardHomeStyles";
+import { Text, TextInput } from "@/components/dashboard/TranslatedInputs";
+import CycleDropdown from "@/components/dashboard/CycleDropdown";
+import { pageStyles, flowStyles, wrStyles } from "@/styles/dashboardHomeStyles";
 import { useDashboardContext } from "../DashboardContext";
 
 const WATERBODY_TYPE_OPTIONS = ["Seasonal", "Perennial", "Canal", "Pond"];

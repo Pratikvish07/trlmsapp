@@ -1,8 +1,8 @@
 import React from "react";
 import { Pressable, ScrollView, View } from "react-native";
-import { Text, TextInput } from "../../../../components/dashboard/TranslatedInputs";
-import EditableSelect from "../../../../components/dashboard/EditableSelect";
-import { pageStyles, tsDetailStyles } from "../../../../styles/dashboardHomeStyles";
+import { Text, TextInput } from "@/components/dashboard/TranslatedInputs";
+import EditableSelect from "@/components/dashboard/EditableSelect";
+import { pageStyles, tsDetailStyles } from "@/styles/dashboardHomeStyles";
 import { useDashboardContext } from "../DashboardContext";
 
 const YES_NO_OPTIONS = ["Yes", "No"];

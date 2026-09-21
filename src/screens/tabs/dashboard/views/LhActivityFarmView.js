@@ -1,9 +1,9 @@
 import React from "react";
 import { Pressable, ScrollView, View } from "react-native";
-import { Text, TextInput } from "../../../../components/dashboard/TranslatedInputs";
-import CycleDropdown from "../../../../components/dashboard/CycleDropdown";
-import { pageStyles, apStyles, wrStyles } from "../../../../styles/dashboardHomeStyles";
-import { FARM_PRODUCTION_UNIT_OPTIONS, FARM_TYPE_OPTIONS } from "../../../../constants/livelihoodOptions";
+import { Text, TextInput } from "@/components/dashboard/TranslatedInputs";
+import CycleDropdown from "@/components/dashboard/CycleDropdown";
+import { pageStyles, apStyles, wrStyles } from "@/styles/dashboardHomeStyles";
+import { FARM_PRODUCTION_UNIT_OPTIONS, FARM_TYPE_OPTIONS } from "@/constants/livelihoodOptions";
 import { useDashboardContext } from "../DashboardContext";
 
 export default function LhActivityFarmView() {

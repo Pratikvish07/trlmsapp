@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, View } from "react-native";
 import { Text } from "./TranslatedInputs";
-import { smStyles } from "../../styles/dashboardHomeStyles";
+import { smStyles } from "@/styles/dashboardHomeStyles";
 
 export default function DropdownField({
   label,
