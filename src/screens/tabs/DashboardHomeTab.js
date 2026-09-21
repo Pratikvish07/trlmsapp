@@ -109,6 +109,17 @@ const DASHBOARD_SELECTION_STORAGE_KEY = "trlmDashboardSelectionState";
 let staticMasterListsCache = null;
 let staticMasterListsPromise = null;
 
+// GP options (per block) and village options (per GP) are keyed caches for
+// the same reason: a CRP's assigned block essentially never changes within
+// a session, and the GP/Village-loading effects below depend on `homeView`
+// (only active on the Dashboard/New Enrolment screens) as well as the
+// block/GP id - so navigating New Enrolment -> Dashboard -> New Enrolment
+// re-ran the fetch every time even though the block/GP id hadn't changed.
+// Caching by id means only a genuinely new block or GP selection triggers
+// a real network call.
+const gpOptionsCacheByBlockId = new Map();
+const villageOptionsCacheByGpId = new Map();
+
 export default function DashboardHomeTab({
   user,
   dashboardMetrics,
@@ -2325,12 +2336,19 @@ export default function DashboardHomeTab({
       return;
     }
 
+    const cachedGpOptions = gpOptionsCacheByBlockId.get(effectiveBlockId);
+    if (cachedGpOptions) {
+      setGpOptions(cachedGpOptions);
+      return;
+    }
+
     let active = true;
 
     async function loadGpOptions() {
       try {
         const payload = await fetchGpsByBlock(effectiveBlockId);
         if (active) {
+          gpOptionsCacheByBlockId.set(effectiveBlockId, payload);
           setGpOptions(payload);
         }
       } catch (error) {
@@ -2356,12 +2374,19 @@ export default function DashboardHomeTab({
       return;
     }
 
+    const cachedVillageOptions = villageOptionsCacheByGpId.get(selectedGpId);
+    if (cachedVillageOptions) {
+      setVillageOptions(cachedVillageOptions);
+      return;
+    }
+
     let active = true;
 
     async function loadVillageOptions() {
       try {
         const payload = await fetchVillagesByGp(selectedGpId);
         if (active) {
+          villageOptionsCacheByGpId.set(selectedGpId, payload);
           setVillageOptions(payload);
         }
       } catch (error) {
