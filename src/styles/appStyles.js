@@ -1612,7 +1612,8 @@ const styles = StyleSheet.create({
   loginContainer: {
     flex: 1,
     backgroundColor: colors.appBg,
-    position: "relative"
+    position: "relative",
+    overflow: "hidden"
   },
   authGlowPrimary: {
     position: "absolute",
