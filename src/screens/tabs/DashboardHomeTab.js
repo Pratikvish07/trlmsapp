@@ -77,6 +77,8 @@ import LhActivityFisheryView from "./dashboard/views/LhActivityFisheryView";
 import LhInvestmentView from "./dashboard/views/LhInvestmentView";
 import LhIncomeView from "./dashboard/views/LhIncomeView";
 import LhCboActivityView from "./dashboard/views/LhCboActivityView";
+import LhCboStatusGuideView from "./dashboard/views/LhCboStatusGuideView";
+import LhCboStatusView from "./dashboard/views/LhCboStatusView";
 
 // CRP ID / GP / Village / SHG / Member selection lived only in this
 // component's React state, with no persistence - a page reload (common on
@@ -2930,75 +2932,10 @@ export default function DashboardHomeTab({
   }
 
   if (homeView === "lhCboStatusGuide") {
-    const selectedRuleTextByType = {
-      "Producer Group (PG)":
-        "- If Producers Group Activity is selected, further details will be shown on Page 1B.8A",
-      "Non-Farm Collective (NFC)":
-        "- If Non-Farm Collective Activity is selected, further details will be shown on Page 1B.8B",
-      "Integrated Farming Cluster (IFC)":
-        "- If Integrated Farming Cluster Activity is selected, further details will be shown on Page 1B.8C",
-      "Custom Hiring Center (CHC)":
-        "- If Custom Hiring Center Activity is selected, further details will be shown on Page 1B.8D",
-      "Farmer Producer Company (FPC)":
-        "- If Farmer Producer Company Activity is selected, further details will be shown on Page 1B.8E"
-    };
-    const selectedRuleText =
-      selectedRuleTextByType[lhCboType] || selectedRuleTextByType["Producer Group (PG)"];
-
     return (
-      <View style={pageStyles.screen}>
-        <View style={[pageStyles.frame, lhGuideStyles.frame]}>
-          <View style={lhGuideStyles.headerCard}>
-            <Text style={lhGuideStyles.headerLine}>LH CBO Name: {selectedLhCboName}</Text>
-            <Text style={lhGuideStyles.headerLine}>GP/VC Name: {user.gpVcName || "-"}</Text>
-          </View>
-
-          <View style={lhGuideStyles.formCard}>
-            <View style={lhGuideStyles.dropdownRow}>
-              <Text style={lhGuideStyles.dropdownLabel}>Livelihood Activity:</Text>
-              <View style={lhGuideStyles.dropdownValueBox}>
-                <Text style={lhGuideStyles.dropdownValue}>{displayedLhCboActivity}</Text>
-                {isChcEnterprisesMode ? null : (
-                  <Text style={lhGuideStyles.dropdownArrow}>v</Text>
-                )}
-              </View>
-            </View>
-            <View style={lhGuideStyles.dropdownRow}>
-              <Text style={lhGuideStyles.dropdownLabel}>Category:</Text>
-              <View style={lhGuideStyles.dropdownValueBox}>
-                <Text style={lhGuideStyles.dropdownValue}>{lhCboType}</Text>
-                <Text style={lhGuideStyles.dropdownArrow}>v</Text>
-              </View>
-            </View>
-
-            <View style={lhGuideStyles.rulesCard}>
-              <Text style={[lhGuideStyles.ruleLine, lhGuideStyles.ruleLineActive]}>
-                {selectedRuleText}
-              </Text>
-            </View>
-
-              <View style={lhGuideStyles.footerRow}>
-                <View
-                  style={[
-                    lhGuideStyles.geoDot,
-                    geoStatusVariant === "green"
-                      ? lhGuideStyles.geoDotGreen
-                      : geoStatusVariant === "red"
-                        ? lhGuideStyles.geoDotRed
-                        : lhGuideStyles.geoDotIdle
-                  ]}
-                />
-                <Pressable style={lhGuideStyles.saveBtn} onPress={handleLhCboGuideSaveAndNext}>
-                  <Text style={lhGuideStyles.saveBtnText}>Save & Next</Text>
-                </Pressable>
-            </View>
-          </View>
-
-          <Pressable style={lhGuideStyles.backBtn} onPress={() => onOpenUpdateData("lhCboActivity")}>
-            <Text style={lhGuideStyles.backBtnText}>Back</Text>
-          </Pressable>
-        </View>
-      </View>
+      <DashboardContextProvider value={dashboardContextValue}>
+        <LhCboStatusGuideView />
+      </DashboardContextProvider>
     );
   }
 
@@ -3009,193 +2946,10 @@ export default function DashboardHomeTab({
     homeView === "lhCboStatusChc" ||
     homeView === "lhCboStatusFpc"
   ) {
-    const isChcView = homeView === "lhCboStatusChc";
-    const titleMetaMap = {
-      lhCboStatusPg: { page: "Page:1B.8A", red: "Producer Group", tail: " Activity Status" },
-      lhCboStatusNfc: { page: "", red: "", tail: "" },
-      lhCboStatusIfc: {
-        page: "Page:1B.8C",
-        red: "Integrated Farming Cluster",
-        tail: " Activity Status"
-      },
-      lhCboStatusChc: {
-        page: "Page:1B.8D",
-        red: "Custom Hiring Center",
-        tail: " Activity Status"
-      },
-      lhCboStatusFpc: {
-        page: "Page:1B.8E",
-        red: "Farmer Producer Company",
-        tail: " Activity Status"
-      }
-    };
-    const headerNameMap = {
-      lhCboStatusPg: "PG Name",
-      lhCboStatusNfc: "NFC Name",
-      lhCboStatusIfc: "IFC Name",
-      lhCboStatusChc: "CHC Name",
-      lhCboStatusFpc: "FPC Name"
-    };
-    const buttonLabelMap = {
-      lhCboStatusPg: ["Activity Profile", "Financial Status", "Income\nStatus"],
-      lhCboStatusNfc: ["Activity Profile", "Financial Status", "Income\nStatus"],
-      lhCboStatusIfc: ["Activity Profile", "Financial Status", "Income\nStatus"],
-      lhCboStatusFpc: ["Activity Profile", "Financial Status", "Income\nStatus"]
-    };
-    const activityRouteMap = {
-      lhCboStatusPg: "lhCboPgActivityProfile",
-      lhCboStatusNfc: "lhCboNfcActivityProfile",
-      lhCboStatusIfc: "",
-      lhCboStatusFpc: ""
-    };
-
     return (
-      <View style={pageStyles.screen}>
-        <View style={[pageStyles.frame, lhcboStatusStyles.frame]}>
-          {homeView !== "lhCboStatusPg" && homeView !== "lhCboStatusNfc" ? (
-            <Text style={lhcboStatusStyles.titleText}>
-              <Text style={lhcboStatusStyles.titlePage}>{titleMetaMap[homeView].page} </Text>
-              <Text style={lhcboStatusStyles.titleRed}>{titleMetaMap[homeView].red}</Text>
-              <Text style={lhcboStatusStyles.titlePage}>{titleMetaMap[homeView].tail}</Text>
-            </Text>
-          ) : null}
-          <View style={lhcboStatusStyles.headerCard}>
-            <Text style={lhcboStatusStyles.headerLine}>
-              {headerNameMap[homeView]}: {selectedLhCboName}
-            </Text>
-            <Text style={lhcboStatusStyles.headerLine}>GP/VC Name: {user.gpVcName || "-"}</Text>
-          </View>
-
-          <View style={lhcboStatusStyles.contentCard}>
-            {isChcView ? (
-              <View style={lhcboStatusStyles.chcDetailsWrap}>
-                <View style={tsDetailStyles.sectionCard}>
-                  <Text style={tsDetailStyles.sectionTitle}>Custom Hiring Center Details</Text>
-                  {[
-                    ["districtName", "Name of the District"],
-                    ["blockName", "Name of the Block"],
-                    ["gpVcName", "Name of the GP/VC"],
-                    ["villageOrganizationName", "Name of the Village Organization"],
-                    ["chcName", "Name of the CHC"],
-                    ["establishedDate", "Date of CHC established"],
-                    ["establishedThroughConvergence", "CHC establishment through convergence (Y/N)"],
-                    ["departmentAndScheme", "If Yes, Name of Department and Scheme"],
-                    ["separateBankAccount", "Having Separate Bank Account (Y/N)"],
-                    ["bankAccountNumber", "CHC Bank Account Number"],
-                    ["bankName", "Name of the Bank"],
-                    ["bankBranchName", "Name of the Bank Branch"],
-                    ["amountFromTrlm", "Amount received from TRLM"],
-                    ["amountFromDepartment", "Amount received from line Department"],
-                    ["availableMachineries", "Available machineries"],
-                    ["chcManagerDeployed", "CHC Manager deployed (Y/N)"],
-                    ["chcManagerName", "Name of the CHC Manager"],
-                    ["chcManagerContact", "Contact No of the CHC Manager"],
-                    ["totalIncomeSinceInception", "Total Income (since inception)"],
-                    ["totalExpenditureSinceInception", "Total Expenditure (since inception)"],
-                    ["netProfitOrLoss", "Net Profit / Loss"],
-                    ["cashInHand", "Cash in Hand"],
-                    ["cashAtBank", "Cash at Bank"]
-                  ].map(([key, label]) => (
-                    <View key={key} style={tsDetailStyles.fieldBlock}>
-                      <Text style={tsDetailStyles.label}>{label}</Text>
-                      <TextInput
-                        style={tsDetailStyles.selectInput}
-                        value={chcDetailForm[key]}
-                        onChangeText={(text) =>
-                          setChcDetailForm((prev) => ({
-                            ...prev,
-                            [key]: text
-                          }))
-                        }
-                        placeholder={label}
-                        placeholderTextColor="#64748b"
-                      />
-                    </View>
-                  ))}
-                </View>
-              </View>
-            ) : (
-              <View style={lhcboStatusStyles.buttonStack}>
-                <Pressable
-                  style={lhcboStatusStyles.blockBtn}
-                  onPress={() => {
-                    if (!activityRouteMap[homeView]) {
-                      showResponsePopup(
-                        "Activity Profile",
-                        "This type does not have a separate activity-profile page in the current flow."
-                      );
-                      return;
-                    }
-                    onOpenUpdateData(activityRouteMap[homeView]);
-                  }}
-                >
-                  <Text style={lhcboStatusStyles.blockBtnText}>{buttonLabelMap[homeView][0]}</Text>
-                </Pressable>
-                <Pressable
-                  style={lhcboStatusStyles.blockBtn}
-                  onPress={() => onOpenUpdateData("lhCboFinancialStatus")}
-                >
-                  <Text style={lhcboStatusStyles.blockBtnText}>{buttonLabelMap[homeView][1]}</Text>
-                </Pressable>
-                <Pressable
-                  style={lhcboStatusStyles.blockBtn}
-                  onPress={() => onOpenUpdateData("lhCboIncomeStatus")}
-                >
-                  <Text style={lhcboStatusStyles.blockBtnText}>{buttonLabelMap[homeView][2]}</Text>
-                </Pressable>
-              </View>
-            )}
-
-            <View style={lhcboStatusStyles.footerRow}>
-              <View
-                style={[
-                  lhcboStatusStyles.geoDot,
-                  geoStatusVariant === "green"
-                    ? lhcboStatusStyles.geoDotGreen
-                    : geoStatusVariant === "red"
-                      ? lhcboStatusStyles.geoDotRed
-                      : lhcboStatusStyles.geoDotIdle
-                ]}
-              />
-              <Pressable
-                style={lhcboStatusStyles.saveBtn}
-                disabled={Boolean(apiSavingKey)}
-                onPress={() => {
-                  if (isChcView) {
-                    saveActivityProfile(
-                      "Custom Hiring Center Activity Profile",
-                      chcDetailForm,
-                      "technicalSupportTech",
-                      {
-                        profileType: "Custom Hiring Center Activity Profile",
-                        saveKey: "chcActivityProfile"
-                      }
-                    );
-                    return;
-                  }
-
-                  showSavedDataPopup(
-                    `${titleMetaMap[homeView].red} status`,
-                    {
-                      name: selectedLhCboName,
-                      gpVcName: user.gpVcName || "-",
-                      activity: displayedLhCboActivity,
-                      category: lhCboType,
-                      geoStatus: geoStatusVariant
-                    },
-                    "technicalSupportTech"
-                  );
-                }}
-              >
-                <Text style={lhcboStatusStyles.saveBtnText}>
-                  {apiSavingKey === "chcActivityProfile" ? "Saving..." : "Save"}
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-          {renderResponsePopup()}
-        </View>
-      </View>
+      <DashboardContextProvider value={dashboardContextValue}>
+        <LhCboStatusView />
+      </DashboardContextProvider>
     );
   }
 
