@@ -79,6 +79,8 @@ import LhIncomeView from "./dashboard/views/LhIncomeView";
 import LhCboActivityView from "./dashboard/views/LhCboActivityView";
 import LhCboStatusGuideView from "./dashboard/views/LhCboStatusGuideView";
 import LhCboStatusView from "./dashboard/views/LhCboStatusView";
+import LhCboPgActivityProfileView from "./dashboard/views/LhCboPgActivityProfileView";
+import LhCboNfcActivityProfileView from "./dashboard/views/LhCboNfcActivityProfileView";
 
 // CRP ID / GP / Village / SHG / Member selection lived only in this
 // component's React state, with no persistence - a page reload (common on
@@ -2954,242 +2956,18 @@ export default function DashboardHomeTab({
   }
 
   if (homeView === "lhCboPgActivityProfile") {
-    const yesNoOptions = ["Yes", "No"];
-    const commodityOptions = activityOptions.map((item) => item.name).filter(Boolean);
-    const pgFields = [
-      ["trainingGovernance", "Training received on PG Governance & Management"],
-      ["trainingBooks", "Training received on PG books on records"],
-      ["businessPlanPrepared", "Whether a Business Plan has been prepared"],
-      ["businessPlanSubmitted", "Whether Business Plan has been submitted for financial support from NRLM"],
-      ["fundReceivedFromNrlm", "Whether any fund has been received from NRLM"],
-      ["booksMaintained", "Whether PG maintaining books of records"],
-      ["dailyBusinessRegister", "Whether PG maintaining Daily Business Register"],
-      ["memberLedger", "Whether PG maintaining Member Ledger"],
-      ["memberPassbook", "Whether PG maintaining Member Passbook"],
-      ["assetRegister", "Whether PG maintaining Asset Register"]
-    ];
-
     return (
-      <View style={pageStyles.screen}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={[pageStyles.frame, tsDetailStyles.frame]}>
-            <View style={tsDetailStyles.heroCard}>
-              <View style={tsDetailStyles.titleWrap}>
-                <Text style={tsDetailStyles.title}>Activity Profile</Text>
-              </View>
-              <Text style={tsDetailStyles.sectionType}>Producer Group</Text>
-              <Text style={tsDetailStyles.sectionHint}>
-                Capture the producer group activity profile and governance readiness details.
-              </Text>
-            </View>
-
-            <View style={tsDetailStyles.sectionCard}>
-              <View style={tsDetailStyles.fieldBlock}>
-                <Text style={tsDetailStyles.label}>Primary Commodity of the PG</Text>
-                <EditableSelect
-                  value={pgActivityProfileForm.primaryCommodity}
-                  options={commodityOptions}
-                  onChange={(value) =>
-                    setPgActivityProfileForm((prev) => ({ ...prev, primaryCommodity: value }))
-                  }
-                  placeholder="Select or type commodity"
-                />
-              </View>
-
-              {pgFields.map(([key, label]) => (
-                <View key={key} style={tsDetailStyles.fieldBlock}>
-                  <Text style={tsDetailStyles.label}>{label}</Text>
-                  <EditableSelect
-                    value={pgActivityProfileForm[key]}
-                    options={yesNoOptions}
-                    onChange={(value) =>
-                      setPgActivityProfileForm((prev) => ({ ...prev, [key]: value }))
-                    }
-                    placeholder="Select Yes / No"
-                  />
-                </View>
-              ))}
-
-              <Pressable
-                style={tsDetailStyles.modalPrimaryBtnWide}
-                disabled={Boolean(apiSavingKey)}
-                onPress={() =>
-                  saveActivityProfile(
-                    "Producer Group Activity Profile",
-                    pgActivityProfileForm,
-                    selectedLhCboStatusView,
-                    {
-                      profileType: "Producer Group Activity Profile",
-                      saveKey: "pgActivityProfile"
-                    }
-                  )
-                }
-              >
-                <Text style={tsDetailStyles.modalPrimaryBtnText}>
-                  {apiSavingKey === "pgActivityProfile" ? "Saving..." : "Save"}
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-        </ScrollView>
-        {renderResponsePopup()}
-      </View>
+      <DashboardContextProvider value={dashboardContextValue}>
+        <LhCboPgActivityProfileView />
+      </DashboardContextProvider>
     );
   }
 
   if (homeView === "lhCboNfcActivityProfile") {
-    const yesNoOptions = ["Yes", "No"];
-    const setUpCategoryOptions = nonFarmSetupCategoryOptions;
-    const volumeUnitOptions = ["KG", "Unit", "Litre", "Piece"];
-
     return (
-      <View style={pageStyles.screen}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={[pageStyles.frame, tsDetailStyles.frame]}>
-            <View style={tsDetailStyles.heroCard}>
-              <View style={tsDetailStyles.titleWrap}>
-                <Text style={tsDetailStyles.title}>Activity Profile</Text>
-              </View>
-              <Text style={tsDetailStyles.sectionType}>Non-Farm Collective</Text>
-              <Text style={tsDetailStyles.sectionHint}>
-                Record product details, compliances, and monthly production information.
-              </Text>
-            </View>
-
-            <View style={tsDetailStyles.sectionCard}>
-              <View style={tsDetailStyles.fieldBlock}>
-                <Text style={tsDetailStyles.label}>Product / Activity Details</Text>
-                <TextInput
-                  style={tsDetailStyles.selectInput}
-                  value={nfcActivityProfileForm.productActivityDetails}
-                  onChangeText={(text) =>
-                    setNfcActivityProfileForm((prev) => ({ ...prev, productActivityDetails: text }))
-                  }
-                  placeholder="Enter product or activity details"
-                  placeholderTextColor="#64748b"
-                />
-              </View>
-              <View style={tsDetailStyles.fieldBlock}>
-                <Text style={tsDetailStyles.label}>Set-up Category</Text>
-                <EditableSelect
-                  value={nfcActivityProfileForm.setUpCategory}
-                  options={setUpCategoryOptions}
-                  onChange={(value) =>
-                    setNfcActivityProfileForm((prev) => ({ ...prev, setUpCategory: value }))
-                  }
-                  placeholder="Select category"
-                />
-              </View>
-              {[
-                ["machineryProcured", "Machinery Procured"],
-                ["signboardMounted", "Signboard Mounted on Enterprise"],
-                ["marketLinked", "Market Linked"],
-                ["productionShed", "Production Shed"],
-                ["homeBasedProduction", "Home-based Production"]
-              ].map(([key, label]) => (
-                <View key={key} style={tsDetailStyles.fieldBlock}>
-                  <Text style={tsDetailStyles.label}>{label}</Text>
-                  <EditableSelect
-                    value={nfcActivityProfileForm[key]}
-                    options={yesNoOptions}
-                    onChange={(value) =>
-                      setNfcActivityProfileForm((prev) => ({ ...prev, [key]: value }))
-                    }
-                    placeholder="Select Yes / No"
-                  />
-                </View>
-              ))}
-              <View style={tsDetailStyles.fieldBlock}>
-                <Text style={tsDetailStyles.label}>Total Employment associated</Text>
-                <TextInput
-                  style={tsDetailStyles.selectInput}
-                  value={nfcActivityProfileForm.totalEmploymentAssociated}
-                  onChangeText={(text) =>
-                    setNfcActivityProfileForm((prev) => ({
-                      ...prev,
-                      totalEmploymentAssociated: text.replace(/[^\d]/g, "")
-                    }))
-                  }
-                  keyboardType="numeric"
-                  placeholder="Enter number"
-                  placeholderTextColor="#64748b"
-                />
-              </View>
-              {[
-                ["gst", "GST"],
-                ["gstRenewalDate", "GST Renewal Date"],
-                ["pan", "PAN"],
-                ["panRenewalDate", "PAN Renewal Date"],
-                ["tradeLicense", "Trade License"],
-                ["tradeRenewalDate", "Trade Renewal Date"],
-                ["fssai", "FSSAI"],
-                ["fssaiRenewDate", "FSSAI Renewal Date"]
-              ].map(([key, label]) => (
-                <View key={key} style={tsDetailStyles.fieldBlock}>
-                  <Text style={tsDetailStyles.label}>{label}</Text>
-                  <TextInput
-                    style={tsDetailStyles.selectInput}
-                    value={nfcActivityProfileForm[key]}
-                    onChangeText={(text) =>
-                      setNfcActivityProfileForm((prev) => ({ ...prev, [key]: text }))
-                    }
-                    placeholder={label}
-                    placeholderTextColor="#64748b"
-                  />
-                </View>
-              ))}
-              <View style={tsDetailStyles.fieldBlock}>
-                <Text style={tsDetailStyles.label}>Monthly Production Volume</Text>
-                <TextInput
-                  style={tsDetailStyles.selectInput}
-                  value={nfcActivityProfileForm.monthlyProductionVolume}
-                  onChangeText={(text) =>
-                    setNfcActivityProfileForm((prev) => ({
-                      ...prev,
-                      monthlyProductionVolume: text.replace(/[^\d.]/g, "")
-                    }))
-                  }
-                  keyboardType="numeric"
-                  placeholder="Enter amount"
-                  placeholderTextColor="#64748b"
-                />
-              </View>
-              <View style={tsDetailStyles.fieldBlock}>
-                <Text style={tsDetailStyles.label}>Volume Unit</Text>
-                <EditableSelect
-                  value={nfcActivityProfileForm.volumeUnit}
-                  options={volumeUnitOptions}
-                  onChange={(value) =>
-                    setNfcActivityProfileForm((prev) => ({ ...prev, volumeUnit: value }))
-                  }
-                  placeholder="Select unit"
-                />
-              </View>
-
-              <Pressable
-                style={tsDetailStyles.modalPrimaryBtnWide}
-                disabled={Boolean(apiSavingKey)}
-                onPress={() =>
-                  saveActivityProfile(
-                    "Non-Farm Collective Activity Profile",
-                    nfcActivityProfileForm,
-                    selectedLhCboStatusView,
-                    {
-                      profileType: "Non-Farm Collective Activity Profile",
-                      saveKey: "nfcActivityProfile"
-                    }
-                  )
-                }
-              >
-                <Text style={tsDetailStyles.modalPrimaryBtnText}>
-                  {apiSavingKey === "nfcActivityProfile" ? "Saving..." : "Save"}
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-        </ScrollView>
-        {renderResponsePopup()}
-      </View>
+      <DashboardContextProvider value={dashboardContextValue}>
+        <LhCboNfcActivityProfileView />
+      </DashboardContextProvider>
     );
   }
 
