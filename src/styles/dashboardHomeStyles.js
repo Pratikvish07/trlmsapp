@@ -4,7 +4,6 @@ import { colors, typography, radii, spacing, sizes } from "./theme";
 export const pageStyles = StyleSheet.create({
   screen: {
     paddingVertical: 10,
-    paddingHorizontal: spacing.screenPad,
     position: "relative",
     overflow: "hidden",
     backgroundColor: colors.appBg
@@ -28,26 +27,16 @@ export const pageStyles = StyleSheet.create({
     left: -60
   },
   frame: {
-    borderRadius: 26,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: "rgba(255,255,255,0.94)",
-    padding: 14,
-    gap: 14,
-    shadowColor: colors.textPrimary,
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 18,
-    elevation: 6
+    gap: 14
   },
   topRow: { flexDirection: "row", gap: 12, alignItems: "center" },
   imageCard: {
     width: 74,
     height: 74,
     borderRadius: 22,
-    backgroundColor: colors.warningLight,
+    backgroundColor: "#EFF6FF",
     borderWidth: 1,
-    borderColor: colors.warningLight,
+    borderColor: "#BFDBFE",
     alignItems: "center",
     justifyContent: "center",
     shadowColor: colors.textPrimary,
@@ -56,7 +45,7 @@ export const pageStyles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3
   },
-  imageAvatarText: { color: colors.warning, fontSize: 20, fontWeight: "900",
+  imageAvatarText: { color: colors.primary, fontSize: 20, fontWeight: "900",
  fontFamily: typography.bold, textAlign: "center" },
   imageText: { color: colors.textSecondary, fontSize: 10, fontWeight: "800",
  fontFamily: typography.bold, textAlign: "center" },
@@ -85,7 +74,7 @@ export const pageStyles = StyleSheet.create({
   },
   dropdownText: { color: colors.textOnPrimary, fontSize: 12, fontWeight: "800",
  fontFamily: typography.bold, letterSpacing: 0.2 },
-  dropdownArrow: { color: colors.warning, fontWeight: "900",
+  dropdownArrow: { color: colors.textOnPrimary, fontWeight: "900",
  fontFamily: typography.bold, },
   dropdownMenu: {
     marginTop: 4,
@@ -100,18 +89,9 @@ export const pageStyles = StyleSheet.create({
  fontFamily: typography.bold, },
   dropdownItemTextActive: { color: colors.primary },
   dashboardCard: {
-    backgroundColor: colors.warningLight,
-    borderWidth: 1,
-    borderColor: colors.warningLight,
-    borderRadius: 24,
     paddingVertical: 16,
-    paddingHorizontal: 14,
-    gap: 14,
-    shadowColor: colors.warning,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 3
+    paddingHorizontal: 0,
+    gap: 14
   },
   dashboardHeadingRow: {
     flexDirection: "row",
@@ -120,7 +100,7 @@ export const pageStyles = StyleSheet.create({
     gap: 12
   },
   dashboardEyebrow: {
-    color: colors.warning,
+    color: colors.primary,
     fontSize: 11,
     fontWeight: "900",
     fontFamily: typography.bold,
@@ -135,25 +115,27 @@ export const pageStyles = StyleSheet.create({
   },
   dashboardDateBadge: {
     borderRadius: 999,
-    backgroundColor: colors.warningLight,
+    backgroundColor: "#EFF6FF",
     borderWidth: 1,
-    borderColor: colors.warningLight,
+    borderColor: "#BFDBFE",
     paddingHorizontal: 12,
     paddingVertical: 8
   },
   dashboardDateLabel: {
-    color: colors.warning,
+    color: colors.primary,
     fontSize: 11,
     fontWeight: "800",
     fontFamily: typography.bold,
   },
   metricGrid: {
+    gap: 10
+  },
+  metricGridRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
     gap: 10
   },
   metricStatCard: {
-    width: "48%",
+    flex: 1,
     minHeight: 116,
     borderRadius: radii.card,
     backgroundColor: colors.surface,
@@ -439,40 +421,96 @@ export const pageStyles = StyleSheet.create({
   },
   quickActionsTitle: { color: colors.textPrimary, fontSize: 18, fontWeight: "800",
  fontFamily: typography.bold, },
-  actionsRow: { flexDirection: "row", gap: 8, marginTop: 8 },
-  submitActionRow: {
+  // Colored icon-card grid (matches the "Livelihood Tracker" marketing
+  // mockup's My Activities/Support/Progress/Field Visit layout) - each
+  // dashboard action gets its own accent color from theme.js's card*
+  // palette instead of the old amber/slate/primary button row.
+  dashboardActionGrid: {
+    gap: 12,
+    marginTop: 8
+  },
+  dashboardActionRow: {
     flexDirection: "row",
-    gap: 10,
+    gap: 12
+  },
+  dashboardActionCard: {
+    flex: 1,
+    borderRadius: 18,
+    borderWidth: 1,
+    paddingVertical: 18,
+    paddingHorizontal: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8
+  },
+  dashboardActionCardGreen: { backgroundColor: "#F0FDF4", borderColor: "#BBF7D0" },
+  dashboardActionCardBlue: { backgroundColor: "#EFF6FF", borderColor: "#BFDBFE" },
+  dashboardActionCardOrange: { backgroundColor: "#FFF7ED", borderColor: "#FED7AA" },
+  dashboardActionCardPurple: { backgroundColor: "#FAF5FF", borderColor: "#E9D5FF" },
+  dashboardActionIconWrap: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  dashboardActionIconGreen: { backgroundColor: colors.cardGreen },
+  dashboardActionIconBlue: { backgroundColor: colors.cardBlue },
+  dashboardActionIconOrange: { backgroundColor: colors.cardOrange },
+  dashboardActionIconPurple: { backgroundColor: colors.cardPurple },
+  dashboardActionIconText: {
+    fontSize: 22,
+    color: colors.textOnPrimary
+  },
+  dashboardActionLabel: {
+    fontSize: 13,
+    fontWeight: "700",
+    fontFamily: typography.bold,
+    textAlign: "center",
+    color: colors.textPrimary
+  },
+  // Full-width "Reports" card below the grid, folding in what used to be
+  // the separate "Open Graphs" button (the old "Submit" button opened the
+  // same Working Report screen the grid's own card already reaches).
+  dashboardReportsCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    backgroundColor: "#F0FDFA",
+    borderWidth: 1,
+    borderColor: "#99F6E4",
+    borderRadius: 18,
+    padding: 14,
     marginTop: 12
   },
-  graphActionBtn: {
-    flex: 1,
-    backgroundColor: colors.primary,
-    borderRadius: radii.button,
-    minHeight: 46,
+  dashboardReportsIconWrap: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: colors.cardTeal,
     alignItems: "center",
     justifyContent: "center"
   },
-  graphActionBtnText: {
-    color: colors.textOnPrimary,
+  dashboardReportsIconText: {
+    fontSize: 22,
+    color: colors.textOnPrimary
+  },
+  dashboardReportsTextWrap: { flex: 1 },
+  dashboardReportsTitle: {
     fontSize: 15,
     fontWeight: "800",
     fontFamily: typography.bold,
+    color: colors.textPrimary
   },
-  submitActionBtn: {
-    minWidth: 104,
-    backgroundColor: colors.warning,
-    borderRadius: radii.button,
-    paddingHorizontal: 16,
-    minHeight: 46,
-    alignItems: "center",
-    justifyContent: "center"
+  dashboardReportsHint: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    marginTop: 2
   },
-  submitActionBtnText: {
-    color: colors.textOnPrimary,
-    fontSize: 15,
-    fontWeight: "800",
-    fontFamily: typography.bold,
+  dashboardReportsArrow: {
+    fontSize: 20,
+    color: colors.cardTeal,
+    fontWeight: "700"
   },
   dashboardInlineAlert: {
     marginTop: 12,
@@ -676,50 +714,6 @@ export const pageStyles = StyleSheet.create({
       fontFamily: typography.bold,
       lineHeight: 18
     },
-    actionBtnMuted: {
-      flex: 1,
-      backgroundColor: colors.border,
-      borderWidth: 1,
-      borderColor: colors.inputBorder,
-      borderRadius: 18,
-      minHeight: 76,
-      alignItems: "center",
-      justifyContent: "center",
-      paddingHorizontal: 6,
-      shadowColor: colors.textSecondary,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.08,
-      shadowRadius: 3,
-      elevation: 1
-    },
-    actionBtnAmber: {
-      backgroundColor: colors.warningLight,
-      borderColor: colors.warningLight
-    },
-    actionBtnSlate: {
-      backgroundColor: colors.surface,
-      borderColor: colors.border
-    },
-    actionBtnPrimary: {
-      flex: 1,
-      backgroundColor: colors.primary,
-      borderWidth: 1,
-      borderColor: colors.primary,
-      borderRadius: 18,
-      minHeight: 76,
-      alignItems: "center",
-      justifyContent: "center",
-      paddingHorizontal: 6,
-      shadowColor: colors.primary,
-      shadowOffset: { width: 0, height: 3 },
-      shadowOpacity: 0.24,
-      shadowRadius: 5,
-      elevation: 2
-    },
-  actionTextMuted: { color: colors.textPrimary, fontSize: 12, fontWeight: "700",
- fontFamily: typography.bold, textAlign: "center" },
-  actionTextPrimary: { color: colors.textOnPrimary, fontSize: 12, fontWeight: "800",
- fontFamily: typography.bold, textAlign: "center" }
 });
 
 export const wrStyles = StyleSheet.create({
@@ -896,9 +890,9 @@ export const wrStyles = StyleSheet.create({
   backBtn: {
     alignSelf: "flex-end",
     backgroundColor: colors.primaryDark,
-    paddingHorizontal: 14,
-    paddingVertical: 9,
-    borderRadius: radii.button
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: radii.pill
   },
   backBtnText: { color: colors.textOnPrimary, fontSize: 11, fontWeight: "700",
  fontFamily: typography.bold, }
@@ -1018,8 +1012,13 @@ export const smStyles = StyleSheet.create({
     backgroundColor: colors.surface,
     paddingHorizontal: 10,
     paddingVertical: 10,
-    borderRadius: 14,
-    gap: 6
+    borderRadius: 16,
+    gap: 6,
+    shadowColor: colors.textPrimary,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 1
   },
   fieldLabel: {
     color: colors.textPrimary,
@@ -1028,23 +1027,30 @@ export const smStyles = StyleSheet.create({
     fontFamily: typography.bold,
   },
   dropdownTrigger: {
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: colors.border,
-    borderRadius: 12,
-    backgroundColor: colors.surface,
+    borderRadius: 14,
+    backgroundColor: "#F8FAFC",
     paddingHorizontal: 12,
-    paddingVertical: 10,
+    paddingVertical: 12,
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
+    gap: 8
+  },
+  dropdownTriggerOpen: {
+    borderColor: colors.primary,
+    backgroundColor: colors.surface
+  },
+  dropdownIcon: {
+    marginRight: 2
   },
   dropdownTriggerText: {
     color: colors.textPrimary,
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: "700",
     fontFamily: typography.bold,
-    flex: 1,
-    marginRight: 6
+    flex: 1
   },
   dropdownArrow: {
     color: colors.textSecondary,
@@ -1056,21 +1062,31 @@ export const smStyles = StyleSheet.create({
     marginTop: 6,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 12,
+    borderRadius: 14,
     backgroundColor: colors.surface,
-    overflow: "hidden"
+    overflow: "hidden",
+    shadowColor: colors.textPrimary,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.1,
+    shadowRadius: 14,
+    elevation: 4
   },
   dropdownItem: {
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    backgroundColor: colors.surface
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 12,
+    paddingVertical: 11,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border
   },
   dropdownItemActive: {
-    backgroundColor: colors.surface
+    backgroundColor: "#EFF6FF"
   },
   dropdownItemText: {
     color: colors.textPrimary,
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: "600",
     fontFamily: typography.semiBold,
   },
@@ -1113,8 +1129,13 @@ export const smStyles = StyleSheet.create({
     backgroundColor: colors.surface,
     paddingHorizontal: 10,
     paddingVertical: 10,
-    borderRadius: 14,
-    gap: 8
+    borderRadius: 16,
+    gap: 8,
+    shadowColor: colors.textPrimary,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 1
   },
   readonlyLabel: {
     flex: 1,
@@ -1148,8 +1169,13 @@ export const smStyles = StyleSheet.create({
     borderColor: colors.border,
     backgroundColor: colors.surface,
     padding: spacing.cardPad,
-    borderRadius: radii.card,
-    gap: 6
+    borderRadius: 16,
+    gap: 8,
+    shadowColor: colors.textPrimary,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 1
   },
   previewTitle: {
     color: colors.textPrimary,
@@ -1159,9 +1185,11 @@ export const smStyles = StyleSheet.create({
   },
   previewBox: {
     minHeight: 84,
-    borderWidth: 1,
-    borderColor: colors.primary,
-    backgroundColor: colors.primary,
+    borderWidth: 1.5,
+    borderColor: "#BFDBFE",
+    borderStyle: "dashed",
+    backgroundColor: "#F8FAFC",
+    borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
     padding: 8
@@ -1169,12 +1197,12 @@ export const smStyles = StyleSheet.create({
   previewImage: {
     width: "100%",
     height: 140,
-    borderRadius: 4,
+    borderRadius: 10,
     resizeMode: "cover"
   },
   previewText: {
-    color: "#dbeafe",
-    fontSize: 14,
+    color: colors.textSecondary,
+    fontSize: 13,
     fontWeight: "700",
     fontFamily: typography.bold,
     textAlign: "center"
@@ -1244,8 +1272,13 @@ export const smStyles = StyleSheet.create({
     backgroundColor: colors.surface,
     paddingHorizontal: 10,
     paddingVertical: 10,
-    borderRadius: 14,
-    gap: 8
+    borderRadius: 16,
+    gap: 8,
+    shadowColor: colors.textPrimary,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 1
   },
   radiusStatusIcon: {
     width: 14,
@@ -1278,25 +1311,32 @@ export const smStyles = StyleSheet.create({
   },
   checkBtn: {
     flex: 1,
-    backgroundColor: colors.primary,
-    borderRadius: radii.button,
+    backgroundColor: "#EFF6FF",
+    borderWidth: 1.5,
+    borderColor: "#93C5FD",
+    borderRadius: radii.pill,
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 11
+    paddingVertical: 13
   },
   checkBtnText: {
-    color: colors.textOnPrimary,
+    color: colors.primary,
     fontSize: 12,
     fontWeight: "800",
     fontFamily: typography.bold,
   },
   saveBtn: {
     flex: 1,
-    backgroundColor: colors.warning,
-    borderRadius: radii.button,
+    backgroundColor: colors.primary600,
+    borderRadius: radii.pill,
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 11
+    paddingVertical: 13,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.28,
+    shadowRadius: 12,
+    elevation: 5
   },
   saveBtnText: {
     color: colors.textOnPrimary,
@@ -1311,25 +1351,25 @@ export const flowStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
     backgroundColor: colors.primaryDark,
-    borderRadius: radii.card,
-    paddingHorizontal: 14,
-    paddingVertical: 14,
-    shadowColor: colors.textPrimary,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    elevation: 4
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    shadowColor: colors.primaryDark,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
+    elevation: 5
   },
   statusHeroAccent: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    backgroundColor: colors.warning,
-    borderWidth: 3,
-    borderColor: colors.warningLight
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: "rgba(255,255,255,0.18)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.35)",
+    alignItems: "center",
+    justifyContent: "center"
   },
   statusHeroCopy: {
     flex: 1,
@@ -1371,50 +1411,44 @@ export const flowStyles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 18
   },
-  moduleStack: {
-    gap: 10
+  moduleGrid: {
+    gap: 12
   },
-  profileButton: {
-    backgroundColor: colors.primary,
+  moduleRow: {
+    flexDirection: "row",
+    gap: 12
+  },
+  moduleCard: {
+    flex: 1,
+    borderRadius: 18,
     borderWidth: 1,
-    borderColor: colors.primary,
-    borderRadius: radii.button,
+    paddingVertical: 18,
+    paddingHorizontal: 10,
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 14,
-    paddingHorizontal: 12,
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.14,
-    shadowRadius: 8,
-    elevation: 2
+    gap: 8
   },
-  profileButtonText: {
-    color: colors.textOnPrimary,
-    fontSize: 16,
-    fontWeight: "800",
-    fontFamily: typography.bold,
-  },
-  trackingEntryBtn: {
-    backgroundColor: colors.primary,
-    borderWidth: 1,
-    borderColor: colors.primaryDark,
-    borderRadius: radii.button,
+  moduleCardGreen: { backgroundColor: "#F0FDF4", borderColor: "#BBF7D0" },
+  moduleCardBlue: { backgroundColor: "#EFF6FF", borderColor: "#BFDBFE" },
+  moduleCardOrange: { backgroundColor: "#FFF7ED", borderColor: "#FED7AA" },
+  moduleCardPurple: { backgroundColor: "#FAF5FF", borderColor: "#E9D5FF" },
+  moduleIconWrap: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 14,
-    paddingHorizontal: 12,
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.14,
-    shadowRadius: 8,
-    elevation: 2
+    justifyContent: "center"
   },
-  trackingEntryBtnText: {
-    color: colors.textOnPrimary,
-    fontSize: 16,
-    fontWeight: "800",
+  moduleIconGreen: { backgroundColor: colors.cardGreen },
+  moduleIconBlue: { backgroundColor: colors.cardBlue },
+  moduleIconOrange: { backgroundColor: colors.cardOrange },
+  moduleIconPurple: { backgroundColor: colors.cardPurple },
+  moduleCardLabel: {
+    fontSize: 13,
+    fontWeight: "700",
     fontFamily: typography.bold,
+    textAlign: "center",
+    color: colors.textPrimary
   },
   statusFooterCard: {
     marginTop: 14,
@@ -1457,18 +1491,18 @@ export const flowStyles = StyleSheet.create({
   },
   primarySaveBtn: {
       width: "100%",
-      backgroundColor: colors.accent,
-      borderWidth: 1,
-      borderColor: colors.accent,
-      borderRadius: radii.button,
+      backgroundColor: colors.primary600,
+      borderRadius: radii.pill,
+      flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      paddingVertical: 12,
-      shadowColor: colors.accent,
-      shadowOffset: { width: 0, height: 3 },
-      shadowOpacity: 0.16,
-      shadowRadius: 8,
-      elevation: 2
+      gap: 8,
+      paddingVertical: 14,
+      shadowColor: colors.primary,
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.28,
+      shadowRadius: 12,
+      elevation: 5
     },
   primarySaveText: {
       color: colors.textOnPrimary,
@@ -1478,12 +1512,12 @@ export const flowStyles = StyleSheet.create({
     },
   statusBackBtn: {
       marginTop: 12,
-      backgroundColor: colors.primary,
-      borderWidth: 1,
-      borderColor: colors.primaryDark,
-      borderRadius: radii.button,
+      backgroundColor: colors.primaryDark,
+      borderRadius: radii.pill,
+      flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
+      gap: 6,
       paddingVertical: 12
     },
   statusBackBtnText: {
@@ -2232,6 +2266,9 @@ export const tsCardStyles = StyleSheet.create({
   },
   titleWrap: {
     alignSelf: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
@@ -2249,6 +2286,11 @@ export const tsCardStyles = StyleSheet.create({
     fontSize: 21,
     fontWeight: "900",
     fontFamily: typography.bold,
+  },
+  sectionTypeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6
   },
   sectionType: {
     alignSelf: "flex-start",
@@ -2278,6 +2320,11 @@ export const tsCardStyles = StyleSheet.create({
     justifyContent: "space-between",
     gap: 12
   },
+  memberLabelRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6
+  },
   memberLabel: {
     color: colors.textSecondary,
     fontSize: 11,
@@ -2294,12 +2341,20 @@ export const tsCardStyles = StyleSheet.create({
     fontFamily: typography.bold,
   },
   geoCard: {
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: colors.border,
     backgroundColor: colors.surface,
     borderRadius: radii.card,
     padding: spacing.cardPad,
     gap: 12
+  },
+  geoCardGreen: {
+    borderColor: colors.success,
+    backgroundColor: colors.successLight
+  },
+  geoCardRed: {
+    borderColor: colors.error,
+    backgroundColor: colors.errorLight
   },
   geoHeaderRow: {
     flexDirection: "row",
@@ -2322,16 +2377,21 @@ export const tsCardStyles = StyleSheet.create({
     lineHeight: 18
   },
   geoActionBtn: {
-    backgroundColor: colors.primary,
-    borderWidth: 1,
-    borderColor: colors.primary,
-    borderRadius: radii.button,
+    backgroundColor: colors.primary600,
+    borderRadius: radii.pill,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12
+    gap: 8,
+    paddingVertical: 14,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.28,
+    shadowRadius: 12,
+    elevation: 5
   },
   geoActionBtnText: {
-    color: "#dbeafe",
+    color: colors.textOnPrimary,
     fontSize: 13,
     fontWeight: "800",
     fontFamily: typography.bold,
@@ -2351,17 +2411,22 @@ export const tsCardStyles = StyleSheet.create({
   },
   mainButton: {
     backgroundColor: colors.primary,
-    borderWidth: 1,
-    borderColor: colors.primary,
-    borderRadius: radii.button,
+    borderRadius: 16,
     minHeight: 62,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: colors.textSecondary,
+    gap: 12,
+    paddingHorizontal: 16,
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 4
+  },
+  mainButtonTeal: {
+    backgroundColor: colors.cardTeal,
+    shadowColor: colors.cardTeal
   },
   mainButtonText: {
     color: colors.textOnPrimary,
@@ -2378,33 +2443,41 @@ export const tsCardStyles = StyleSheet.create({
   },
   segmentBtn: {
     flex: 1,
-    minHeight: 54,
-    borderRadius: radii.button,
-    backgroundColor: colors.primary,
-    borderWidth: 1,
-    borderColor: colors.primary,
+    minHeight: 64,
+    borderRadius: 16,
+    borderWidth: 1.5,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: colors.textSecondary,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 2
+    gap: 4
   },
   segmentBtnActive: {
     backgroundColor: colors.primary,
-    borderColor: colors.primary
+    borderColor: colors.primary,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 2
+  },
+  segmentBtnInactive: {
+    backgroundColor: "#EFF6FF",
+    borderColor: "#BFDBFE"
   },
   lockedButton: {
-    opacity: 0.6
+    opacity: 0.5
   },
   segmentBtnText: {
-    color: colors.textOnPrimary,
     textAlign: "center",
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: "800",
     fontFamily: typography.bold,
-    lineHeight: 18
+    lineHeight: 16
+  },
+  segmentBtnTextActive: {
+    color: colors.textOnPrimary
+  },
+  segmentBtnTextInactive: {
+    color: colors.primary
   },
   footerCard: {
     borderWidth: 1,
@@ -2415,37 +2488,35 @@ export const tsCardStyles = StyleSheet.create({
     gap: 12
   },
   geoDot: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 1
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    alignItems: "center",
+    justifyContent: "center"
   },
   geoDotGreen: {
-    backgroundColor: colors.success,
-    borderColor: colors.success
+    backgroundColor: colors.success
   },
   geoDotIdle: {
-    backgroundColor: colors.textPlaceholder,
-    borderColor: colors.textSecondary
+    backgroundColor: colors.textPlaceholder
   },
   geoDotRed: {
-    backgroundColor: colors.error,
-    borderColor: colors.error
+    backgroundColor: colors.error
   },
   saveBtn: {
     width: "100%",
-    backgroundColor: colors.accent,
-    borderWidth: 1,
-    borderColor: colors.accent,
-    borderRadius: radii.button,
+    backgroundColor: colors.primary600,
+    borderRadius: radii.pill,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
-    shadowColor: colors.accent,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.16,
-    shadowRadius: 8,
-    elevation: 2
+    gap: 8,
+    paddingVertical: 14,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.28,
+    shadowRadius: 12,
+    elevation: 5
   },
   saveBtnText: {
     color: colors.textOnPrimary,
@@ -2736,32 +2807,21 @@ export const tsDetailStyles = StyleSheet.create({
   },
   modalIconCircle: {
     alignSelf: "center",
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
     alignItems: "center",
     justifyContent: "center"
   },
   modalIconCircleSaved: {
     backgroundColor: colors.successLight,
-    borderWidth: 1,
+    borderWidth: 4,
     borderColor: colors.successLight
   },
   modalIconCircleAlert: {
     backgroundColor: colors.errorLight,
-    borderWidth: 1,
+    borderWidth: 4,
     borderColor: colors.errorLight
-  },
-  modalIconText: {
-    fontSize: 26,
-    fontWeight: "900",
-    fontFamily: typography.bold,
-  },
-  modalIconTextSaved: {
-    color: colors.primary
-  },
-  modalIconTextAlert: {
-    color: colors.error
   },
   modalBadgeSaved: {
     backgroundColor: colors.successLight,
@@ -2787,27 +2847,46 @@ export const tsDetailStyles = StyleSheet.create({
     alignItems: "flex-start",
     gap: 12,
     paddingVertical: 10,
+    paddingHorizontal: 8,
+    borderRadius: 8,
     borderBottomWidth: 1,
     borderBottomColor: colors.border
+  },
+  modalFieldRowAlt: {
+    backgroundColor: "#F8FAFC"
   },
   modalFieldRowLast: {
     borderBottomWidth: 0
   },
   modalFieldLabel: {
     color: colors.textSecondary,
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: "700",
     fontFamily: typography.bold,
+    textTransform: "uppercase",
+    letterSpacing: 0.4,
     flexShrink: 0,
     maxWidth: "45%"
   },
   modalFieldValue: {
     color: colors.textPrimary,
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "800",
     fontFamily: typography.bold,
     textAlign: "right",
     flexShrink: 1
+  },
+  modalPreviewWrap: {
+    marginBottom: 12,
+    gap: 6
+  },
+  modalPreviewCaption: {
+    color: colors.textSecondary,
+    fontSize: 11,
+    fontWeight: "800",
+    fontFamily: typography.bold,
+    textTransform: "uppercase",
+    letterSpacing: 0.5
   },
   modalTitle: {
     color: colors.textPrimary,
@@ -2832,7 +2911,6 @@ export const tsDetailStyles = StyleSheet.create({
     width: "100%",
     height: 180,
     borderRadius: 14,
-    marginBottom: 12,
     backgroundColor: colors.border
   },
   modalMessage: {
@@ -2890,18 +2968,18 @@ export const tsDetailStyles = StyleSheet.create({
   },
   modalPrimaryBtnWide: {
     width: "100%",
-    minHeight: 50,
-    borderWidth: 1,
-    borderColor: colors.primary,
-    borderRadius: radii.button,
-    backgroundColor: colors.primary,
+    minHeight: 52,
+    borderRadius: radii.pill,
+    backgroundColor: colors.primary600,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    gap: 8,
     shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.18,
-    shadowRadius: 10,
-    elevation: 3
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.28,
+    shadowRadius: 12,
+    elevation: 5
   },
   modalPrimaryBtnText: {
     color: colors.textOnPrimary,

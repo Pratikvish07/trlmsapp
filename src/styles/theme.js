@@ -3,11 +3,24 @@
 // hardcoding hex values, so the brand can be updated in one place.
 
 export const colors = {
-  // Brand
-  primary: "#00B4D8",
-  primaryDark: "#007A96",
-  primary600: "#0096B7",
-  accent: "#FF6900",
+  // Brand - matches the "Livelihood Tracker" marketing identity (deep blue
+  // wordmark fading into a lighter sky blue, orange as the sole warm accent).
+  primary: "#1D4ED8",
+  primaryDark: "#1E3A8A",
+  primary600: "#2563EB",
+  secondary: "#0EA5E9",
+  accent: "#F97316",
+
+  // Card accent palette - the four color-coded action icons from the
+  // marketing mockup (My Activities/Support/Progress/Field Visit), plus a
+  // fifth for Reports-style cards. Kept distinct from `success`/`warning`
+  // etc. below since those carry semantic meaning (status colors) while
+  // these are purely a rotating decorative palette for dashboard cards.
+  cardGreen: "#16A34A",
+  cardBlue: "#2563EB",
+  cardOrange: "#F97316",
+  cardPurple: "#9333EA",
+  cardTeal: "#0D9488",
 
   // Background
   appBg: "#F8FAFB",

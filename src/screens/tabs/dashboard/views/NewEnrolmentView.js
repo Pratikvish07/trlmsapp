@@ -53,6 +53,7 @@ export default function NewEnrolmentView() {
 
       <DropdownField
         label="CRP ID / Name:"
+        icon="person-outline"
         value={selectedCrpRecord?.name || "Select CRP"}
         options={crpOptions}
         open={openCrpSelector}
@@ -71,6 +72,7 @@ export default function NewEnrolmentView() {
 
       <DropdownField
         label="GP/VC Name:"
+        icon="business-outline"
         value={selectedGp?.name || user.gpVcName || "Select GP/VC"}
         options={gpOptions}
         open={openGpSelector}
@@ -86,6 +88,7 @@ export default function NewEnrolmentView() {
       />
       <DropdownField
         label="Village Name:"
+        icon="location-outline"
         value={selectedVillage?.name || user.villageName || "Select Village"}
         options={villageOptions}
         open={openVillageSelector}

@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Platform, Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from "react-redux";
 import BottomNav from "../components/BottomNav";
-import TrlmHeader from "../components/TrlmHeader";
 import DashboardHomeTab from "../screens/tabs/DashboardHomeTab.js";
 import ProfileTab from "../screens/tabs/ProfileTab";
 import LanguageScreen from "../screens/LanguageScreen";
@@ -13,6 +13,7 @@ import { I18nProvider } from "../i18n/I18nProvider";
 import { detectBrowserLanguage, persistLanguage, readStoredLanguage } from "../i18n/config";
 import { getLanguageCode, translateText } from "../i18n/translations";
 import styles from "../styles/appStyles";
+import { colors } from "../styles/theme";
 import {
   detectRole,
   isAadhaarValid,
@@ -1377,7 +1378,9 @@ export default function AppRouter() {
   return (
     <I18nProvider language={language} onChangeLanguage={handleSetLanguage}>
       <SafeAreaView style={styles.safe}>
-      {step === "splash" ? <SplashScreen /> : null}
+      {step === "splash" ? (
+        <SplashScreen onContinue={() => setStep(postSplashStep)} />
+      ) : null}
 
       {step === "attendanceGate" ? (
         <ScrollView
@@ -1386,69 +1389,92 @@ export default function AppRouter() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.sessionGateHero}>
-            <Text style={styles.sessionGateEyebrow}>{t("Attendance")}</Text>
-            <Text style={styles.sessionGateTitle}>{t("Start field session")}</Text>
-            <Text style={styles.sessionGateHint}>
-              {t("Enable geo location and check in before using Livelihood Tracker.")}
-            </Text>
-          </View>
-
-          <View style={styles.sessionGateCard}>
-            <View style={styles.sessionGateRow}>
-              <Text style={styles.sessionGateLabel}>{t("Date")}</Text>
-              <Text style={styles.sessionGateValue}>{todayLabel}</Text>
-            </View>
-            <View style={styles.sessionGateRow}>
-              <Text style={styles.sessionGateLabel}>{t("Geo location")}</Text>
-              <Text style={styles.sessionGateValue}>
-                {checkInInfo.geoEnabled ? t("Enabled") : t("Not enabled")}
-              </Text>
-            </View>
-            <View style={styles.sessionGateRow}>
-              <Text style={styles.sessionGateLabel}>{t("Status")}</Text>
-              <Text style={styles.sessionGateValue}>{t(checkInStatusLabel)}</Text>
-            </View>
-            <View style={styles.sessionGateRow}>
-              <Text style={styles.sessionGateLabel}>{t("Coordinates")}</Text>
-              <Text style={styles.sessionGateValue}>
-                {checkInInfo.latitude !== null && checkInInfo.longitude !== null
-                  ? `${Number(checkInInfo.latitude).toFixed(6)}, ${Number(checkInInfo.longitude).toFixed(6)}`
-                  : "--"}
+          <View style={styles.sessionGateUnifiedCard}>
+            <View style={styles.sessionGateHero}>
+              <View style={styles.sessionGateHeroBadge}>
+                <Ionicons name="location-outline" size={24} color={colors.textOnPrimary} />
+              </View>
+              <Text style={styles.sessionGateEyebrow}>{t("Attendance")}</Text>
+              <Text style={styles.sessionGateTitle}>{t("Start field session")}</Text>
+              <Text style={styles.sessionGateHint}>
+                {t("Enable geo location and check in before using Livelihood Tracker.")}
               </Text>
             </View>
 
-            <View style={styles.sessionGateActionRow}>
-              <Pressable
-                style={styles.sessionGateGhostButton}
-                onPress={handleEnableGeoLocation}
-                disabled={geoLoading || checkInSubmitting}
-              >
-                {geoLoading ? (
-                  <ActivityIndicator color="#1d4ed8" />
-                ) : (
-                  <Text style={styles.sessionGateGhostButtonText}>
-                    {t("Enable Geo Location")}
-                  </Text>
-                )}
-              </Pressable>
-              <Pressable
-                style={[
-                  styles.sessionGatePrimaryButton,
-                  (!checkInInfo.geoEnabled || checkInSubmitting) &&
-                    styles.sessionGateButtonDisabled
-                ]}
-                onPress={handleCheckIn}
-                disabled={!checkInInfo.geoEnabled || checkInSubmitting}
-              >
-                {checkInSubmitting ? (
-                  <ActivityIndicator color="#ffffff" />
-                ) : (
-                  <Text style={styles.sessionGatePrimaryButtonText}>
-                    {t("Check In")}
-                  </Text>
-                )}
-              </Pressable>
+            <View style={styles.sessionGateCard}>
+              <View style={styles.sessionGateRow}>
+                <View style={styles.sessionGateRowLabelWrap}>
+                  <Ionicons name="calendar-outline" size={16} color={colors.textSecondary} />
+                  <Text style={styles.sessionGateLabel}>{t("Date")}</Text>
+                </View>
+                <Text style={styles.sessionGateValue}>{todayLabel}</Text>
+              </View>
+              <View style={styles.sessionGateRow}>
+                <View style={styles.sessionGateRowLabelWrap}>
+                  <Ionicons name="navigate-outline" size={16} color={colors.textSecondary} />
+                  <Text style={styles.sessionGateLabel}>{t("Geo location")}</Text>
+                </View>
+                <Text style={styles.sessionGateValue}>
+                  {checkInInfo.geoEnabled ? t("Enabled") : t("Not enabled")}
+                </Text>
+              </View>
+              <View style={styles.sessionGateRow}>
+                <View style={styles.sessionGateRowLabelWrap}>
+                  <Ionicons name="checkmark-circle-outline" size={16} color={colors.textSecondary} />
+                  <Text style={styles.sessionGateLabel}>{t("Status")}</Text>
+                </View>
+                <Text style={styles.sessionGateValue}>{t(checkInStatusLabel)}</Text>
+              </View>
+              <View style={[styles.sessionGateRow, styles.sessionGateRowLast]}>
+                <View style={styles.sessionGateRowLabelWrap}>
+                  <Ionicons name="pin-outline" size={16} color={colors.textSecondary} />
+                  <Text style={styles.sessionGateLabel}>{t("Coordinates")}</Text>
+                </View>
+                <Text style={styles.sessionGateValue}>
+                  {checkInInfo.latitude !== null && checkInInfo.longitude !== null
+                    ? `${Number(checkInInfo.latitude).toFixed(6)}, ${Number(checkInInfo.longitude).toFixed(6)}`
+                    : "--"}
+                </Text>
+              </View>
+
+              <View style={styles.sessionGateActionRow}>
+                <Pressable
+                  style={styles.sessionGateGhostButton}
+                  onPress={handleEnableGeoLocation}
+                  disabled={geoLoading || checkInSubmitting}
+                >
+                  {geoLoading ? (
+                    <ActivityIndicator color={colors.primary} />
+                  ) : (
+                    <>
+                      <Ionicons name="navigate-outline" size={16} color={colors.primary} />
+                      <Text style={styles.sessionGateGhostButtonText}>
+                        {t("Enable Geo Location")}
+                      </Text>
+                    </>
+                  )}
+                </Pressable>
+                <Pressable
+                  style={[
+                    styles.sessionGatePrimaryButton,
+                    (!checkInInfo.geoEnabled || checkInSubmitting) &&
+                      styles.sessionGateButtonDisabled
+                  ]}
+                  onPress={handleCheckIn}
+                  disabled={!checkInInfo.geoEnabled || checkInSubmitting}
+                >
+                  {checkInSubmitting ? (
+                    <ActivityIndicator color="#ffffff" />
+                  ) : (
+                    <>
+                      <Text style={styles.sessionGatePrimaryButtonText}>
+                        {t("Check In")}
+                      </Text>
+                      <Ionicons name="arrow-forward" size={16} color={colors.textOnPrimary} />
+                    </>
+                  )}
+                </Pressable>
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -1492,17 +1518,6 @@ export default function AppRouter() {
           <View style={[styles.dashboardGlowBottom, { pointerEvents: "none" }]} />
           <View style={styles.dashboardContentShell}>
             <View style={styles.dashboardHeaderWrap}>
-              <TrlmHeader
-                title={activeTab === "Profile" ? "Profile" : "Dashboard"}
-                subtitle={checkInInfo.isCheckedIn && !checkInInfo.checkOutAt
-                  ? `${todayLabel}`
-                  : "Complete Check In to continue."}
-                badge={checkInInfo.isCheckedIn && !checkInInfo.checkOutAt ? "Checked In" : "Check In Required"}
-                onLogout={onLogout}
-                showLogout
-                compact
-              />
-
               <View style={styles.sessionStripCard}>
                 <View style={styles.sessionStripCopy}>
                   <Text style={styles.sessionStripTitle}>Attendance</Text>

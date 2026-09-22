@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Image, Modal, Platform, Pressable, ScrollView, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { Ionicons } from "@expo/vector-icons";
+import { colors } from "../../styles/theme";
 import { getCurrentLocation, calculateDistance } from "../../utils/geofence";
 import {
   fetchActivities,
@@ -681,7 +683,6 @@ export default function DashboardHomeTab({
   const renderResponsePopup = () => {
     const isSaved = responsePopup.badge === "Saved";
     const iconCircleStyle = isSaved ? tsDetailStyles.modalIconCircleSaved : tsDetailStyles.modalIconCircleAlert;
-    const iconTextStyle = isSaved ? tsDetailStyles.modalIconTextSaved : tsDetailStyles.modalIconTextAlert;
     const badgeChipStyle = isSaved ? tsDetailStyles.modalBadgeSaved : tsDetailStyles.modalBadgeAlert;
     const badgeTextStyle = isSaved ? tsDetailStyles.modalBadgeTextSaved : tsDetailStyles.modalBadgeTextAlert;
 
@@ -695,9 +696,11 @@ export default function DashboardHomeTab({
         <View style={tsDetailStyles.modalOverlay}>
           <View style={tsDetailStyles.modalCard}>
             <View style={[tsDetailStyles.modalIconCircle, iconCircleStyle]}>
-              <Text style={[tsDetailStyles.modalIconText, iconTextStyle]}>
-                {isSaved ? "\u2713" : "!"}
-              </Text>
+              <Ionicons
+                name={isSaved ? "checkmark" : "alert"}
+                size={30}
+                color={isSaved ? colors.success : colors.error}
+              />
             </View>
             <Text style={tsDetailStyles.modalTitle}>{responsePopup.title}</Text>
             <View style={[tsDetailStyles.modalBadge, badgeChipStyle]}>
@@ -707,7 +710,10 @@ export default function DashboardHomeTab({
             <View style={tsDetailStyles.modalContentCard}>
               <ScrollView style={tsDetailStyles.modalScroll} showsVerticalScrollIndicator={false}>
                 {responsePopup.imageUri ? (
-                  <Image source={{ uri: responsePopup.imageUri }} style={tsDetailStyles.modalPreviewImage} />
+                  <View style={tsDetailStyles.modalPreviewWrap}>
+                    <Text style={tsDetailStyles.modalPreviewCaption}>Uploaded Photo</Text>
+                    <Image source={{ uri: responsePopup.imageUri }} style={tsDetailStyles.modalPreviewImage} />
+                  </View>
                 ) : null}
 
                 {responsePopup.fields?.length ? (
@@ -716,6 +722,7 @@ export default function DashboardHomeTab({
                       key={`${field.label}-${index}`}
                       style={[
                         tsDetailStyles.modalFieldRow,
+                        index % 2 === 1 && tsDetailStyles.modalFieldRowAlt,
                         index === responsePopup.fields.length - 1 && tsDetailStyles.modalFieldRowLast
                       ]}
                     >
@@ -731,6 +738,7 @@ export default function DashboardHomeTab({
 
             <Pressable style={tsDetailStyles.modalPrimaryBtnWide} onPress={closeResponsePopup}>
               <Text style={tsDetailStyles.modalPrimaryBtnText}>OK</Text>
+              <Ionicons name="checkmark-circle" size={18} color={colors.textOnPrimary} />
             </Pressable>
           </View>
         </View>

@@ -65,6 +65,7 @@ export default function ShgMemberView() {
 
         <DropdownField
           label="SHG Name:"
+          icon="people-outline"
           value={shgName}
           options={shgNames}
           open={openShgDropdown}
@@ -81,6 +82,7 @@ export default function ShgMemberView() {
 
         <DropdownField
           label="SHG Members Name:"
+          icon="person-outline"
           value={memberName}
           options={shgMembers}
           open={openMemberDropdown}
@@ -97,6 +99,7 @@ export default function ShgMemberView() {
 
           <DropdownField
             label="Select Livelihood Activity:"
+            icon="briefcase-outline"
             value={activityType}
             options={activityTypes}
           open={openActivityDropdown}
@@ -113,6 +116,7 @@ export default function ShgMemberView() {
 
           <DropdownField
             label="Sub-Category:"
+            icon="pricetag-outline"
             value={subCategory}
             options={subCategories}
           open={openSubCategoryDropdown}

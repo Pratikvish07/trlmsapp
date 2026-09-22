@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Animated, Image, Platform, Text, View } from "react-native";
+import { Animated, Image, Platform, Pressable, Text, View } from "react-native";
 import { useI18n } from "../i18n/I18nProvider";
 import styles from "../styles/appStyles";
 
 const APP_LOGO = require("../../assets/branding/livelihood-tracker-icon.png");
 
-export default function SplashScreen() {
+export default function SplashScreen({ onContinue }) {
   const { t } = useI18n();
   const [pulseAnim] = useState(new Animated.Value(1));
   const [dotAnim1] = useState(new Animated.Value(0.4));
@@ -90,11 +90,17 @@ export default function SplashScreen() {
       </View>
 
       {/* App name */}
-      <Text style={styles.splashAppName}>Livelihood Tracker</Text>
-      
+      <View style={styles.splashAppNameRow}>
+        <Text style={styles.splashAppName}>{t("Livelihood")} </Text>
+        <Text style={[styles.splashAppName, styles.splashAppNameAccent]}>{t("Tracker")}</Text>
+      </View>
+
       {/* Subtitle */}
       <Text style={styles.splashSubtitle}>
         {t("Rural field monitoring, identity creation, and livelihood tracking")}
+      </Text>
+      <Text style={styles.splashPillarRow}>
+        {t("People")} | {t("Progress")} | {t("Prosperity")}
       </Text>
 
       {/* Animated loading dots */}
@@ -121,6 +127,16 @@ export default function SplashScreen() {
           ]}
         />
       </View>
+
+      {/* Get Started - tapping jumps straight to the same screen the
+          auto-advance timer in AppRouter.js would reach; the timer keeps
+          running in parallel as a fallback for anyone who doesn't tap. */}
+      {onContinue ? (
+        <Pressable style={styles.splashCtaBtn} onPress={onContinue}>
+          <Text style={styles.splashCtaBtnText}>{t("Get Started")}</Text>
+          <Text style={styles.splashCtaBtnArrow}>{"→"}</Text>
+        </Pressable>
+      ) : null}
 
       {/* Tagline */}
       <Text style={styles.splashTagline}>Tripura Rural Livelihood Mission</Text>

@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Animated,
-  Image,
   Modal,
   Pressable,
   ScrollView,
@@ -11,7 +10,9 @@ import {
   View
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { Ionicons } from "@expo/vector-icons";
 import { useI18n } from "../i18n/I18nProvider";
+import { colors } from "../styles/theme";
 import { LANGUAGE_OPTIONS, getLanguageCode, getLanguageNativeName } from "../i18n/translations";
 import {
   fetchBlocksByDistrict,
@@ -35,7 +36,6 @@ import { showAlert } from "../utils/showAlert";
 
 const EMPTY_ARRAY = [];
 const ID_TYPE_OPTIONS = ["CRP ID", "Master ID"];
-const TRLM_BRAND_IMAGE = require("../../assets/branding/livelihood-tracker-icon.png");
 
 function Field({ label, required = false, helper, children }) {
   return (
@@ -46,6 +46,33 @@ function Field({ label, required = false, helper, children }) {
       </Text>
       {children}
       {helper ? <Text style={styles.helperText}>{helper}</Text> : null}
+    </View>
+  );
+}
+
+function IconInput({ icon, isPassword = false, style, ...inputProps }) {
+  const [revealed, setRevealed] = useState(false);
+  return (
+    <View style={styles.loginInputIconWrap}>
+      <Ionicons name={icon} size={18} color={colors.textSecondary} style={styles.loginInputIcon} />
+      <TextInput
+        style={[styles.loginInput, styles.loginInputWithIcon, isPassword && styles.loginInputWithEye, style]}
+        secureTextEntry={isPassword ? !revealed : inputProps.secureTextEntry}
+        {...inputProps}
+      />
+      {isPassword ? (
+        <Pressable
+          style={styles.loginInputEyeBtn}
+          onPress={() => setRevealed((prev) => !prev)}
+          hitSlop={8}
+        >
+          <Ionicons
+            name={revealed ? "eye-off-outline" : "eye-outline"}
+            size={18}
+            color={colors.textSecondary}
+          />
+        </Pressable>
+      ) : null}
     </View>
   );
 }
@@ -504,9 +531,11 @@ export default function LoginScreen({
                   : styles.responseStatusIconError
               ]}
             >
-              <Text style={styles.responseStatusIconText}>
-                {signupApiIsSuccess ? "OK" : "!"}
-              </Text>
+              <Ionicons
+                name={signupApiIsSuccess ? "checkmark" : "alert"}
+                size={28}
+                color={signupApiIsSuccess ? colors.success : colors.error}
+              />
             </View>
             <Text style={styles.responseModalTitle}>{signupApiTitle}</Text>
             <Text style={styles.responseModalMessage}>{signupApiMessage}</Text>
@@ -604,65 +633,34 @@ export default function LoginScreen({
         ) : null}
 
         <Animated.View
-          style={[
-            styles.loginHeader,
-            {
-              opacity: cardAnim,
-              transform: [
-                {
-                  translateY: cardAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [24, 0]
-                  })
-                }
-              ]
-            }
-          ]}
+          style={{
+            opacity: cardAnim,
+            transform: [
+              {
+                translateY: cardAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [24, 0]
+                })
+              }
+            ]
+          }}
         >
-          <View style={styles.loginLogoWrapper}>
-            <View style={styles.loginGlassChip}>
-              <Text style={styles.loginGlassChipText}>Secure Field Access</Text>
-            </View>
-            <View style={styles.loginLogoCircle}>
-              <Image source={TRLM_BRAND_IMAGE} style={styles.loginLogoImage} />
-            </View>
-            <Text style={styles.loginAppName}>Livelihood Tracker</Text>
-            <Text style={styles.loginTagline}>
-              {t("Digital Livelihood Monitoring System")}
-            </Text>
-            <View style={styles.loginHeroMetricRow}>
-              <View style={styles.loginHeroMetric}>
-                <Text style={styles.loginHeroMetricValue}>24x7</Text>
-                <Text style={styles.loginHeroMetricLabel}>Access</Text>
-              </View>
-              <View style={styles.loginHeroMetric}>
-                <Text style={styles.loginHeroMetricValue}>Geo</Text>
-                <Text style={styles.loginHeroMetricLabel}>Verified</Text>
-              </View>
-              <View style={styles.loginHeroMetric}>
-                <Text style={styles.loginHeroMetricValue}>Gov</Text>
-                <Text style={styles.loginHeroMetricLabel}>Aligned</Text>
-              </View>
-            </View>
+        <View style={styles.loginUnifiedCard}>
+        <View style={styles.loginCardAccentBar} />
+        <View style={styles.loginHeroBand}>
+          <View style={styles.loginHeroBadge}>
+            <Ionicons name="shield-checkmark-outline" size={26} color={colors.textOnPrimary} />
           </View>
-        </Animated.View>
-
-        <Animated.View
-          style={[
-            styles.loginTabContainer,
-            {
-              opacity: cardAnim,
-              transform: [
-                {
-                  translateY: cardAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [32, 0]
-                  })
-                }
-              ]
-            }
-          ]}
-        >
+          <Text style={styles.loginWelcomeTitle}>
+            {mode === "login" ? t("Welcome Back") : t("Create Your Account")}
+          </Text>
+          <Text style={styles.loginWelcomeSubtitle}>
+            {mode === "login"
+              ? t("Sign in to continue your fieldwork")
+              : t("Register as a Community Resource Person")}
+          </Text>
+        </View>
+        <View style={styles.loginTabContainer}>
           {["login", "signup"].map((item) => {
             const active = mode === item;
             return (
@@ -679,28 +677,10 @@ export default function LoginScreen({
               </Pressable>
             );
           })}
-        </Animated.View>
+        </View>
 
         {mode === "login" ? (
-          <Animated.View
-            style={[
-              styles.loginCard,
-              styles.loginCardGlass,
-              {
-                opacity: cardAnim,
-                transform: [
-                  {
-                    translateY: cardAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [40, 0]
-                    })
-                  }
-                ]
-              }
-            ]}
-          >
-            <Text style={styles.loginCardTitle}>{t("Log-In")}</Text>
-
+          <View style={[styles.loginCard, styles.loginCardGlass]}>
             <Field label={t("Identity Type")} required>
               <View style={styles.loginIdTypeRow}>
                 {ID_TYPE_OPTIONS.map((item) => {
@@ -716,6 +696,12 @@ export default function LoginScreen({
                         }))
                       }
                     >
+                      <Ionicons
+                        name="card-outline"
+                        size={14}
+                        color={active ? colors.textOnPrimary : colors.textSecondary}
+                        style={styles.loginIdPillIcon}
+                      />
                       <Text
                         style={[
                           styles.loginIdPillText,
@@ -735,8 +721,8 @@ export default function LoginScreen({
               required
               helper={t("Enter the ID matching the type selected above")}
             >
-              <TextInput
-                style={styles.loginInput}
+              <IconInput
+                icon="person-outline"
                 placeholder={t("Enter ID")}
                 value={loginForm.identity}
                 autoCapitalize="characters"
@@ -750,11 +736,11 @@ export default function LoginScreen({
             </Field>
 
             <Field label={t("Password")} required>
-              <TextInput
-                style={styles.loginInput}
+              <IconInput
+                icon="lock-closed-outline"
+                isPassword
                 placeholder={t("Password")}
                 value={loginForm.password}
-                secureTextEntry
                 onChangeText={(value) =>
                   setLoginForm((prev) => ({
                     ...prev,
@@ -772,30 +758,15 @@ export default function LoginScreen({
               {loginSubmitting ? (
                 <ActivityIndicator color="#ffffff" />
               ) : (
-                <Text style={styles.loginButtonText}>{t("Log-In")}</Text>
+                <>
+                  <Text style={styles.loginButtonText}>{t("Log-In")}</Text>
+                  <Ionicons name="arrow-forward" size={18} color={colors.textOnPrimary} />
+                </>
               )}
             </Pressable>
-          </Animated.View>
+          </View>
         ) : (
-          <Animated.View
-            style={[
-              styles.loginCard,
-              styles.loginCardGlass,
-              {
-                opacity: cardAnim,
-                transform: [
-                  {
-                    translateY: cardAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [40, 0]
-                    })
-                  }
-                ]
-              }
-            ]}
-          >
-            <Text style={styles.loginCardTitle}>{t("Sign-up")}</Text>
-
+          <View style={[styles.loginCard, styles.loginCardGlass]}>
             <View style={styles.formSectionCard}>
             <Text style={styles.signupSectionTitle}>{t("Personal Details")}</Text>
 
@@ -1158,8 +1129,15 @@ export default function LoginScreen({
                 <Text style={styles.loginButtonText}>{t("Sign-up")}</Text>
               )}
             </Pressable>
-          </Animated.View>
+          </View>
         )}
+        </View>
+        </Animated.View>
+
+        <View style={styles.loginFooterBrand}>
+          <Text style={styles.loginFooterBrandText}>Tripura Rural Livelihood Mission</Text>
+          <Text style={styles.loginFooterVersion}>Version 1.0.0</Text>
+        </View>
       </ScrollView>
     </View>
   );

@@ -1,7 +1,9 @@
 import React from "react";
 import { Pressable, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@/components/dashboard/TranslatedInputs";
 import { pageStyles, flowStyles } from "@/styles/dashboardHomeStyles";
+import { colors } from "@/styles/theme";
 import { useDashboardContext } from "../DashboardContext";
 
 const STATUS_TITLE_MAP = {
@@ -33,7 +35,9 @@ export default function LhStatusView() {
     <View style={pageStyles.screen}>
       <View style={pageStyles.frame}>
         <View style={flowStyles.statusHeroCard}>
-          <View style={flowStyles.statusHeroAccent} />
+          <View style={flowStyles.statusHeroAccent}>
+            <Ionicons name="person" size={20} color={colors.textOnPrimary} />
+          </View>
           <View style={flowStyles.statusHeroCopy}>
             <Text style={flowStyles.statusHeroEyebrow}>Tracking Context</Text>
             <Text style={flowStyles.statusHeroTitle}>{selectedMemberName}</Text>
@@ -46,28 +50,50 @@ export default function LhStatusView() {
           <Text style={flowStyles.statusHint}>Choose a module to continue CRP tracking.</Text>
         </View>
 
-        <View style={flowStyles.moduleStack}>
-          <Pressable
-            style={flowStyles.profileButton}
-            onPress={() => onOpenUpdateData(activityBySubCategory[selectedSubCategory])}
-          >
-            <Text style={flowStyles.profileButtonText}>Activity Profile</Text>
-          </Pressable>
+        <View style={flowStyles.moduleGrid}>
+          <View style={flowStyles.moduleRow}>
+            <Pressable
+              style={[flowStyles.moduleCard, flowStyles.moduleCardGreen]}
+              onPress={() => onOpenUpdateData(activityBySubCategory[selectedSubCategory])}
+            >
+              <View style={[flowStyles.moduleIconWrap, flowStyles.moduleIconGreen]}>
+                <Ionicons name="bar-chart-outline" size={22} color={colors.textOnPrimary} />
+              </View>
+              <Text style={flowStyles.moduleCardLabel}>Activity{"\n"}Profile</Text>
+            </Pressable>
 
-          <Pressable
-            style={flowStyles.profileButton}
-            onPress={() => onOpenUpdateData("lhInvestment")}
-          >
-            <Text style={flowStyles.profileButtonText}>Investment Profile</Text>
-          </Pressable>
+            <Pressable
+              style={[flowStyles.moduleCard, flowStyles.moduleCardBlue]}
+              onPress={() => onOpenUpdateData("lhInvestment")}
+            >
+              <View style={[flowStyles.moduleIconWrap, flowStyles.moduleIconBlue]}>
+                <Ionicons name="wallet-outline" size={22} color={colors.textOnPrimary} />
+              </View>
+              <Text style={flowStyles.moduleCardLabel}>Investment{"\n"}Profile</Text>
+            </Pressable>
+          </View>
 
-          <Pressable style={flowStyles.profileButton} onPress={() => onOpenUpdateData("lhIncome")}>
-            <Text style={flowStyles.profileButtonText}>Income Profile</Text>
-          </Pressable>
+          <View style={flowStyles.moduleRow}>
+            <Pressable
+              style={[flowStyles.moduleCard, flowStyles.moduleCardOrange]}
+              onPress={() => onOpenUpdateData("lhIncome")}
+            >
+              <View style={[flowStyles.moduleIconWrap, flowStyles.moduleIconOrange]}>
+                <Ionicons name="trending-up-outline" size={22} color={colors.textOnPrimary} />
+              </View>
+              <Text style={flowStyles.moduleCardLabel}>Income{"\n"}Profile</Text>
+            </Pressable>
 
-          <Pressable style={flowStyles.trackingEntryBtn} onPress={() => onOpenUpdateData("shgTracking")}>
-            <Text style={flowStyles.trackingEntryBtnText}>Tracking</Text>
-          </Pressable>
+            <Pressable
+              style={[flowStyles.moduleCard, flowStyles.moduleCardPurple]}
+              onPress={() => onOpenUpdateData("shgTracking")}
+            >
+              <View style={[flowStyles.moduleIconWrap, flowStyles.moduleIconPurple]}>
+                <Ionicons name="navigate-outline" size={22} color={colors.textOnPrimary} />
+              </View>
+              <Text style={flowStyles.moduleCardLabel}>Tracking</Text>
+            </Pressable>
+          </View>
         </View>
 
         <View style={flowStyles.statusFooterCard}>
@@ -75,11 +101,13 @@ export default function LhStatusView() {
             style={flowStyles.primarySaveBtn}
             onPress={() => onOpenUpdateData("technicalSupport")}
           >
+            <Ionicons name="checkmark-circle-outline" size={18} color={colors.textOnPrimary} />
             <Text style={flowStyles.primarySaveText}>Save</Text>
           </Pressable>
         </View>
 
         <Pressable style={flowStyles.statusBackBtn} onPress={onOpenShgMember}>
+        <Ionicons name="arrow-back" size={14} color={colors.textOnPrimary} />
         <Text style={flowStyles.statusBackBtnText}>Back to Dashboard</Text>
       </Pressable>
     </View>

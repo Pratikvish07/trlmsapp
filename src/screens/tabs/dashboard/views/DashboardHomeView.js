@@ -97,12 +97,16 @@ export default function DashboardHomeView() {
           </View>
 
           <View style={pageStyles.metricGrid}>
-            {dashboardHighlights.map((item) => (
-              <View key={item.key} style={pageStyles.metricStatCard}>
-                <View style={[pageStyles.metricAccent, { backgroundColor: item.tint }]} />
-                <Text style={pageStyles.metricStatLabel}>{item.label}</Text>
-                <Text style={pageStyles.metricStatValue}>{item.value}</Text>
-                <Text style={pageStyles.metricStatHint}>{item.hint}</Text>
+            {[0, 2].map((rowStart) => (
+              <View key={`metric-row-${rowStart}`} style={pageStyles.metricGridRow}>
+                {dashboardHighlights.slice(rowStart, rowStart + 2).map((item) => (
+                  <View key={item.key} style={pageStyles.metricStatCard}>
+                    <View style={[pageStyles.metricAccent, { backgroundColor: item.tint }]} />
+                    <Text style={pageStyles.metricStatLabel}>{item.label}</Text>
+                    <Text style={pageStyles.metricStatValue}>{item.value}</Text>
+                    <Text style={pageStyles.metricStatHint}>{item.hint}</Text>
+                  </View>
+                ))}
               </View>
             ))}
           </View>
@@ -125,15 +129,6 @@ export default function DashboardHomeView() {
                 <Text style={pageStyles.graphText}>Honorarium</Text>
               </Pressable>
             </View>
-          </View>
-
-          <View style={pageStyles.submitActionRow}>
-            <Pressable style={pageStyles.graphActionBtn} onPress={() => handleGraphPress("visits")}>
-              <Text style={pageStyles.graphActionBtnText}>Open Graphs</Text>
-            </Pressable>
-            <Pressable style={pageStyles.submitActionBtn} onPress={onOpenWorkingReport}>
-              <Text style={pageStyles.submitActionBtnText}>Submit</Text>
-            </Pressable>
           </View>
 
           <View style={pageStyles.dashboardInlineAlert}>
@@ -175,20 +170,59 @@ export default function DashboardHomeView() {
 
         <View style={pageStyles.quickActionsCard}>
           <Text style={pageStyles.quickActionsTitle}>Quick Actions</Text>
-          <View style={pageStyles.actionsRow}>
-            <Pressable style={[pageStyles.actionBtnMuted, pageStyles.actionBtnAmber]} onPress={onOpenNewEnrolment}>
-              <Text style={pageStyles.actionTextMuted}>New{"\n"}Enrolment</Text>
-            </Pressable>
-            <Pressable style={pageStyles.actionBtnPrimary} onPress={onOpenShgMember}>
-              <Text style={pageStyles.actionTextPrimary}>SHG{"\n"}Member</Text>
-            </Pressable>
-            <Pressable
-              style={[pageStyles.actionBtnMuted, pageStyles.actionBtnSlate]}
-              onPress={() => onOpenUpdateData("newEnrolment")}
-            >
-              <Text style={pageStyles.actionTextMuted}>Update Data</Text>
-            </Pressable>
+          <View style={pageStyles.dashboardActionGrid}>
+            <View style={pageStyles.dashboardActionRow}>
+              <Pressable
+                style={[pageStyles.dashboardActionCard, pageStyles.dashboardActionCardGreen]}
+                onPress={onOpenWorkingReport}
+              >
+                <View style={[pageStyles.dashboardActionIconWrap, pageStyles.dashboardActionIconGreen]}>
+                  <Text style={pageStyles.dashboardActionIconText}>📋</Text>
+                </View>
+                <Text style={pageStyles.dashboardActionLabel}>My{"\n"}Activities</Text>
+              </Pressable>
+              <Pressable
+                style={[pageStyles.dashboardActionCard, pageStyles.dashboardActionCardBlue]}
+                onPress={onOpenShgMember}
+              >
+                <View style={[pageStyles.dashboardActionIconWrap, pageStyles.dashboardActionIconBlue]}>
+                  <Text style={pageStyles.dashboardActionIconText}>🤝</Text>
+                </View>
+                <Text style={pageStyles.dashboardActionLabel}>SHG{"\n"}Member</Text>
+              </Pressable>
+            </View>
+            <View style={pageStyles.dashboardActionRow}>
+              <Pressable
+                style={[pageStyles.dashboardActionCard, pageStyles.dashboardActionCardOrange]}
+                onPress={onOpenNewEnrolment}
+              >
+                <View style={[pageStyles.dashboardActionIconWrap, pageStyles.dashboardActionIconOrange]}>
+                  <Text style={pageStyles.dashboardActionIconText}>📝</Text>
+                </View>
+                <Text style={pageStyles.dashboardActionLabel}>New{"\n"}Enrolment</Text>
+              </Pressable>
+              <Pressable
+                style={[pageStyles.dashboardActionCard, pageStyles.dashboardActionCardPurple]}
+                onPress={() => onOpenUpdateData("newEnrolment")}
+              >
+                <View style={[pageStyles.dashboardActionIconWrap, pageStyles.dashboardActionIconPurple]}>
+                  <Text style={pageStyles.dashboardActionIconText}>🔄</Text>
+                </View>
+                <Text style={pageStyles.dashboardActionLabel}>Update{"\n"}Data</Text>
+              </Pressable>
+            </View>
           </View>
+
+          <Pressable style={pageStyles.dashboardReportsCard} onPress={() => handleGraphPress("visits")}>
+            <View style={pageStyles.dashboardReportsIconWrap}>
+              <Text style={pageStyles.dashboardReportsIconText}>📊</Text>
+            </View>
+            <View style={pageStyles.dashboardReportsTextWrap}>
+              <Text style={pageStyles.dashboardReportsTitle}>Reports</Text>
+              <Text style={pageStyles.dashboardReportsHint}>Visits, members & honorarium graphs</Text>
+            </View>
+            <Text style={pageStyles.dashboardReportsArrow}>{"→"}</Text>
+          </Pressable>
         </View>
 
         <PostCheckoutModal
